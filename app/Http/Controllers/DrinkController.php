@@ -65,11 +65,26 @@ class DrinkController extends Controller
     public function show(Request $request, $id)
     {
         $with = [];
+        $visible = [];
+        $hidden = [];
+
+        if ($request->nolang) {
+            $visible = [
+                'name_en',
+                'name_hu',
+                'description_en',
+                'description_hu',
+            ];
+            $hidden = [
+                'name',
+                'description'
+            ];
+        }
 
         if ($request->with) {
             $with = array_intersect(explode(',', strtolower($request->with)), self::$valid_withs);
         }
-        return Drink::with($with)->findOrFail($id);
+        return Drink::with($with)->findOrFail($id)->makeVisible($visible)->makeHidden($hidden);
     }
 
     /**
@@ -78,8 +93,8 @@ class DrinkController extends Controller
     public function update(Request $request, Drink $drink)
     {
         $valid = $request->validate([
-            'name_en' => 'string|sometimes|unique:drinks,name_en',
-            'name_hu' => 'string|sometimes|unique:drinks,name_hu',
+            'name_en' => 'string|sometimes|unique:drinks,name_en,'.$drink->id,
+            'name_hu' => 'string|sometimes|unique:drinks,name_hu,'.$drink->id,
             'category_id' => 'integer|sometimes',
             'description_en' => 'string|sometimes|nullable',
             'description_hu' => 'string|sometimes|nullable',
@@ -88,7 +103,7 @@ class DrinkController extends Controller
 
         $drink->fill($valid)->save();
         event(new \App\Events\DrinkUpdated($drink));
-        return $drink;
+        return $this->show($request, $drink->id);
     }
 
     /**

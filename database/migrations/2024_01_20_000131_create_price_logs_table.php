@@ -21,9 +21,6 @@ return new class extends Migration
             $table->unique(['drink_unit_id', 'end']);
             $table->foreign('drink_unit_id')->references('id')->on('drink_units');
         });
-        
-        
-
     }
 
     /**

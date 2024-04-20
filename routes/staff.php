@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\EmployeeAuthController as AuthController;
-use App\Http\Controllers\OrderController;
+
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -14,6 +14,10 @@ Route::get('/reset', [AuthController::class, 'reset']);
 
 
 Route::get('/refresh', [AuthController::class, 'refresh'])->middleware(['refresh.jwt']);
+// Route::get('/refresh', [AuthController::class, 'refresh']);
+Route::get('categories', [\App\Http\Controllers\DrinkCategoryController::class, 'index']);
+Route::get('categories/{category}', [\App\Http\Controllers\DrinkCategoryController::class, 'show']);
+
 Route::middleware(['auth:guard_employee'])->group(function () {
     // Route::post('/reset-password', [AuthController::class, 'resetPassword']);
     // Route::get('/verify-email/{id}/{hash}', [AuthController::class, 'verifyEmail']);
@@ -23,11 +27,14 @@ Route::middleware(['auth:guard_employee'])->group(function () {
     Route::get('/menu', [\App\Http\Controllers\DrinkController::class, 'menu']);
     Route::get('/menu-tree', [\App\Http\Controllers\DrinkController::class, 'menuTree']);
 
-    Route::apiResource('orders', OrderController::class);
-    Route::get('/orders-with-guests', [OrderController::class, 'getOrdersWithGuests']);
-
     Route::get('drinks/scheme', [\App\Http\Controllers\DrinkController::class, 'scheme']);
     Route::apiResource('drinks', \App\Http\Controllers\DrinkController::class);
+
+
+    Route::post('categories', [\App\Http\Controllers\DrinkCategoryController::class, 'store']);
+    Route::put('categories/{category}', [\App\Http\Controllers\DrinkCategoryController::class, 'update']);
+    Route::delete('categories/{category}', [\App\Http\Controllers\DrinkCategoryController::class, 'destroy']);
+
     Route::apiResource('employees', \App\Http\Controllers\EmployeeController::class);
     Route::apiResource('guests', \App\Http\Controllers\GuestController::class);
     Route::get('categories/{category}/drinks', [\App\Http\Controllers\DrinkCategoryController::class, 'drinks']);

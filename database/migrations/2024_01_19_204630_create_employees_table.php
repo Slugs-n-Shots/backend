@@ -19,33 +19,23 @@ return new class extends Migration
             $table->string('email', 64)->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->integer('role_code');  // CHECK ([role] IN ('pincér', 'pultos', 'backoffice'))
+            $table->integer('role_code');
             $table->boolean('active')->default(true);
             // $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
         });
 
-        App\Models\Employee::create([
-            'first_name' => 'Zsolt',
+        \App\Models\Employee::create([
+            'first_name' => 'Slugs',
             'middle_name' => 'Admin',
-            'last_name' => 'Schopper',
+            'last_name' => 'Shhots',
             'email' => 'zschopper+admin@gmail.com',
-            'password' => 'Bo0ze-nOOOw!',
-            'role_code' => \App\Models\Employee::BACKOFFICE,
+            'password' => Config::get('ADMIN_PASSWORD', 'RPS?iou-siztE#R!'),
+            'role_code' => \App\Models\Employee::ADMIN,
             'active' => 1,
         ]);
-
-        (new \App\Models\Employee())->fill([
-            'first_name' => 'StafAdmin',
-            'middle_name' => 'StafAdmin',
-            'last_name' => 'StafAdmin',
-            'email' => 'StafAdmin@boozenow.hu',
-            'role_code'=> \App\Models\Employee::BACKOFFICE,
-            'password' => 'StafAdminBo0ze-nOOOw!',
-        ])->save();
     }
-
 
     /**
      * Reverse the migrations.

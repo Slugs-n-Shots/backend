@@ -7,7 +7,7 @@
     stopOnFailure="true"
     xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd">
     <testsuites>
-        <testsuite name="Booze Now Test Suite">
+        <testsuite name="Slug'n'Shots Test Suite">
             <file>./tests/Feature/Http/Controllers/DrinkControllerTest.php</file>
         </testsuite>
     </testsuites>

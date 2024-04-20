@@ -20,12 +20,6 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
-
-        (new \App\Models\User())->fill([
-            'name' => 'admin',
-            'email' => 'admin@boozenow.hu',
-            'password' => 'Bo0ze-nOOOw!',
-        ])->save();
     }
 
     /**

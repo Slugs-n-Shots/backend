@@ -26,7 +26,7 @@ class EmployeeFactory extends Factory
         $middle_name = rand(0, 1) ? fake()->firstName($gender) : '';
 
         $name = implode(' ', array_filter([$last_name, $first_name, $middle_name]));
-        $email = strtolower(str_replace(' ', '.', StrUtils::stripAccents($name))) . '@boozenow.hu';
+        $email = strtolower(str_replace(' ', '.', StrUtils::stripAccents($name))) . '@slugs-n-shots.hu';
         return [
             'first_name' => $first_name,
             'middle_name' => $middle_name,

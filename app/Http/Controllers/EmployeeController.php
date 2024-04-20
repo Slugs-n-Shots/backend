@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rule;
 
@@ -28,22 +30,14 @@ class EmployeeController extends Controller
         // return response($request->all(), 404);
         $valid = $request->validate([
             'first_name' => 'string|required',
-            'middle_name' => 'string|sometimes',
+            'middle_name' => 'string|optional|sometimes',
             'last_name' => 'string|required',
             'email' => 'string|required|unique:employees,email',
-            'password' => [
-                'string',
-                'required',
-                'min:10',             // legalább 10 karakter hosszú
-                'regex:/[a-z]/',      // legalább egy kisbetű
-                'regex:/[A-Z]/',      // legalább egy nagybetű
-                'regex:/[0-9]/',      // legalább egy számjegy
-                'regex:/[@+\-\.$!%*#?&]/', // legalább egy speciális karakter
-            ],
+            'password' => ['optional', Password::min(10)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
             'role_code' => [
                 'integer',
                 'required',
-                Rule::in(array_keys(Employee::ROLES))
+                // Rule::in(array_keys(Employee::ROLES))
             ],
             'active' => 'boolean|required',
         ]);
@@ -66,25 +60,17 @@ class EmployeeController extends Controller
     public function update(Request $request, Employee $employee)
     {
         $valid = $request->validate([
-            'first_name' => 'string|required',
-            'middle_name' => 'string|sometimes',
-            'last_name' => 'string|required',
-            'email' => 'string|sometimes|required',
-            'password' => [
-                'string',
-                'required',
-                'sometimes',
-                'min:10',             // legalább 10 karakter hosszú
-                'regex:/[a-z]/',      // legalább egy kisbetű
-                'regex:/[A-Z]/',      // legalább egy nagybetű
-                'regex:/[0-9]/',      // legalább egy számjegy
-                'regex:/[@+\-\.$!%*#?&]/', // legalább egy speciális karakter
-            ],
+            'first_name' => 'string|optional|sometimes',
+            'middle_name' => 'string|optional|sometimes',
+            'last_name' => 'string|optional|sometimes',
+            'email' => 'string|sometimes|required|unique:employees,email',
+            'password' => ['optional', Password::min(10)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
             'role_code' => [
                 'integer',
-                Rule::in(array_keys(Employee::ROLES))
+                'required',
+                //  Rule::in(array_keys(Employee::ROLES))
             ],
-            'active' => 'boolean|sometimes',
+            'active' => 'boolean|sometimes|required',
         ]);
 
         $employee->fill($valid)->save();
@@ -121,40 +107,50 @@ class EmployeeController extends Controller
         return $employee;
     }
 
-    public function me(Request $request) {
-        $payload = Auth::payload()->toArray();
-        $payload['refresh_ttl'] = $payload['iat'] + Config::get('jwt.refresh_ttl') * 60;
-        $payload['iat_dt'] = gmdate("Y-m-d\TH:i:s\Z", intval($payload['iat']));
-        $payload['exp_dt'] = gmdate("Y-m-d\TH:i:s\Z", intval($payload['exp']));
-        $payload['refresh_ttl_dt'] = gmdate("Y-m-d\TH:i:s\Z", intval($payload['refresh_ttl']));
+    public function me(Request $request)
+    {
+        // $payload = Auth::payload()->toArray();
+        // $payload['refresh_ttl'] = $payload['iat'] + Config::get('jwt.refresh_ttl') * 60;
+        // $payload['iat_dt'] = gmdate("Y-m-d\TH:i:s\Z", intval($payload['iat']));
+        // $payload['exp_dt'] = gmdate("Y-m-d\TH:i:s\Z", intval($payload['exp']));
+        // $payload['refresh_ttl_dt'] = gmdate("Y-m-d\TH:i:s\Z", intval($payload['refresh_ttl']));
 
         return [Auth::user()->makeVisible(['created_at'])];
     }
 
-    public function updateSelf(Request $request)
+    public function updateMe(Request $request)
     {
         $guest = Employee::find(Auth::user()->id);
         $valid = $request->validate([
             'first_name' => 'string|required',
-            'middle_name' => 'string|sometimes',
+            'middle_name' => 'string|optional|sometimes',
             'last_name' => 'string|required',
             'email' => 'prohibited',
+            'password' => 'prohibited',
+            'role_code' => 'prohibited',
             'active' => 'prohibited',
-            'password' => [
-                'string',
-                'required',
-                'confirmed',
-                'sometimes',
-                'min:10',             // legalább 10 karakter hosszú
-                'regex:/[a-z]/',      // legalább egy kisbetű
-                'regex:/[A-Z]/',      // legalább egy nagybetű
-                'regex:/[0-9]/',      // legalább egy számjegy
-                'regex:/[@+\-\.$!%*#?&]/', // legalább egy speciális karakter
-            ],
         ]);
 
         $guest->fill($valid)->save();
         return $guest;
     }
 
+
+    public function updatePassword(Request $request)
+    {
+        // $guest = Employee::find(Auth::user()->id);
+        $user = Auth::user();
+
+        $valid = $request->validate([
+            'password' => ['required', 'confirmed', Password::min(10)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
+        ]);
+
+        if (!Hash::check($request->current_password, Auth::user()->password)) {
+            return back()->withErrors(['current_password' => 'Your current password is incorrect.']);
+        }
+        $user->password = $valid->password;
+        $user->save();
+
+        return $user;
+    }
 }

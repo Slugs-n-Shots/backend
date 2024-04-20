@@ -74,7 +74,8 @@ class DrinkCategoryController extends Controller
     public function update(Request $request, DrinkCategory $category)
     {
         $valid = $request->validate([
-            'name' => 'string|required|unique:drink_categories',
+            'name_en' => 'string|required|unique:drink_categories,name_en',
+            'name_hu' => 'string|required|unique:drink_categories,name_hu',
             'parent' => 'nullable|int:sometimes'
         ]);
 
