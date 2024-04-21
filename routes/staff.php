@@ -15,6 +15,7 @@ Route::get('/reset', [AuthController::class, 'reset']);
 
 Route::get('/refresh', [AuthController::class, 'refresh'])->middleware(['refresh.jwt']);
 // Route::get('/refresh', [AuthController::class, 'refresh']);
+Route::get('categories/parents', [\App\Http\Controllers\DrinkCategoryController::class, 'parents']);
 Route::get('categories', [\App\Http\Controllers\DrinkCategoryController::class, 'index']);
 Route::get('categories/{category}', [\App\Http\Controllers\DrinkCategoryController::class, 'show']);
 
