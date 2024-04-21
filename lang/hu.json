@@ -25,5 +25,7 @@
     "We have received your request. If there is an unconfirmed registration associated with the provided email address, we have sent a confirmation email. Please check your inbox, including the spam or promotions folder.": "Kérésedet rögzítettük. Ha a megadott email címhez tartozik aktiválatlan regisztráció, elküldtünk egy megerősítő emailt. Kérjük, ellenőrizd a beérkező leveleidet, beleértve a spam vagy promóciós mappát is.",
     "Only a main category can be a parent.": "Csak főkategória lehet szülő.",
     "A category cannot be parent of itself.": "Kategória nem lehet saját maga szülője.",
+    "(and :count more error)": "(és további :count hiba)",
+    "(and :count more errors)": "(és további :count hiba)",
     "": ""
 }

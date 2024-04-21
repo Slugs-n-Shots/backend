@@ -186,6 +186,11 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'name_hu' => 'Név (hu)',
+        'name_en' => 'Név (en)',
+        'description_hu' => 'Leírás (hu)',
+        'description_en' => 'Leírás (en)',
+    ],
 
 ];
