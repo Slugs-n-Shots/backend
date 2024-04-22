@@ -20,7 +20,8 @@ class EmployeeController extends Controller
      */
     public function index(Request $request)
     {
-        return Employee::all();
+        $visible = ['created_at'];
+        return Employee::get()->makeVisible($visible);
     }
 
     /**
@@ -65,7 +66,7 @@ class EmployeeController extends Controller
             'middle_name' => 'string|nullable|sometimes',
             'last_name' => 'string|sometimes|min:2',
             'email' => 'string|sometimes|required|unique:employees,email,' . $employee->id,
-//            'password' => ['sometimes', PasswordRule::min(10)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
+            //            'password' => ['sometimes', PasswordRule::min(10)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
             'password' => ['sometimes', PasswordRule::min(10)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
             'role_code' => [
                 'integer',
@@ -156,12 +157,13 @@ class EmployeeController extends Controller
         return $user;
     }
 
-    public function roles() {
+    public function roles()
+    {
         $locales = config('app.available_locales');
         $ret = [];
-        foreach(EMPLOYEE::ROLES as $code => $role) {
+        foreach (EMPLOYEE::ROLES as $code => $role) {
             $obj = ['id' => $code];
-            foreach($locales as $lang) {
+            foreach ($locales as $lang) {
                 $obj["name_{$lang}"] = __($role, [], $lang);
             }
             $ret[] = $obj;
