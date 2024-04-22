@@ -35,12 +35,14 @@ class Employee extends Authenticatable implements JWTSubject
      */
 
     public const ROLES = [ //'pincér', 'pultos', 'backoffice'
+        self::NONE => 'none',
         self::WAITER => 'waiter',
         self::BARTENDER => 'bartender',
         self::BACKOFFICE => 'backoffice',
         self::ADMIN => 'admin',
     ];
 
+    public const NONE = 0;
     public const WAITER = 1;
     public const BARTENDER = 2;
     public const BACKOFFICE = 4;

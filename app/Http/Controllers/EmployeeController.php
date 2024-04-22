@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password as PasswordRule;
 
 class EmployeeController extends Controller
 {
@@ -30,10 +31,10 @@ class EmployeeController extends Controller
         // return response($request->all(), 404);
         $valid = $request->validate([
             'first_name' => 'string|required',
-            'middle_name' => 'string|optional|sometimes',
+            'middle_name' => 'string|nullable|sometimes',
             'last_name' => 'string|required',
             'email' => 'string|required|unique:employees,email',
-            'password' => ['optional', Password::min(10)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
+            'password' => ['optional', PasswordRule::min(10)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
             'role_code' => [
                 'integer',
                 'required',
@@ -60,11 +61,12 @@ class EmployeeController extends Controller
     public function update(Request $request, Employee $employee)
     {
         $valid = $request->validate([
-            'first_name' => 'string|optional|sometimes',
-            'middle_name' => 'string|optional|sometimes',
-            'last_name' => 'string|optional|sometimes',
-            'email' => 'string|sometimes|required|unique:employees,email',
-            'password' => ['optional', Password::min(10)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
+            'first_name' => 'string|sometimes|min:2',
+            'middle_name' => 'string|nullable|sometimes',
+            'last_name' => 'string|sometimes|min:2',
+            'email' => 'string|sometimes|required|unique:employees,email,' . $employee->id,
+//            'password' => ['sometimes', PasswordRule::min(10)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
+            'password' => ['sometimes', PasswordRule::min(10)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
             'role_code' => [
                 'integer',
                 'required',
@@ -142,7 +144,7 @@ class EmployeeController extends Controller
         $user = Auth::user();
 
         $valid = $request->validate([
-            'password' => ['required', 'confirmed', Password::min(10)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
+            'password' => ['required', 'confirmed', PasswordRule::min(10)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
         ]);
 
         if (!Hash::check($request->current_password, Auth::user()->password)) {
@@ -152,5 +154,19 @@ class EmployeeController extends Controller
         $user->save();
 
         return $user;
+    }
+
+    public function roles() {
+        $locales = config('app.available_locales');
+        $ret = [];
+        foreach(EMPLOYEE::ROLES as $code => $role) {
+            $obj = ['id' => $code];
+            foreach($locales as $lang) {
+                $obj["name_{$lang}"] = __($role, [], $lang);
+            }
+            $ret[] = $obj;
+        }
+
+        return $ret;
     }
 }

@@ -18,6 +18,7 @@ Route::get('/refresh', [AuthController::class, 'refresh'])->middleware(['refresh
 Route::get('categories/parents', [\App\Http\Controllers\DrinkCategoryController::class, 'parents']);
 Route::get('categories', [\App\Http\Controllers\DrinkCategoryController::class, 'index']);
 Route::get('categories/{category}', [\App\Http\Controllers\DrinkCategoryController::class, 'show']);
+Route::get('employee/roles', [\App\Http\Controllers\EmployeeController::class, 'roles']);
 
 Route::middleware(['auth:guard_employee'])->group(function () {
     // Route::post('/reset-password', [AuthController::class, 'resetPassword']);
