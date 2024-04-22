@@ -27,6 +27,6 @@ Route::get('/drinks/{drink}', [DrinkController::class, 'show']);
 Route::middleware(['auth:guard_guest'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [GuestController::class, 'me']);
-    Route::post('/me', [GuestController::class, 'updateMe']);
+    Route::post('/me', [GuestController::class, 'updateSelf']);
     Route::post('/update-password', [GuestController::class, 'updatePassword']);
 });

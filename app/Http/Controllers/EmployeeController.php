@@ -120,7 +120,7 @@ class EmployeeController extends Controller
         return [Auth::user()->makeVisible(['created_at'])];
     }
 
-    public function updateMe(Request $request)
+    public function updateSelf(Request $request)
     {
         $guest = Employee::find(Auth::user()->id);
         $valid = $request->validate([
@@ -128,7 +128,7 @@ class EmployeeController extends Controller
             'middle_name' => 'string|optional|sometimes',
             'last_name' => 'string|required',
             'email' => 'prohibited',
-            'password' => 'prohibited',
+            'password' => ['sometimes', PasswordRule::min(10)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
             'role_code' => 'prohibited',
             'active' => 'prohibited',
         ]);

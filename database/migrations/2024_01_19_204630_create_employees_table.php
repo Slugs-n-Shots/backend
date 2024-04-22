@@ -29,7 +29,7 @@ return new class extends Migration
         \App\Models\Employee::create([
             'first_name' => 'Slugs',
             'middle_name' => 'Admin',
-            'last_name' => 'Shhots',
+            'last_name' => 'Shots',
             'email' => 'zschopper+admin@gmail.com',
             'password' => Config::get('ADMIN_PASSWORD', 'RPS?iou-siztE#R!'),
             'role_code' => \App\Models\Employee::ADMIN,

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password as PasswordRule;
 
 class GuestController extends Controller
 {
@@ -24,19 +25,13 @@ class GuestController extends Controller
      */
     public function store(Request $request)
     {
-        // return response($request->all(), 404);
         $valid = $request->validate([
-            'name' => 'string|required',
+            'first_name' => 'string|required',
+            'middle_name' => 'string|nullable|sometimes',
+            'last_name' => 'string|required',
             'email' => 'string|required|unique:guests,email',
-            'password' => [
-                'string',
-                'required',
-                'min:10',             // legalább 10 karakter hosszú
-                'regex:/[a-z]/',      // legalább egy kisbetű
-                'regex:/[A-Z]/',      // legalább egy nagybetű
-                'regex:/[0-9]/',      // legalább egy számjegy
-                'regex:/[@+\-\.$!%*#?&]/', // legalább egy speciális karakter
-            ],
+            'password' => ['string', PasswordRule::min(10)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
+            'picture' => 'string|nullable',
             'active' => 'boolean|required',
         ]);
         $guest = new Guest();
@@ -57,21 +52,13 @@ class GuestController extends Controller
      */
     public function update(Request $request, Guest $guest)
     {
-        $guest->Auth::user();
         $valid = $request->validate([
-            'name' => 'string|sometimes|required',
-            'email' => 'string|sometimes|required|unique:guests,email',
-            'password' => [
-                'string',
-                'required',
-                'confirmed',
-                'sometimes',
-                'min:10',             // legalább 10 karakter hosszú
-                'regex:/[a-z]/',      // legalább egy kisbetű
-                'regex:/[A-Z]/',      // legalább egy nagybetű
-                'regex:/[0-9]/',      // legalább egy számjegy
-                'regex:/[@+\-\.$!%*#?&]/', // legalább egy speciális karakter
-            ],
+            'first_name' => 'string|sometimes|min:2',
+            'middle_name' => 'string|nullable|sometimes',
+            'last_name' => 'string|sometimes|min:2',
+            'email' => 'string|sometimes|required|unique:guests,email,' . $guest->id,
+            'password' => ['sometimes', PasswordRule::min(10)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
+            'picture' => 'string|nullable',
             'active' => ['boolean','sometimes','required',Rule::in([Guest::INACTIVE, Guest::ACTIVE])],
         ]);
 
@@ -117,20 +104,12 @@ class GuestController extends Controller
     {
         $guest = Guest::find(Auth::user()->id);
         $valid = $request->validate([
-            'name' => 'string|sometimes|required',
+            'first_name' => 'string|sometimes|required',
+            'middle_name' => 'string|sometimes|nullable',
+            'last_name' => 'string|sometimes|required',
             'email' => 'prohibited',
             'active' => 'prohibited',
-            'password' => [
-                'string',
-                'required',
-                'confirmed',
-                'sometimes',
-                'min:10',             // legalább 10 karakter hosszú
-                'regex:/[a-z]/',      // legalább egy kisbetű
-                'regex:/[A-Z]/',      // legalább egy nagybetű
-                'regex:/[0-9]/',      // legalább egy számjegy
-                'regex:/[@+\-\.$!%*#?&]/', // legalább egy speciális karakter
-            ],
+            'password' => ['sometimes', PasswordRule::min(10)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
         ]);
 
         $guest->fill($valid)->save();

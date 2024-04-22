@@ -8,6 +8,7 @@
     "ready": "elkészült",
     "served": "felszolgálva",
     "paid": "fizetve",
+    "none": "nincs",
     "waiter": "pincér",
     "bartender": "bárpultos",
     "backoffice": "backoffice",
