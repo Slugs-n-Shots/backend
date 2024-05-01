@@ -1,8 +1,6 @@
 <?php
 
-use App\Http\Controllers\PromoController;
 use Illuminate\Database\Migrations\Migration;
-use Carbon\Carbon;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
@@ -24,14 +22,6 @@ return new class extends Migration
             $table->foreign('promo_id')->references('id')->on('promo_types');
             $table->foreign('category_id')->references('id')->on('drink_categories');
         });
-
-        (new \App\Models\Promo())->fill([
-            'promo_id' => 1, 'start' => Carbon::now(), 'end' => Carbon::tomorrow(), 'category_id' => null
-        ])->save();
-
-        (new \App\Models\Promo())->fill([
-            'promo_id'=>1, 'start'=>Carbon::now(),'end'=> Carbon::tomorrow(),'category_id'=>null
-        ])->save();
     }
 
     /**

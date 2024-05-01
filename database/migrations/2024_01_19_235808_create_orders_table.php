@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\OrderController;
-use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -30,24 +28,6 @@ return new class extends Migration
             $table->foreign('made_by')->references('id')->on('employees');
             $table->foreign('served_by')->references('id')->on('employees');
         });
-
-        App\Models\Order::create([
-            'guest_id' => 1,
-            'recorded_by' => 1,
-            'created_at' => Carbon::now(),
-            'made_by' => null,
-            'served_by' => null,
-            'served_at' => null,
-        ]);
-
-        App\Models\Order::create([
-            'guest_id' => 1,
-            'recorded_by' => 1,
-            'created_at' => Carbon::now(),
-            'made_by' => null,
-            'served_by' => null,
-            'served_at' => null,
-        ]);
     }
 
     /**
