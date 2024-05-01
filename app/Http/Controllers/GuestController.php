@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Guest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password as PasswordRule;
+use Illuminate\Validation\ValidationException;
 
 class GuestController extends Controller
 {
@@ -102,18 +105,43 @@ class GuestController extends Controller
 
     public function updateSelf(Request $request)
     {
-        $guest = Guest::find(Auth::user()->id);
+        $guest = Auth::user();
         $valid = $request->validate([
             'first_name' => 'string|sometimes|required',
             'middle_name' => 'string|sometimes|nullable',
             'last_name' => 'string|sometimes|required',
             'email' => 'prohibited',
             'active' => 'prohibited',
-            'password' => ['sometimes', PasswordRule::min(10)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
+            'password' => 'prohibited',
+            'picture' => 'string|nullable',
         ]);
 
         $guest->fill($valid)->save();
         return $guest;
+    }
+
+    public function updatePassword(Request $request)
+    {
+        // $guest = Employee::find(Auth::user()->id);
+        $user = Auth::user();
+
+        $validator = Validator::make($request->all(), [
+            'current_password' => ['required', 'string'],
+            'password' => ['required', 'confirmed', PasswordRule::min(10)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
+        ]);
+
+        if (!Hash::check($request->current_password, Auth::user()->password)) {
+            $validator->errors()->add('current_password', __('Your current password is incorrect.'));
+        }
+
+        if ($validator->errors()->isNotEmpty()) {
+            throw new ValidationException($validator);
+        }
+
+        $user->password = $request->password;
+        $user->save();
+
+        return $user;
     }
 
 }

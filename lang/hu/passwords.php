@@ -13,9 +13,9 @@ return [
     |
     */
 
-    'reset' => 'A jelszava visszaállítva.',
-    'sent' => 'Elküldtük Önnek a jelszóvisszaállító linket.',
-    'throttled' => 'Kérjük, várjon, mielőtt újrapróbálná.',
+    'reset' => 'A jelszavad visszaállítva.',
+    'sent' => 'Elküldtük neked a jelszóvisszaállító linket.',
+    'throttled' => 'Kérjük, várj, mielőtt újrapróbálnád.',
     'token' => 'Ez a jelszóvisszaállító token érvénytelen.',
-    'user' => "Nem találjuk a felhasználót ezzel az email címmel.",
+    'user' => "Nem találunk felhasználót ezzel az email címmel.",
 ];

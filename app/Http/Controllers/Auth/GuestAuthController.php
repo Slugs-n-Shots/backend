@@ -161,7 +161,7 @@ class GuestAuthController extends Controller
         $data = $guest->data;
         error_log(json_encode($data, JSON_PRETTY_PRINT));
         if (empty($data['pw_reset_token']) || empty($data['pw_reset_exp'])) {
-            return response()->json(['message' => __('Invalid request')], 401);
+            return response()->json(['message' => __('Invalid user or token')], 401);
         }
 
         if ($data['pw_reset_exp'] < time()) {
@@ -240,7 +240,7 @@ class GuestAuthController extends Controller
         $data = $guest->data;
 
         if (empty($data['confirm_token']) || empty($data['confirm_exp'])) {
-            return response()->json(['message' => __('Invalid request')], 401);
+            return response()->json(['message' => __('Invalid user or token')], 401);
         }
 
         if (!empty($guest->hasVerifiedEmail())) {
@@ -300,10 +300,4 @@ class GuestAuthController extends Controller
             'Please check your inbox, including the spam or promotions folder.')];
     }
 
-    public function reset()
-    {
-        # When access token will be expired, we are going to generate a new one with this function
-        # and return it here in response
-        return request()->all();
-    }
 }

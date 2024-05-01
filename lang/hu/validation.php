@@ -193,6 +193,7 @@ return [
         'name_en' => 'Név (en)',
         'description_hu' => 'Leírás (hu)',
         'description_en' => 'Leírás (en)',
+        'password' => 'jelszó',
     ],
 
 ];

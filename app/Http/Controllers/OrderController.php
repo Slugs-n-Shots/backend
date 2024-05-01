@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DrinkUnit;
 use App\Models\Order;
+use App\Models\OrderDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 
 class OrderController extends Controller
@@ -126,28 +129,40 @@ class OrderController extends Controller
         return $order;
     }
 
-    public function getOrdersWithGuests()
+    public function makeOrder(Request $request)
     {
-        $orders = Order::with('guest')->get();
+        $guest = Auth::user();
+        $order = Order::create([
+            'guest_id' => $guest->id,
+            'recorded_at' => now(),
+        ]);
+        $order->save();
+        $total = 0;
+        foreach ($request->cart as $item) {
+            $drink_unit = DrinkUnit::where('drink_id', $item['drink_id'])
+            ->where('amount', $item['amount'])
+            ->where('unit_en', $item['unit'])->first();
+            // return $drink_unit;
 
-        // Transform the orders to include guest names instead of IDs
-        $ordersWithGuestNames = $orders->map(function ($order) {
-            return [
-                'id' => $order->id,
-                'guest_id' => $order->guest_id,
-                'guest_name' => $order->guest->name,
-                'recorded_by' => $order->ready_by,
-                'recorded_at' => $order->ready_at,
-                'made_by' => $order->made_by,
-                'made_at' => $order->made_at,
-                'table' => $order->table,
-                'created_at' => $order->created_at,
-                'updated_at' => $order->updated_at,
-            ];
-        });
+            $order_det = OrderDetail::create([
+                'order_id' => $order->id,
+                'drink_unit_id' => $drink_unit->id,
+                'amount' => $item['quantity'],
+                'promo_id' => null,
+                'unit_price' => $drink_unit->amount,
+                'discount' => 0,
+            ]);
+            $total += $item['quantity'] * $drink_unit->unit_price;
+            $order_det->save();
+        }
 
-        return $ordersWithGuestNames;
+        $new_order = Order::with(['details', 'details.drinkUnit.drink'])->find($order->id);
+        return (object)[
+            'message' => __('Your selections are being prepared and will be served shortly. Stay tuned!'),
+            'cart' => $request->cart,
+            'order' => $new_order,
+            'discounts' => [],
+            'total' => $total,
+        ];
     }
-
-    
 }

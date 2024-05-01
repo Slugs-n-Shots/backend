@@ -5,12 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class DrinkUnit extends Model
 {
     use HasFactory;
-
 
     protected $dispatchesEvents = [
         'created' => \App\Events\DrinkUnitCreated::class,
@@ -32,7 +30,7 @@ class DrinkUnit extends Model
         'active',
     ];
 
-    protected $appends = ['unit'];
+    protected $appends = ['unit', 'unit_code'];
     protected $hidden = [
         'unit_en',
         'unit_hu',
@@ -45,15 +43,15 @@ class DrinkUnit extends Model
         'active' => 'boolean'
     ];
 
-    public function pricesLog(): HasMany
-    {
-        return $this->hasMany(PriceLog::class, 'drink_unit_id', 'id');
-    }
-
     public function getUnitAttribute()
     {
         $locale = app()->getLocale();
         return $this->attributes["unit_{$locale}"];
+    }
+
+    public function getUnitCodeAttribute()
+    {
+        return $this->attributes["unit_en"];
     }
 
     public function setUnitAttribute($value)
@@ -65,6 +63,6 @@ class DrinkUnit extends Model
 
     public function drink(): BelongsTo
     {
-        return $this->belongsTo(Drink::class, );
+        return $this->belongsTo(Drink::class);
     }
 }

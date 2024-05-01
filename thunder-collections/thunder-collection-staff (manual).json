@@ -1,0 +1,578 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "Booze Now (Staff requests)",
+    "dateExported": "2024-01-23T18:06:05.959Z",
+    "version": "1.1",
+    "folders": [
+        {
+            "_id": "4b7980d0-5030-4eb4-9105-c20b8c3f4b68",
+            "name": "Account",
+            "containerId": "",
+            "created": "2024-01-22T22:55:02.996Z",
+            "sortNum": 1000
+        },
+        {
+            "_id": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "name": "Drinks",
+            "containerId": "",
+            "created": "2024-01-22T22:55:02.996Z",
+            "sortNum": 2000
+        },
+        {
+            "_id": "5affade7-6b59-4624-95a2-074fac8ee7e3",
+            "name": "Employees",
+            "containerId": "",
+            "created": "2024-01-22T22:55:02.996Z",
+            "sortNum": 3000
+        },
+        {
+            "_id": "ac62df9e-4b91-4da8-b3db-db935d7f931b",
+            "name": "Guests",
+            "containerId": "",
+            "created": "2024-01-22T22:55:02.996Z",
+            "sortNum": 4000
+        }
+    ],
+    "requests": [
+        {
+            "method": "GET",
+            "name": "staff categories",
+            "url": "categories",
+            "_id": "4f094a7f-9606-47b5-bd80-5839e2eda7d2",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "sortNum": 1000,
+            "headers": [],
+            "params": []
+        },
+        {
+            "method": "POST",
+            "name": "staff categories",
+            "url": "categories",
+            "_id": "f4c24fca-d146-4d19-92e5-802d34432a75",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "sortNum": 2000,
+            "headers": [],
+            "params": []
+        },
+        {
+            "method": "GET",
+            "name": "staff categories/parents",
+            "url": "categories/parents",
+            "_id": "e2b7869c-b4a4-4561-9743-49541a6d5668",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "sortNum": 3000,
+            "headers": [],
+            "params": []
+        },
+        {
+            "method": "GET",
+            "name": "staff categories/{category}",
+            "url": "categories/{category}",
+            "_id": "8d68397a-d9ec-4bd7-95e5-48f491b9488a",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "sortNum": 4000,
+            "headers": [],
+            "params": [
+                {
+                    "name": "category",
+                    "value": "1",
+                    "isPath": true
+                }
+            ]
+        },
+        {
+            "method": "PUT",
+            "name": "staff categories/{category}",
+            "url": "categories/{category}",
+            "_id": "04f18592-233e-464e-963b-8d733215f64b",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "sortNum": 5000,
+            "headers": [],
+            "params": [
+                {
+                    "name": "category",
+                    "value": "1",
+                    "isPath": true
+                }
+            ]
+        },
+        {
+            "method": "DELETE",
+            "name": "staff categories/{category}",
+            "url": "categories/{category}",
+            "_id": "63eb528c-931f-4dfa-ac9d-92732ba8e72b",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "sortNum": 6000,
+            "headers": [],
+            "params": [
+                {
+                    "name": "category",
+                    "value": "1",
+                    "isPath": true
+                }
+            ]
+        },
+        {
+            "method": "PUT",
+            "name": "staff categories/{category}",
+            "url": "categories/{category}",
+            "_id": "895efae5-813e-4fed-bb73-b038144cc4f2",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "sortNum": 7000,
+            "headers": [],
+            "params": [
+                {
+                    "name": "category",
+                    "value": "1",
+                    "isPath": true
+                }
+            ]
+        },
+        {
+            "method": "GET",
+            "name": "staff categories/{category}/drinks",
+            "url": "categories/{category}/drinks",
+            "_id": "ea0dea6a-6079-4fe5-9081-239643429d94",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "sortNum": 8000,
+            "headers": [],
+            "params": []
+        },
+        {
+            "method": "POST",
+            "name": "staff confirm-password",
+            "url": "confirm-password",
+            "_id": "d0eb4a33-d6a0-4acf-9517-702ac0b3def0",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "4b7980d0-5030-4eb4-9105-c20b8c3f4b68",
+            "sortNum": 9000,
+            "headers": [],
+            "params": []
+        },
+        {
+            "method": "GET",
+            "name": "staff drink-units",
+            "url": "drink-units",
+            "_id": "4e74b40e-f0d9-41e9-a489-9f5ef3d479cf",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "sortNum": 10000,
+            "headers": [],
+            "params": []
+        },
+        {
+            "method": "POST",
+            "name": "staff drink-units",
+            "url": "drink-units",
+            "_id": "0fed0cdb-1dea-4fa4-acf2-4e1cd303ac41",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "sortNum": 11000,
+            "headers": [],
+            "params": []
+        },
+        {
+            "method": "GET",
+            "name": "staff drink-units/{drink_unit}",
+            "url": "drink-units/{drink_unit}",
+            "_id": "af76bffb-cb5c-4cd0-9bee-a3d6f16048c2",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "sortNum": 12000,
+            "headers": [],
+            "params": [
+                {
+                    "name": "drink_unit",
+                    "value": "1",
+                    "isPath": true
+                }
+            ]
+        },
+        {
+            "method": "PUT",
+            "name": "staff drink-units/{drink_unit}",
+            "url": "drink-units/{drink_unit}",
+            "_id": "a4fd844c-e061-4a1c-befb-b6f90373953b",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "sortNum": 13000,
+            "headers": [],
+            "params": [
+                {
+                    "name": "drink_unit",
+                    "value": "1",
+                    "isPath": true
+                }
+            ]
+        },
+        {
+            "method": "DELETE",
+            "name": "staff drink-units/{drink_unit}",
+            "url": "drink-units/{drink_unit}",
+            "_id": "cd0216d1-e2be-48cf-8e44-968d05c4cbfb",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "sortNum": 14000,
+            "headers": [],
+            "params": [
+                {
+                    "name": "drink_unit",
+                    "value": "1",
+                    "isPath": true
+                }
+            ]
+        },
+        {
+            "method": "GET",
+            "name": "staff drinks",
+            "url": "drinks",
+            "_id": "70b84176-591c-4799-ae6f-0cebfb2fa4db",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "sortNum": 15000,
+            "headers": [],
+            "params": []
+        },
+        {
+            "method": "POST",
+            "name": "staff drinks",
+            "url": "drinks",
+            "_id": "08e4e9a0-b00c-4c88-98d6-1de140adf299",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "sortNum": 16000,
+            "headers": [],
+            "params": []
+        },
+        {
+            "method": "GET",
+            "name": "staff drinks/scheme",
+            "url": "drinks/scheme",
+            "_id": "ba072908-eb5b-4d83-96fc-f503bec06d97",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "sortNum": 17000,
+            "headers": [],
+            "params": []
+        },
+        {
+            "method": "GET",
+            "name": "staff drinks/{drink}",
+            "url": "drinks/{drink}",
+            "_id": "48dafb89-9706-47c8-8b09-8beae7e5fd3e",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "sortNum": 18000,
+            "headers": [],
+            "params": [
+                {
+                    "name": "drink",
+                    "value": "1",
+                    "isPath": true
+                }
+            ]
+        },
+        {
+            "method": "PUT",
+            "name": "staff drinks/{drink}",
+            "url": "drinks/{drink}",
+            "_id": "8c1a675f-5794-4687-8028-badd896eb97a",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "sortNum": 19000,
+            "headers": [],
+            "params": [
+                {
+                    "name": "drink",
+                    "value": "1",
+                    "isPath": true
+                }
+            ]
+        },
+        {
+            "method": "DELETE",
+            "name": "staff drinks/{drink}",
+            "url": "drinks/{drink}",
+            "_id": "ce535cae-f15a-4160-ba48-aca90ae82805",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "sortNum": 20000,
+            "headers": [],
+            "params": [
+                {
+                    "name": "drink",
+                    "value": "1",
+                    "isPath": true
+                }
+            ]
+        },
+        {
+            "method": "GET",
+            "name": "staff employees",
+            "url": "employees",
+            "_id": "0aff571a-d650-4288-8b8e-9ae54076e5a0",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "5affade7-6b59-4624-95a2-074fac8ee7e3",
+            "sortNum": 21000,
+            "headers": [],
+            "params": []
+        },
+        {
+            "method": "POST",
+            "name": "staff employees",
+            "url": "employees",
+            "_id": "87b0b509-8b09-45d4-b174-24f58890e70b",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "5affade7-6b59-4624-95a2-074fac8ee7e3",
+            "sortNum": 22000,
+            "headers": [],
+            "params": []
+        },
+        {
+            "method": "GET",
+            "name": "staff employees/roles",
+            "url": "employees/roles",
+            "_id": "4eeafd01-dbc1-416f-b2b0-3c65705f3a11",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "5affade7-6b59-4624-95a2-074fac8ee7e3",
+            "sortNum": 23000,
+            "headers": [],
+            "params": []
+        },
+        {
+            "method": "GET",
+            "name": "staff employees/{employee}",
+            "url": "employees/{employee}",
+            "_id": "fef989ef-bd0f-40da-98a7-a4b8982c7273",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "5affade7-6b59-4624-95a2-074fac8ee7e3",
+            "sortNum": 24000,
+            "headers": [],
+            "params": [
+                {
+                    "name": "employee",
+                    "value": "1",
+                    "isPath": true
+                }
+            ]
+        },
+        {
+            "method": "PUT",
+            "name": "staff employees/{employee}",
+            "url": "employees/{employee}",
+            "_id": "723178b5-32a4-4eb4-886c-02efb04e463c",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "5affade7-6b59-4624-95a2-074fac8ee7e3",
+            "sortNum": 25000,
+            "headers": [],
+            "params": [
+                {
+                    "name": "employee",
+                    "value": "1",
+                    "isPath": true
+                }
+            ]
+        },
+        {
+            "method": "DELETE",
+            "name": "staff employees/{employee}",
+            "url": "employees/{employee}",
+            "_id": "f3d1e6cc-4114-4711-b666-e770bab44321",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "5affade7-6b59-4624-95a2-074fac8ee7e3",
+            "sortNum": 26000,
+            "headers": [],
+            "params": [
+                {
+                    "name": "employee",
+                    "value": "1",
+                    "isPath": true
+                }
+            ]
+        },
+        {
+            "method": "GET",
+            "name": "staff guests",
+            "url": "guests",
+            "_id": "d98763bd-7ce7-40af-a162-f4ab09d097d0",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "ac62df9e-4b91-4da8-b3db-db935d7f931b",
+            "sortNum": 27000,
+            "headers": [],
+            "params": []
+        },
+        {
+            "method": "POST",
+            "name": "staff guests",
+            "url": "guests",
+            "_id": "9369a467-6dc1-4ab5-b795-dbf322a06c95",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "ac62df9e-4b91-4da8-b3db-db935d7f931b",
+            "sortNum": 28000,
+            "headers": [],
+            "params": []
+        },
+        {
+            "method": "GET",
+            "name": "staff guests/{guest}",
+            "url": "guests/{guest}",
+            "_id": "a8c49eda-5f18-49ff-b187-900007d57616",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "ac62df9e-4b91-4da8-b3db-db935d7f931b",
+            "sortNum": 29000,
+            "headers": [],
+            "params": [
+                {
+                    "name": "guest",
+                    "value": "1",
+                    "isPath": true
+                }
+            ]
+        },
+        {
+            "method": "PUT",
+            "name": "staff guests/{guest}",
+            "url": "guests/{guest}",
+            "_id": "b84d9bfb-269a-411e-873e-d4f7fb6d2ccb",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "ac62df9e-4b91-4da8-b3db-db935d7f931b",
+            "sortNum": 30000,
+            "headers": [],
+            "params": [
+                {
+                    "name": "guest",
+                    "value": "1",
+                    "isPath": true
+                }
+            ]
+        },
+        {
+            "method": "DELETE",
+            "name": "staff guests/{guest}",
+            "url": "guests/{guest}",
+            "_id": "5cb58588-ca61-4520-b769-dbecd4b0a32e",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "ac62df9e-4b91-4da8-b3db-db935d7f931b",
+            "sortNum": 31000,
+            "headers": [],
+            "params": [
+                {
+                    "name": "guest",
+                    "value": "1",
+                    "isPath": true
+                }
+            ]
+        },
+        {
+            "method": "POST",
+            "name": "staff login",
+            "url": "login",
+            "_id": "27105d08-92ad-48c2-9abb-2bfd1ff8e51b",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "4b7980d0-5030-4eb4-9105-c20b8c3f4b68",
+            "sortNum": 32000,
+            "headers": [],
+            "params": []
+        },
+        {
+            "method": "POST",
+            "name": "staff logout",
+            "url": "logout",
+            "_id": "c973e773-7aff-46f9-8c23-1993fb7f96ac",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "4b7980d0-5030-4eb4-9105-c20b8c3f4b68",
+            "sortNum": 33000,
+            "headers": [],
+            "params": []
+        },
+        {
+            "method": "GET",
+            "name": "staff me",
+            "url": "me",
+            "_id": "1a763c51-ea30-46d2-bc5c-234735b4f22e",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "4b7980d0-5030-4eb4-9105-c20b8c3f4b68",
+            "sortNum": 34000,
+            "headers": [],
+            "params": []
+        },
+        {
+            "method": "GET",
+            "name": "staff menu",
+            "url": "menu",
+            "_id": "7fa491e5-7f48-4b09-ba07-a121ef408458",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "sortNum": 35000,
+            "headers": [],
+            "params": []
+        },
+        {
+            "method": "GET",
+            "name": "staff menu-tree",
+            "url": "menu-tree",
+            "_id": "9e469fa4-82c3-4285-9ce9-f3c4d2cb3a5b",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "sortNum": 36000,
+            "headers": [],
+            "params": []
+        },
+        {
+            "method": "GET",
+            "name": "staff refresh",
+            "url": "refresh",
+            "_id": "34d0db2a-9ced-46dd-ab5a-efa3b60d7f09",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "4b7980d0-5030-4eb4-9105-c20b8c3f4b68",
+            "sortNum": 37000,
+            "headers": [],
+            "params": []
+        },
+        {
+            "method": "POST",
+            "name": "staff register",
+            "url": "register",
+            "_id": "8d087c32-a57f-4f45-bc14-72a58ea38a73",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "4b7980d0-5030-4eb4-9105-c20b8c3f4b68",
+            "sortNum": 38000,
+            "headers": [],
+            "params": []
+        },
+        {
+            "method": "GET",
+            "name": "staff reset",
+            "url": "reset",
+            "_id": "d4461646-1f17-4a7e-9563-be09f7f728ec",
+            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
+            "containerId": "4b7980d0-5030-4eb4-9105-c20b8c3f4b68",
+            "sortNum": 39000,
+            "headers": [],
+            "params": []
+        }
+    ],
+    "settings": {
+        "headers": [
+            {
+                "name": "Accept",
+                "value": "application/json"
+            },
+            {
+                "name": "Content-Type",
+                "value": "application/json"
+            }
+        ],
+        "options": {
+            "baseUrl": "localhost:8000/api/staff/"
+        }
+    }
+}

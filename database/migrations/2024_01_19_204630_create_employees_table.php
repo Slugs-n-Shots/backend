@@ -30,7 +30,7 @@ return new class extends Migration
             'first_name' => 'Slugs',
             'middle_name' => 'Admin',
             'last_name' => 'Shots',
-            'email' => 'zschopper+admin@gmail.com',
+            'email' => 'slugs.n.shots+admin@gmail.com',
             'password' => Config::get('ADMIN_PASSWORD', 'RPS?iou-siztE#R!'),
             'role_code' => \App\Models\Employee::ADMIN,
             'active' => 1,

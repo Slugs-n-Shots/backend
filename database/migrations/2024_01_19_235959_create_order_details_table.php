@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('order_details', function (Blueprint $table) {
             $table->id();
-            $table->integer('order_id')->relates('order')->on('id');
-            $table->integer('drink_unit_id');
+            $table->unsignedBigInteger('order_id');
+            $table->unsignedBigInteger('drink_unit_id');
             $table->integer('amount');
             $table->unsignedBigInteger('promo_id')->nullable();
             $table->integer('unit_price');
@@ -22,6 +22,8 @@ return new class extends Migration
             $table->unsignedBigInteger('receipt_id')->nullable();
             $table->timestamps();
 
+            $table->foreign('order_id')->references('id')->on('orders');
+            $table->foreign('drink_unit_id')->references('id')->on('drink_units');
             $table->foreign('promo_id')->references('id')->on('promos');
             $table->foreign('receipt_id')->references('id')->on('receipts');
         });

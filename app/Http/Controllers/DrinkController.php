@@ -93,8 +93,8 @@ class DrinkController extends Controller
     public function update(Request $request, Drink $drink)
     {
         $valid = $request->validate([
-            'name_en' => 'string|sometimes|unique:drinks,name_en,'.$drink->id,
-            'name_hu' => 'string|sometimes|unique:drinks,name_hu,'.$drink->id,
+            'name_en' => 'string|sometimes|unique:drinks,name_en,' . $drink->id,
+            'name_hu' => 'string|sometimes|unique:drinks,name_hu,' . $drink->id,
             'category_id' => 'integer|sometimes',
             'description_en' => 'string|sometimes|nullable',
             'description_hu' => 'string|sometimes|nullable',
@@ -177,5 +177,22 @@ class DrinkController extends Controller
         }
 
         return $response;
+    }
+
+    public function card(Request $request, $id)
+    {
+        $with = [];
+
+        $visible = [];
+        $hidden = [
+            'active',
+            'category',
+            'category_id'
+        ];
+
+        if ($request->with) {
+            $with = array_intersect(explode(',', strtolower($request->with)), self::$valid_withs);
+        }
+        return Drink::findOrFail($id)->active()->with($with)->findOrFail($id)->append('category_name')->makeVisible($visible)->makeHidden($hidden);
     }
 }

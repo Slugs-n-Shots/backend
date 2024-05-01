@@ -29,11 +29,11 @@ return new class extends Migration
             $table->softDeletes();
         });
         (new \App\Models\Guest())->fill([
-            'first_name' => 'Zsolt',
+            'first_name' => 'Shots',
             'middle_name' => 'Guest',
-            'last_name' => 'Schopper',
-            'email' => 'zschopper+guest@gmail.com',
-            'password' => 'Bo0ze-nOOOw!',
+            'last_name' => 'Slugs',
+            'email' => 'slugs.n.shots+guest@gmail.com',
+            'password' => 'slUGz-R0CKS!',
             'active' => true,
         ])->save();
     }

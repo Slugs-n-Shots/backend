@@ -3,14 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
-use Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password as PasswordRule;
+use Illuminate\Validation\ValidationException;
 
 class EmployeeController extends Controller
 {
@@ -66,7 +68,6 @@ class EmployeeController extends Controller
             'middle_name' => 'string|nullable|sometimes',
             'last_name' => 'string|sometimes|min:2',
             'email' => 'string|sometimes|required|unique:employees,email,' . $employee->id,
-            //            'password' => ['sometimes', PasswordRule::min(10)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
             'password' => ['sometimes', PasswordRule::min(10)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
             'role_code' => [
                 'integer',
@@ -144,14 +145,20 @@ class EmployeeController extends Controller
         // $guest = Employee::find(Auth::user()->id);
         $user = Auth::user();
 
-        $valid = $request->validate([
+        $validator = Validator::make($request->all(), [
+            'current_password' => ['required', 'string'],
             'password' => ['required', 'confirmed', PasswordRule::min(10)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
         ]);
 
         if (!Hash::check($request->current_password, Auth::user()->password)) {
-            return back()->withErrors(['current_password' => 'Your current password is incorrect.']);
+            $validator->errors()->add('current_password', __('Your current password is incorrect.'));
         }
-        $user->password = $valid->password;
+
+        if ($validator->errors()->isNotEmpty()) {
+            throw new ValidationException($validator);
+        }
+
+        $user->password = $request->password;
         $user->save();
 
         return $user;

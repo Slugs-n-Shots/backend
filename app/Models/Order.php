@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
@@ -24,11 +25,7 @@ class Order extends Model
         'served_at',
         'table',
     ];
-protected $dates = [
-    'recorded_at',
-    'made_at',
-    'served_at',
-];
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -43,21 +40,31 @@ protected $dates = [
         'status'
     ];
 
+    protected $casts = [
+        'recorded_at' => 'datetime',
+        'made_at' => 'datetime',
+        'served_at' => 'datetime',
+    ];
+
     public function guest()
     {
         return $this->belongsTo(Guest::class, 'guest_id');
     }
 
+    public function details(): HasMany {
+        return $this->hasMany(OrderDetail::class);
+    }
+
     public function getStatusAttribute()
     {
-        if ($this->recorded_at === null) {
-            $status = __('pending');
-        } elseif ($this->made_at === null) {
-            $status = __('in progress');
-        } elseif ($this->served_at === null) {
-            $status = __('ready');
-        } else {
+        if (!empty($this->served_at)) {
             $status = __('served');
+        } elseif (!empty($this->made_at)) {
+            $status = __('ready');
+        } elseif (!empty($this->recorded_at)) {
+            $status = __('in progress');
+        } else {
+            $status = __('pending');
         }
         return $status;
     }

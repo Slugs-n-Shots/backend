@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('picture', 64)->nullable();
             $table->boolean('active')->default(true);
             $table->timestamps();
-
+            $table->softDeletes();
             $table->foreign('category_id')->references('id')->on('drink_categories');
         });
     }

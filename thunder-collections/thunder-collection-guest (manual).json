@@ -1,0 +1,311 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "Booze Now (Guest requests)",
+    "collectionId": "97cebc83-3b76-4ee8-a5a5-c68a1c2dd5f7",
+    "dateExported": "2024-05-01T18:22:26.837Z",
+    "version": "1.2",
+    "folders": [
+        {
+            "_id": "3336b74b-1e74-4e49-8640-d52a11608156",
+            "name": "Account",
+            "containerId": "",
+            "created": "2024-04-30T19:54:01.175Z",
+            "sortNum": 1000
+        },
+        {
+            "_id": "120424bf-ad92-43b7-8f6c-06a0dc73092d",
+            "name": "Drinks",
+            "containerId": "",
+            "created": "2024-04-30T19:54:01.174Z",
+            "sortNum": 2000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "606dc98f-846d-4d57-8e8f-9677a39d029d",
+            "colId": "97cebc83-3b76-4ee8-a5a5-c68a1c2dd5f7",
+            "containerId": "3336b74b-1e74-4e49-8640-d52a11608156",
+            "name": "register",
+            "url": "register",
+            "method": "POST",
+            "sortNum": 55000,
+            "created": "2024-04-30T19:54:01.185Z",
+            "modified": "2024-04-30T19:54:20.984Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"first_name\": \"Shots\",\n  \"middle_name\": \"and\",\n  \"last_name\": \"Slugs\",\n  \"email\": \"slugs.n.shots+guest1@gmail.com\",\n  \"password\": \"slUGz-R0CKS!\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "e51789bb-b1b3-4b99-ba7e-1d02884d771d",
+            "colId": "97cebc83-3b76-4ee8-a5a5-c68a1c2dd5f7",
+            "containerId": "3336b74b-1e74-4e49-8640-d52a11608156",
+            "name": "verify/resend",
+            "url": "verify/resend",
+            "method": "POST",
+            "sortNum": 58750,
+            "created": "2024-04-30T19:54:01.188Z",
+            "modified": "2024-04-30T19:54:01.188Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\": \"slugs.n.shots+guest1@gmail.com\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "dbff1929-6c53-4d1f-95eb-23cb76fe599b",
+            "colId": "97cebc83-3b76-4ee8-a5a5-c68a1c2dd5f7",
+            "containerId": "120424bf-ad92-43b7-8f6c-06a0dc73092d",
+            "name": "drinks/card/{drink}",
+            "url": "drinks/card/{drink}",
+            "method": "GET",
+            "sortNum": 60000,
+            "created": "2024-04-30T19:54:01.176Z",
+            "modified": "2024-05-01T18:21:17.700Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "drink",
+                    "value": "1",
+                    "isPath": true
+                }
+            ]
+        },
+        {
+            "_id": "e1ff9fec-96cd-4c5e-9305-8d57c9be1572",
+            "colId": "97cebc83-3b76-4ee8-a5a5-c68a1c2dd5f7",
+            "containerId": "3336b74b-1e74-4e49-8640-d52a11608156",
+            "name": "confirm-registration",
+            "url": "confirm-registration",
+            "method": "POST",
+            "sortNum": 62500,
+            "created": "2024-04-30T19:54:01.174Z",
+            "modified": "2024-04-30T19:57:36.491Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"id\": 22,\n  \"token\": \"h6wWfrWkr1GfE0rzrwba\"\n  \n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "b285680a-5480-4bc3-9d2b-a682b9bf35b6",
+            "colId": "97cebc83-3b76-4ee8-a5a5-c68a1c2dd5f7",
+            "containerId": "3336b74b-1e74-4e49-8640-d52a11608156",
+            "name": "forgot-password",
+            "url": "forgot-password",
+            "method": "POST",
+            "sortNum": 70000,
+            "created": "2024-04-30T19:54:01.177Z",
+            "modified": "2024-04-30T19:54:01.177Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\": \"slugs.n.shots+guest1@gmail.com\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "fed1717a-be5a-4491-8514-a6d1870cfdfa",
+            "colId": "97cebc83-3b76-4ee8-a5a5-c68a1c2dd5f7",
+            "containerId": "3336b74b-1e74-4e49-8640-d52a11608156",
+            "name": "login",
+            "url": "login",
+            "method": "POST",
+            "sortNum": 80000,
+            "created": "2024-04-30T19:54:01.178Z",
+            "modified": "2024-04-30T19:54:01.178Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\": \"slugs.n.shots+guest1@gmail.com\",\n  \"password\": \"slUGz-R0CKS!\"\n}",
+                "form": []
+            },
+            "postReq": {
+                "inlineScripts": [
+                    {
+                        "script": [
+                            "console.log('response', tc.response.text);\r",
+                            "let responseData = tc.response.json;\r",
+                            "tc.setVar(\"guestAccessToken\", responseData.access_token);"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "_id": "1eb2961a-e2e2-4a76-ab3e-33ef26b0e10b",
+            "colId": "97cebc83-3b76-4ee8-a5a5-c68a1c2dd5f7",
+            "containerId": "3336b74b-1e74-4e49-8640-d52a11608156",
+            "name": "logout",
+            "url": "logout",
+            "method": "POST",
+            "sortNum": 90000,
+            "created": "2024-04-30T19:54:01.179Z",
+            "modified": "2024-04-30T19:54:01.179Z",
+            "headers": [],
+            "params": []
+        },
+        {
+            "_id": "b85a095e-7207-4810-a8c9-dbb01e0c3523",
+            "colId": "97cebc83-3b76-4ee8-a5a5-c68a1c2dd5f7",
+            "containerId": "3336b74b-1e74-4e49-8640-d52a11608156",
+            "name": "me",
+            "url": "me",
+            "method": "GET",
+            "sortNum": 100000,
+            "created": "2024-04-30T19:54:01.180Z",
+            "modified": "2024-04-30T19:54:01.180Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{guestAccessToken}}"
+            }
+        },
+        {
+            "_id": "b3bea372-97f6-44c2-8c4a-e319840843b7",
+            "colId": "97cebc83-3b76-4ee8-a5a5-c68a1c2dd5f7",
+            "containerId": "3336b74b-1e74-4e49-8640-d52a11608156",
+            "name": "me",
+            "url": "me",
+            "method": "POST",
+            "sortNum": 110000,
+            "created": "2024-04-30T19:54:01.181Z",
+            "modified": "2024-04-30T19:54:01.181Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"first_name\": \"Shots\",\n  \"middle_name\": \"Guest\",\n  \"last_name\": \"Slugs\",\n  \"picture\": null\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{guestAccessToken}}"
+            }
+        },
+        {
+            "_id": "ded1078d-1c1c-4ba6-8bbe-3e2cdc698cba",
+            "colId": "97cebc83-3b76-4ee8-a5a5-c68a1c2dd5f7",
+            "containerId": "120424bf-ad92-43b7-8f6c-06a0dc73092d",
+            "name": "menu",
+            "url": "menu",
+            "method": "GET",
+            "sortNum": 120000,
+            "created": "2024-04-30T19:54:01.182Z",
+            "modified": "2024-04-30T19:54:01.182Z",
+            "headers": [],
+            "params": []
+        },
+        {
+            "_id": "e3b2f7f8-8c8c-4fbb-8d2f-62b19076b3c3",
+            "colId": "97cebc83-3b76-4ee8-a5a5-c68a1c2dd5f7",
+            "containerId": "120424bf-ad92-43b7-8f6c-06a0dc73092d",
+            "name": "menu-tree",
+            "url": "menu-tree",
+            "method": "GET",
+            "sortNum": 130000,
+            "created": "2024-04-30T19:54:01.183Z",
+            "modified": "2024-04-30T19:54:01.183Z",
+            "headers": [],
+            "params": []
+        },
+        {
+            "_id": "bcdffe2e-63bd-4ed7-b030-bd01d0332bd8",
+            "colId": "97cebc83-3b76-4ee8-a5a5-c68a1c2dd5f7",
+            "containerId": "3336b74b-1e74-4e49-8640-d52a11608156",
+            "name": "refresh",
+            "url": "refresh",
+            "method": "GET",
+            "sortNum": 140000,
+            "created": "2024-04-30T19:54:01.184Z",
+            "modified": "2024-04-30T19:54:01.184Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{guestAccessToken}}"
+            },
+            "postReq": {
+                "inlineScripts": [
+                    {
+                        "script": [
+                            "console.log('response', tc.response.text);\r",
+                            "let responseData = tc.response.json;\r",
+                            "tc.setVar(\"guestAccessToken\", responseData.access_token);"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "_id": "1b89df74-e382-424f-bc99-ae1c804f6f80",
+            "colId": "97cebc83-3b76-4ee8-a5a5-c68a1c2dd5f7",
+            "containerId": "3336b74b-1e74-4e49-8640-d52a11608156",
+            "name": "reset-password",
+            "url": "reset-password?lang=hu",
+            "method": "POST",
+            "sortNum": 170000,
+            "created": "2024-04-30T19:54:01.186Z",
+            "modified": "2024-04-30T19:54:01.186Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "lang",
+                    "value": "hu",
+                    "isPath": false
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"id\": 25,\n  \"token\": \"ztauXlsGpKXW2XK0Gj7N\",\n  \"password\": \"slUGz-R0CKS!3\"\n}\n\n",
+                "form": []
+            }
+        },
+        {
+            "_id": "5aa475f5-e4cc-4085-930d-d23f55b922c6",
+            "colId": "97cebc83-3b76-4ee8-a5a5-c68a1c2dd5f7",
+            "containerId": "3336b74b-1e74-4e49-8640-d52a11608156",
+            "name": "update-password",
+            "url": "update-password?lang=en",
+            "method": "POST",
+            "sortNum": 180000,
+            "created": "2024-04-30T19:54:01.187Z",
+            "modified": "2024-04-30T19:54:01.187Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "lang",
+                    "value": "en",
+                    "isPath": false
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"current_password\": \"slUGz-R0CKS!2\", \n  \"password\": \"slUGz-R0CKS!\",\n  \"password_confirmation\": \"slUGz-R0CKS!\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{guestAccessToken}}"
+            }
+        }
+    ],
+    "settings": {
+        "headers": [
+            {
+                "name": "Accept",
+                "value": "application/json"
+            },
+            {
+                "name": "Content-Type",
+                "value": "application/json"
+            }
+        ],
+        "options": {
+            "baseUrl": "localhost:8000/api/guest/"
+        }
+    },
+    "ref": "nGcfpdkefTibuCXYXcY0ok6XC-s6Cs1tsQvB4AARpuqRDZ3xKlcm0XqgZhmnRm1stOOcVM0ViE-7iQw0GM1WEg"
+}

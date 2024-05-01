@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Drink extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $dispatchesEvents = [
         'created' => \App\Events\DrinkCreated::class,
@@ -23,6 +24,7 @@ class Drink extends Model
      *
      * name_en: string
      * name_hu: string
+     * guid: string
      * category_id: integer
      * description_en: ?string
      * description_hu: ?string
@@ -63,6 +65,7 @@ class Drink extends Model
         'description_hu',
         'created_at',
         'updated_at',
+        'deleted_at',
     ];
 
     protected $casts = [
@@ -76,6 +79,7 @@ class Drink extends Model
         'category_id',
         'description_en',
         'description_hu',
+        'picture',
         'active',
         'created_at',
         'updated_at',
@@ -142,5 +146,12 @@ class Drink extends Model
     public function getUnitsAttribute()
     {
         return $this->units()->get()->makeHidden(['id', 'drink_id']);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query
+            ->whereNull("{$this->getTable()}.deleted_at")
+            ->where("{$this->getTable()}.active", Drink::ACTIVE);
     }
 }
