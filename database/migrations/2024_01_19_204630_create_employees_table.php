@@ -35,6 +35,33 @@ return new class extends Migration
             'role_code' => \App\Models\Employee::ADMIN,
             'active' => 1,
         ]);
+
+        \App\Models\Employee::create([
+            'first_name' => 'Slugs',
+            'middle_name' => 'Bartender',
+            'last_name' => 'Employee',
+            'email' => 'slugs.n.shots+bartender@gmail.com',
+            'role_code' => \App\Models\Employee::BARTENDER,
+            'password' => 'slUGz-R0CKS!',
+        ]);
+
+        \App\Models\Employee::create([
+            'first_name' => 'Slugs',
+            'middle_name' => 'Backoffice',
+            'last_name' => 'Employee',
+            'email' => 'slugs.n.shots+backoffice@gmail.com',
+            'role_code' => \App\Models\Employee::BACKOFFICE,
+            'password' => 'slUGz-R0CKS!',
+        ]);
+
+        \App\Models\Employee::create([
+            'first_name' => 'Slugs',
+            'middle_name' => 'Waiter',
+            'last_name' => 'Employee',
+            'email' => 'slugs.n.shots+waiter@gmail.com',
+            'role_code' => \App\Models\Employee::WAITER,
+            'password' => 'slUGz-R0CKS!',
+        ]);
     }
 
     /**
