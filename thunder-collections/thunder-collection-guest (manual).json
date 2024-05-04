@@ -1,8 +1,8 @@
 {
     "clientName": "Thunder Client",
-    "collectionName": "Booze Now (Guest requests)",
+    "collectionName": "Slugs'n'Shots (Guest requests)",
     "collectionId": "97cebc83-3b76-4ee8-a5a5-c68a1c2dd5f7",
-    "dateExported": "2024-05-01T18:22:26.837Z",
+    "dateExported": "2024-05-04T10:37:19.955Z",
     "version": "1.2",
     "folders": [
         {
@@ -305,7 +305,8 @@
         ],
         "options": {
             "baseUrl": "localhost:8000/api/guest/"
-        }
+        },
+        "envId": "125b80eb-8b38-419d-ac47-7ee3ce7e8dcf"
     },
-    "ref": "nGcfpdkefTibuCXYXcY0ok6XC-s6Cs1tsQvB4AARpuqRDZ3xKlcm0XqgZhmnRm1stOOcVM0ViE-7iQw0GM1WEg"
+    "ref": "nGcfpdkefTibuCXYXcY0ov_LNlaWORGDxjrxaMppU7zqwNPLOybFTVdUgzFAB2R07Ed3GbEsXZg6rA-GMPsZKg"
 }

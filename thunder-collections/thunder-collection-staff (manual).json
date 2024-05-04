@@ -1,80 +1,96 @@
 {
-    "client": "Thunder Client",
-    "collectionName": "Booze Now (Staff requests)",
-    "dateExported": "2024-01-23T18:06:05.959Z",
-    "version": "1.1",
+    "clientName": "Thunder Client",
+    "collectionName": "Slugs'n'Shots (Staff requests)",
+    "collectionId": "654a7e0e-5030-4613-ba97-257e664404b8",
+    "dateExported": "2024-05-04T10:37:29.578Z",
+    "version": "1.2",
     "folders": [
         {
-            "_id": "4b7980d0-5030-4eb4-9105-c20b8c3f4b68",
+            "_id": "5853a023-9c05-4f85-9bb1-c9fb1b7695e9",
             "name": "Account",
             "containerId": "",
-            "created": "2024-01-22T22:55:02.996Z",
+            "created": "2024-05-04T10:30:49.124Z",
             "sortNum": 1000
         },
         {
-            "_id": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "_id": "f17722a3-df8c-4655-b008-a629618e0309",
             "name": "Drinks",
             "containerId": "",
-            "created": "2024-01-22T22:55:02.996Z",
+            "created": "2024-05-04T10:30:49.125Z",
             "sortNum": 2000
         },
         {
-            "_id": "5affade7-6b59-4624-95a2-074fac8ee7e3",
+            "_id": "3c620a1f-80c5-429c-a54f-24d765d8c036",
             "name": "Employees",
             "containerId": "",
-            "created": "2024-01-22T22:55:02.996Z",
+            "created": "2024-05-04T10:30:49.126Z",
             "sortNum": 3000
         },
         {
-            "_id": "ac62df9e-4b91-4da8-b3db-db935d7f931b",
+            "_id": "54a89ef1-5a7e-4132-a973-ce283513f0d3",
             "name": "Guests",
             "containerId": "",
-            "created": "2024-01-22T22:55:02.996Z",
+            "created": "2024-05-04T10:30:49.127Z",
             "sortNum": 4000
+        },
+        {
+            "_id": "b894963f-0fcf-402b-82db-0a2066a932d8",
+            "name": "Orders",
+            "containerId": "",
+            "created": "2024-05-04T10:31:01.321Z",
+            "sortNum": 14000
         }
     ],
     "requests": [
         {
-            "method": "GET",
+            "_id": "c8355de4-168f-49ca-ae67-4a6b45f51c1b",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "f17722a3-df8c-4655-b008-a629618e0309",
             "name": "staff categories",
             "url": "categories",
-            "_id": "4f094a7f-9606-47b5-bd80-5839e2eda7d2",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "method": "GET",
             "sortNum": 1000,
+            "created": "2024-05-04T10:30:49.124Z",
+            "modified": "2024-05-04T10:30:49.124Z",
             "headers": [],
             "params": []
         },
         {
-            "method": "POST",
+            "_id": "a043f278-6e9e-419d-895a-def83a43a3d4",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "f17722a3-df8c-4655-b008-a629618e0309",
             "name": "staff categories",
             "url": "categories",
-            "_id": "f4c24fca-d146-4d19-92e5-802d34432a75",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "method": "POST",
             "sortNum": 2000,
+            "created": "2024-05-04T10:30:49.125Z",
+            "modified": "2024-05-04T10:30:49.125Z",
             "headers": [],
             "params": []
         },
         {
-            "method": "GET",
+            "_id": "51dbde77-9157-4f7a-8a13-3fcf21c456bf",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "f17722a3-df8c-4655-b008-a629618e0309",
             "name": "staff categories/parents",
             "url": "categories/parents",
-            "_id": "e2b7869c-b4a4-4561-9743-49541a6d5668",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "method": "GET",
             "sortNum": 3000,
+            "created": "2024-05-04T10:30:49.126Z",
+            "modified": "2024-05-04T10:30:49.126Z",
             "headers": [],
             "params": []
         },
         {
-            "method": "GET",
+            "_id": "b2d1af40-fdf3-4950-9a4a-4b83554d1bda",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "f17722a3-df8c-4655-b008-a629618e0309",
             "name": "staff categories/{category}",
             "url": "categories/{category}",
-            "_id": "8d68397a-d9ec-4bd7-95e5-48f491b9488a",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "method": "GET",
             "sortNum": 4000,
+            "created": "2024-05-04T10:30:49.127Z",
+            "modified": "2024-05-04T10:30:49.127Z",
             "headers": [],
             "params": [
                 {
@@ -85,13 +101,15 @@
             ]
         },
         {
-            "method": "PUT",
+            "_id": "13cff6c4-7982-44d1-8f4d-201668a1be4a",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "f17722a3-df8c-4655-b008-a629618e0309",
             "name": "staff categories/{category}",
             "url": "categories/{category}",
-            "_id": "04f18592-233e-464e-963b-8d733215f64b",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "method": "PUT",
             "sortNum": 5000,
+            "created": "2024-05-04T10:30:49.128Z",
+            "modified": "2024-05-04T10:30:49.128Z",
             "headers": [],
             "params": [
                 {
@@ -102,13 +120,15 @@
             ]
         },
         {
+            "_id": "5c121c67-d070-41fc-98c4-2bab77efb085",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "f17722a3-df8c-4655-b008-a629618e0309",
+            "name": "staff categories/{category}",
+            "url": "categories/{category}",
             "method": "DELETE",
-            "name": "staff categories/{category}",
-            "url": "categories/{category}",
-            "_id": "63eb528c-931f-4dfa-ac9d-92732ba8e72b",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
             "sortNum": 6000,
+            "created": "2024-05-04T10:30:49.129Z",
+            "modified": "2024-05-04T10:30:49.129Z",
             "headers": [],
             "params": [
                 {
@@ -119,13 +139,15 @@
             ]
         },
         {
-            "method": "PUT",
+            "_id": "f4ceb59e-a321-4671-a306-75574d2d2006",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "f17722a3-df8c-4655-b008-a629618e0309",
             "name": "staff categories/{category}",
             "url": "categories/{category}",
-            "_id": "895efae5-813e-4fed-bb73-b038144cc4f2",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "method": "PUT",
             "sortNum": 7000,
+            "created": "2024-05-04T10:30:49.130Z",
+            "modified": "2024-05-04T10:30:49.130Z",
             "headers": [],
             "params": [
                 {
@@ -136,141 +158,163 @@
             ]
         },
         {
-            "method": "GET",
+            "_id": "ea44a5d4-cb61-468e-9444-d31049ea1371",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "f17722a3-df8c-4655-b008-a629618e0309",
             "name": "staff categories/{category}/drinks",
             "url": "categories/{category}/drinks",
-            "_id": "ea0dea6a-6079-4fe5-9081-239643429d94",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "method": "GET",
             "sortNum": 8000,
+            "created": "2024-05-04T10:30:49.131Z",
+            "modified": "2024-05-04T10:30:49.131Z",
             "headers": [],
             "params": []
         },
         {
-            "method": "POST",
+            "_id": "dbf9355d-2387-4740-9fcf-4d7c5e1f746d",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "5853a023-9c05-4f85-9bb1-c9fb1b7695e9",
             "name": "staff confirm-password",
             "url": "confirm-password",
-            "_id": "d0eb4a33-d6a0-4acf-9517-702ac0b3def0",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "4b7980d0-5030-4eb4-9105-c20b8c3f4b68",
+            "method": "POST",
             "sortNum": 9000,
+            "created": "2024-05-04T10:30:49.132Z",
+            "modified": "2024-05-04T10:30:49.132Z",
             "headers": [],
             "params": []
         },
         {
-            "method": "GET",
+            "_id": "0e700f0b-bb17-4554-a3b7-006bfa256150",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "f17722a3-df8c-4655-b008-a629618e0309",
             "name": "staff drink-units",
             "url": "drink-units",
-            "_id": "4e74b40e-f0d9-41e9-a489-9f5ef3d479cf",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "method": "GET",
             "sortNum": 10000,
+            "created": "2024-05-04T10:30:49.133Z",
+            "modified": "2024-05-04T10:30:49.133Z",
             "headers": [],
             "params": []
         },
         {
-            "method": "POST",
+            "_id": "77c7028f-f2ba-4d3f-9062-d6996591f835",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "f17722a3-df8c-4655-b008-a629618e0309",
             "name": "staff drink-units",
             "url": "drink-units",
-            "_id": "0fed0cdb-1dea-4fa4-acf2-4e1cd303ac41",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
-            "sortNum": 11000,
-            "headers": [],
-            "params": []
-        },
-        {
-            "method": "GET",
-            "name": "staff drink-units/{drink_unit}",
-            "url": "drink-units/{drink_unit}",
-            "_id": "af76bffb-cb5c-4cd0-9bee-a3d6f16048c2",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
-            "sortNum": 12000,
-            "headers": [],
-            "params": [
-                {
-                    "name": "drink_unit",
-                    "value": "1",
-                    "isPath": true
-                }
-            ]
-        },
-        {
-            "method": "PUT",
-            "name": "staff drink-units/{drink_unit}",
-            "url": "drink-units/{drink_unit}",
-            "_id": "a4fd844c-e061-4a1c-befb-b6f90373953b",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
-            "sortNum": 13000,
-            "headers": [],
-            "params": [
-                {
-                    "name": "drink_unit",
-                    "value": "1",
-                    "isPath": true
-                }
-            ]
-        },
-        {
-            "method": "DELETE",
-            "name": "staff drink-units/{drink_unit}",
-            "url": "drink-units/{drink_unit}",
-            "_id": "cd0216d1-e2be-48cf-8e44-968d05c4cbfb",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
-            "sortNum": 14000,
-            "headers": [],
-            "params": [
-                {
-                    "name": "drink_unit",
-                    "value": "1",
-                    "isPath": true
-                }
-            ]
-        },
-        {
-            "method": "GET",
-            "name": "staff drinks",
-            "url": "drinks",
-            "_id": "70b84176-591c-4799-ae6f-0cebfb2fa4db",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
-            "sortNum": 15000,
-            "headers": [],
-            "params": []
-        },
-        {
             "method": "POST",
-            "name": "staff drinks",
-            "url": "drinks",
-            "_id": "08e4e9a0-b00c-4c88-98d6-1de140adf299",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
-            "sortNum": 16000,
+            "sortNum": 11000,
+            "created": "2024-05-04T10:30:49.134Z",
+            "modified": "2024-05-04T10:30:49.134Z",
             "headers": [],
             "params": []
         },
         {
+            "_id": "3e7fe6eb-0347-4ea7-9cd3-1d05b9f348a6",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "f17722a3-df8c-4655-b008-a629618e0309",
+            "name": "staff drink-units/{drink_unit}",
+            "url": "drink-units/{drink_unit}",
             "method": "GET",
+            "sortNum": 12000,
+            "created": "2024-05-04T10:30:49.135Z",
+            "modified": "2024-05-04T10:30:49.135Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "drink_unit",
+                    "value": "1",
+                    "isPath": true
+                }
+            ]
+        },
+        {
+            "_id": "02a5ff31-a09d-4e9b-ad14-27bb3494b48b",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "f17722a3-df8c-4655-b008-a629618e0309",
+            "name": "staff drink-units/{drink_unit}",
+            "url": "drink-units/{drink_unit}",
+            "method": "PUT",
+            "sortNum": 13000,
+            "created": "2024-05-04T10:30:49.136Z",
+            "modified": "2024-05-04T10:30:49.136Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "drink_unit",
+                    "value": "1",
+                    "isPath": true
+                }
+            ]
+        },
+        {
+            "_id": "457f9462-2a40-48ac-9526-392ec38c7c5f",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "f17722a3-df8c-4655-b008-a629618e0309",
+            "name": "staff drink-units/{drink_unit}",
+            "url": "drink-units/{drink_unit}",
+            "method": "DELETE",
+            "sortNum": 14000,
+            "created": "2024-05-04T10:30:49.137Z",
+            "modified": "2024-05-04T10:30:49.137Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "drink_unit",
+                    "value": "1",
+                    "isPath": true
+                }
+            ]
+        },
+        {
+            "_id": "2492f152-b8ed-4a47-ba75-5097bc509a3c",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "f17722a3-df8c-4655-b008-a629618e0309",
+            "name": "staff drinks",
+            "url": "drinks",
+            "method": "GET",
+            "sortNum": 15000,
+            "created": "2024-05-04T10:30:49.138Z",
+            "modified": "2024-05-04T10:30:49.138Z",
+            "headers": [],
+            "params": []
+        },
+        {
+            "_id": "6af622f0-ecb9-4e4c-bab8-92f57106f226",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "f17722a3-df8c-4655-b008-a629618e0309",
+            "name": "staff drinks",
+            "url": "drinks",
+            "method": "POST",
+            "sortNum": 16000,
+            "created": "2024-05-04T10:30:49.139Z",
+            "modified": "2024-05-04T10:30:49.139Z",
+            "headers": [],
+            "params": []
+        },
+        {
+            "_id": "8ac32d3e-52a5-4dbb-9099-3379e0f2e55c",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "f17722a3-df8c-4655-b008-a629618e0309",
             "name": "staff drinks/scheme",
             "url": "drinks/scheme",
-            "_id": "ba072908-eb5b-4d83-96fc-f503bec06d97",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "method": "GET",
             "sortNum": 17000,
+            "created": "2024-05-04T10:30:49.140Z",
+            "modified": "2024-05-04T10:30:49.140Z",
             "headers": [],
             "params": []
         },
         {
-            "method": "GET",
+            "_id": "263113b7-478d-48a3-952d-dfb5cadb4c38",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "f17722a3-df8c-4655-b008-a629618e0309",
             "name": "staff drinks/{drink}",
             "url": "drinks/{drink}",
-            "_id": "48dafb89-9706-47c8-8b09-8beae7e5fd3e",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "method": "GET",
             "sortNum": 18000,
+            "created": "2024-05-04T10:30:49.141Z",
+            "modified": "2024-05-04T10:30:49.141Z",
             "headers": [],
             "params": [
                 {
@@ -281,13 +325,15 @@
             ]
         },
         {
+            "_id": "34ed8e30-07c5-4a5d-a31d-8b02c7a9a496",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "f17722a3-df8c-4655-b008-a629618e0309",
+            "name": "staff drinks/{drink}",
+            "url": "drinks/{drink}",
             "method": "PUT",
-            "name": "staff drinks/{drink}",
-            "url": "drinks/{drink}",
-            "_id": "8c1a675f-5794-4687-8028-badd896eb97a",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
             "sortNum": 19000,
+            "created": "2024-05-04T10:30:49.142Z",
+            "modified": "2024-05-04T10:30:49.142Z",
             "headers": [],
             "params": [
                 {
@@ -298,13 +344,15 @@
             ]
         },
         {
-            "method": "DELETE",
+            "_id": "0a74e365-8460-438b-9c56-ddd58010a313",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "f17722a3-df8c-4655-b008-a629618e0309",
             "name": "staff drinks/{drink}",
             "url": "drinks/{drink}",
-            "_id": "ce535cae-f15a-4160-ba48-aca90ae82805",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "method": "DELETE",
             "sortNum": 20000,
+            "created": "2024-05-04T10:30:49.143Z",
+            "modified": "2024-05-04T10:30:49.143Z",
             "headers": [],
             "params": [
                 {
@@ -315,46 +363,54 @@
             ]
         },
         {
-            "method": "GET",
+            "_id": "d40f900c-f3ff-4430-94c9-7745451fc7f5",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "3c620a1f-80c5-429c-a54f-24d765d8c036",
             "name": "staff employees",
             "url": "employees",
-            "_id": "0aff571a-d650-4288-8b8e-9ae54076e5a0",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "5affade7-6b59-4624-95a2-074fac8ee7e3",
+            "method": "GET",
             "sortNum": 21000,
+            "created": "2024-05-04T10:30:49.144Z",
+            "modified": "2024-05-04T10:30:49.144Z",
             "headers": [],
             "params": []
         },
         {
-            "method": "POST",
+            "_id": "989233e8-17eb-498c-8246-0deac32020f0",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "3c620a1f-80c5-429c-a54f-24d765d8c036",
             "name": "staff employees",
             "url": "employees",
-            "_id": "87b0b509-8b09-45d4-b174-24f58890e70b",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "5affade7-6b59-4624-95a2-074fac8ee7e3",
+            "method": "POST",
             "sortNum": 22000,
+            "created": "2024-05-04T10:30:49.145Z",
+            "modified": "2024-05-04T10:30:49.145Z",
             "headers": [],
             "params": []
         },
         {
-            "method": "GET",
+            "_id": "f6893ab9-4f83-45ec-b820-baf0f1bc35a5",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "3c620a1f-80c5-429c-a54f-24d765d8c036",
             "name": "staff employees/roles",
             "url": "employees/roles",
-            "_id": "4eeafd01-dbc1-416f-b2b0-3c65705f3a11",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "5affade7-6b59-4624-95a2-074fac8ee7e3",
+            "method": "GET",
             "sortNum": 23000,
+            "created": "2024-05-04T10:30:49.146Z",
+            "modified": "2024-05-04T10:30:49.146Z",
             "headers": [],
             "params": []
         },
         {
-            "method": "GET",
+            "_id": "2d2b7f73-8b49-429d-aacf-379f2b330d0c",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "3c620a1f-80c5-429c-a54f-24d765d8c036",
             "name": "staff employees/{employee}",
             "url": "employees/{employee}",
-            "_id": "fef989ef-bd0f-40da-98a7-a4b8982c7273",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "5affade7-6b59-4624-95a2-074fac8ee7e3",
+            "method": "GET",
             "sortNum": 24000,
+            "created": "2024-05-04T10:30:49.148Z",
+            "modified": "2024-05-04T10:30:49.148Z",
             "headers": [],
             "params": [
                 {
@@ -365,13 +421,15 @@
             ]
         },
         {
-            "method": "PUT",
+            "_id": "90ab2766-7471-4bd4-821b-5d74a3f85465",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "3c620a1f-80c5-429c-a54f-24d765d8c036",
             "name": "staff employees/{employee}",
             "url": "employees/{employee}",
-            "_id": "723178b5-32a4-4eb4-886c-02efb04e463c",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "5affade7-6b59-4624-95a2-074fac8ee7e3",
+            "method": "PUT",
             "sortNum": 25000,
+            "created": "2024-05-04T10:30:49.149Z",
+            "modified": "2024-05-04T10:30:49.149Z",
             "headers": [],
             "params": [
                 {
@@ -382,13 +440,15 @@
             ]
         },
         {
-            "method": "DELETE",
+            "_id": "eefa7611-72ae-42bf-9cf2-1855d02423f3",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "3c620a1f-80c5-429c-a54f-24d765d8c036",
             "name": "staff employees/{employee}",
             "url": "employees/{employee}",
-            "_id": "f3d1e6cc-4114-4711-b666-e770bab44321",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "5affade7-6b59-4624-95a2-074fac8ee7e3",
+            "method": "DELETE",
             "sortNum": 26000,
+            "created": "2024-05-04T10:30:49.150Z",
+            "modified": "2024-05-04T10:30:49.150Z",
             "headers": [],
             "params": [
                 {
@@ -399,35 +459,41 @@
             ]
         },
         {
-            "method": "GET",
+            "_id": "51e57515-227d-4275-961f-2e78fee03c14",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "54a89ef1-5a7e-4132-a973-ce283513f0d3",
             "name": "staff guests",
             "url": "guests",
-            "_id": "d98763bd-7ce7-40af-a162-f4ab09d097d0",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "ac62df9e-4b91-4da8-b3db-db935d7f931b",
+            "method": "GET",
             "sortNum": 27000,
+            "created": "2024-05-04T10:30:49.151Z",
+            "modified": "2024-05-04T10:30:49.151Z",
             "headers": [],
             "params": []
         },
         {
-            "method": "POST",
+            "_id": "bccefb28-41eb-4bac-acf0-0d3ba7f81fbd",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "54a89ef1-5a7e-4132-a973-ce283513f0d3",
             "name": "staff guests",
             "url": "guests",
-            "_id": "9369a467-6dc1-4ab5-b795-dbf322a06c95",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "ac62df9e-4b91-4da8-b3db-db935d7f931b",
+            "method": "POST",
             "sortNum": 28000,
+            "created": "2024-05-04T10:30:49.152Z",
+            "modified": "2024-05-04T10:30:49.152Z",
             "headers": [],
             "params": []
         },
         {
+            "_id": "2d79a614-0dd3-4e29-9650-9c832c83d128",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "54a89ef1-5a7e-4132-a973-ce283513f0d3",
+            "name": "staff guests/{guest}",
+            "url": "guests/{guest}",
             "method": "GET",
-            "name": "staff guests/{guest}",
-            "url": "guests/{guest}",
-            "_id": "a8c49eda-5f18-49ff-b187-900007d57616",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "ac62df9e-4b91-4da8-b3db-db935d7f931b",
             "sortNum": 29000,
+            "created": "2024-05-04T10:30:49.153Z",
+            "modified": "2024-05-04T10:30:49.153Z",
             "headers": [],
             "params": [
                 {
@@ -438,13 +504,15 @@
             ]
         },
         {
+            "_id": "f68fbd9b-dd5d-4371-9392-1ab22a87d3dc",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "54a89ef1-5a7e-4132-a973-ce283513f0d3",
+            "name": "staff guests/{guest}",
+            "url": "guests/{guest}",
             "method": "PUT",
-            "name": "staff guests/{guest}",
-            "url": "guests/{guest}",
-            "_id": "b84d9bfb-269a-411e-873e-d4f7fb6d2ccb",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "ac62df9e-4b91-4da8-b3db-db935d7f931b",
             "sortNum": 30000,
+            "created": "2024-05-04T10:30:49.154Z",
+            "modified": "2024-05-04T10:30:49.154Z",
             "headers": [],
             "params": [
                 {
@@ -455,13 +523,15 @@
             ]
         },
         {
-            "method": "DELETE",
+            "_id": "b9b9479c-3bad-4e0c-8a46-0b996798e019",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "54a89ef1-5a7e-4132-a973-ce283513f0d3",
             "name": "staff guests/{guest}",
             "url": "guests/{guest}",
-            "_id": "5cb58588-ca61-4520-b769-dbecd4b0a32e",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "ac62df9e-4b91-4da8-b3db-db935d7f931b",
+            "method": "DELETE",
             "sortNum": 31000,
+            "created": "2024-05-04T10:30:49.155Z",
+            "modified": "2024-05-04T10:30:49.155Z",
             "headers": [],
             "params": [
                 {
@@ -472,92 +542,135 @@
             ]
         },
         {
-            "method": "POST",
+            "_id": "8005738c-8abb-4627-9342-10425fd1fa3c",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "5853a023-9c05-4f85-9bb1-c9fb1b7695e9",
             "name": "staff login",
             "url": "login",
-            "_id": "27105d08-92ad-48c2-9abb-2bfd1ff8e51b",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "4b7980d0-5030-4eb4-9105-c20b8c3f4b68",
+            "method": "POST",
             "sortNum": 32000,
+            "created": "2024-05-04T10:30:49.156Z",
+            "modified": "2024-05-04T10:32:53.877Z",
             "headers": [],
-            "params": []
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\": \"slugs.n.shots+bartender@gmail.com\",\n  \"password\": \"slUGz-R0CKS!\"\n}",
+                "form": []
+            },
+            "postReq": {
+                "inlineScripts": [
+                    {
+                        "script": [
+                            "console.log('response', tc.response.text);\r",
+                            "let responseData = tc.response.json;\r",
+                            "tc.setVar(\"staffAccessToken\", responseData.access_token);"
+                        ]
+                    }
+                ]
+            }
         },
         {
-            "method": "POST",
+            "_id": "e5d548cb-f9d1-49ec-94e4-724c1a0c1945",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "5853a023-9c05-4f85-9bb1-c9fb1b7695e9",
             "name": "staff logout",
             "url": "logout",
-            "_id": "c973e773-7aff-46f9-8c23-1993fb7f96ac",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "4b7980d0-5030-4eb4-9105-c20b8c3f4b68",
+            "method": "POST",
             "sortNum": 33000,
+            "created": "2024-05-04T10:30:49.157Z",
+            "modified": "2024-05-04T10:30:49.157Z",
             "headers": [],
             "params": []
         },
         {
-            "method": "GET",
+            "_id": "72cfd35e-b81c-4439-817d-8d2f86598bb0",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "5853a023-9c05-4f85-9bb1-c9fb1b7695e9",
             "name": "staff me",
             "url": "me",
-            "_id": "1a763c51-ea30-46d2-bc5c-234735b4f22e",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "4b7980d0-5030-4eb4-9105-c20b8c3f4b68",
+            "method": "GET",
             "sortNum": 34000,
+            "created": "2024-05-04T10:30:49.158Z",
+            "modified": "2024-05-04T10:30:49.158Z",
             "headers": [],
             "params": []
         },
         {
-            "method": "GET",
+            "_id": "e8cd163c-5479-4f70-8be3-d9e60413846f",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "f17722a3-df8c-4655-b008-a629618e0309",
             "name": "staff menu",
             "url": "menu",
-            "_id": "7fa491e5-7f48-4b09-ba07-a121ef408458",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "method": "GET",
             "sortNum": 35000,
+            "created": "2024-05-04T10:30:49.159Z",
+            "modified": "2024-05-04T10:30:49.159Z",
             "headers": [],
             "params": []
         },
         {
-            "method": "GET",
+            "_id": "ba4717de-6bcd-4922-b165-e3fe89305400",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "f17722a3-df8c-4655-b008-a629618e0309",
             "name": "staff menu-tree",
             "url": "menu-tree",
-            "_id": "9e469fa4-82c3-4285-9ce9-f3c4d2cb3a5b",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "285418f8-f965-4933-9ca6-72b540bbcd3c",
+            "method": "GET",
             "sortNum": 36000,
+            "created": "2024-05-04T10:30:49.160Z",
+            "modified": "2024-05-04T10:30:49.160Z",
             "headers": [],
             "params": []
         },
         {
-            "method": "GET",
+            "_id": "77fef247-8f0f-4112-8d8c-6b3cb32d3185",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "5853a023-9c05-4f85-9bb1-c9fb1b7695e9",
             "name": "staff refresh",
             "url": "refresh",
-            "_id": "34d0db2a-9ced-46dd-ab5a-efa3b60d7f09",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "4b7980d0-5030-4eb4-9105-c20b8c3f4b68",
+            "method": "GET",
             "sortNum": 37000,
+            "created": "2024-05-04T10:30:49.161Z",
+            "modified": "2024-05-04T10:30:49.161Z",
             "headers": [],
             "params": []
         },
         {
-            "method": "POST",
+            "_id": "148bf139-548a-4148-8c5e-7956296740f6",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "5853a023-9c05-4f85-9bb1-c9fb1b7695e9",
             "name": "staff register",
             "url": "register",
-            "_id": "8d087c32-a57f-4f45-bc14-72a58ea38a73",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "4b7980d0-5030-4eb4-9105-c20b8c3f4b68",
+            "method": "POST",
             "sortNum": 38000,
+            "created": "2024-05-04T10:30:49.162Z",
+            "modified": "2024-05-04T10:30:49.162Z",
             "headers": [],
             "params": []
         },
         {
-            "method": "GET",
+            "_id": "1befd993-d571-496e-9c03-f2096890d572",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "5853a023-9c05-4f85-9bb1-c9fb1b7695e9",
             "name": "staff reset",
             "url": "reset",
-            "_id": "d4461646-1f17-4a7e-9563-be09f7f728ec",
-            "colId": "e0b48f98-8d25-492a-ab4e-d688458cd259",
-            "containerId": "4b7980d0-5030-4eb4-9105-c20b8c3f4b68",
+            "method": "GET",
             "sortNum": 39000,
+            "created": "2024-05-04T10:30:49.163Z",
+            "modified": "2024-05-04T10:30:49.163Z",
             "headers": [],
             "params": []
+        },
+        {
+            "_id": "2dc37f3a-dc31-4cc6-9ba1-143ab47c0073",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "b894963f-0fcf-402b-82db-0a2066a932d8",
+            "name": "active orders",
+            "url": "orders/active",
+            "method": "GET",
+            "sortNum": 49000,
+            "created": "2024-05-04T10:31:33.750Z",
+            "modified": "2024-05-04T10:31:39.714Z",
+            "headers": []
         }
     ],
     "settings": {
@@ -573,6 +686,8 @@
         ],
         "options": {
             "baseUrl": "localhost:8000/api/staff/"
-        }
-    }
+        },
+        "envId": "125b80eb-8b38-419d-ac47-7ee3ce7e8dcf"
+    },
+    "ref": "W5eXFIt8KYK_Y-qVTXv5cGiD_YxN6BcVix5zS0am_33PgXb52sLgca3MG-_UHiipmoQaobONiDTMr0MNuqpbDg"
 }
