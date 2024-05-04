@@ -58,11 +58,11 @@ class ImportDrinks extends Command
                 foreach ($data->units as $unit) {
                     DrinkUnit::firstOrCreate([
                         'drink_id' => $drink->id,
-                        'amount' => $unit->amount,
+                        'quantity' => $unit->quantity,
                         'unit_en' => $unit->unit_en,
                     ], [
                         'drink_id' => $drink->id,
-                        'amount' => $unit->amount,
+                        'quantity' => $unit->quantity,
                         'unit_en' => $unit->unit_en,
                         'unit_hu' => $unit->unit_hu,
                         'unit_price' => $unit->unit_price,

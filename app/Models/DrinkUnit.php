@@ -23,7 +23,7 @@ class DrinkUnit extends Model
      */
     protected $fillable = [
         'drink_id',
-        'amount',
+        'quantity',
         'unit_en',
         'unit_hu',
         'unit_price',

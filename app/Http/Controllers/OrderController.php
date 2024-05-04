@@ -140,16 +140,16 @@ class OrderController extends Controller
         $total = 0;
         foreach ($request->cart as $item) {
             $drink_unit = DrinkUnit::where('drink_id', $item['drink_id'])
-            ->where('amount', $item['amount'])
+            ->where('quantity', $item['quantity'])
             ->where('unit_en', $item['unit'])->first();
             // return $drink_unit;
 
             $order_det = OrderDetail::create([
                 'order_id' => $order->id,
                 'drink_unit_id' => $drink_unit->id,
-                'amount' => $item['quantity'],
+                'quantity' => $item['quantity'],
                 'promo_id' => null,
-                'unit_price' => $drink_unit->amount,
+                'unit_price' => $drink_unit->quantity,
                 'discount' => 0,
             ]);
             $total += $item['quantity'] * $drink_unit->unit_price;

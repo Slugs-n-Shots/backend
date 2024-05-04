@@ -11,7 +11,7 @@ class OrderDetailController extends Controller
      * Fields:
      * order_id: integer
      * drink_unit_id: integer
-     * amount: integer
+     * quantity: integer
      * promo_id: ?integer
      * unit_price: integer
      * discount: ?decimal
@@ -46,7 +46,7 @@ class OrderDetailController extends Controller
         $valid = $request->validate([
             'order_id' => 'integer|required',
             'drink_unit_id' => 'integer|required',
-            'amount' => 'integer|required',
+            'quantity' => 'integer|required',
             'promo_id' => 'integer|required',
             'unit_price' => 'integer|required',
             'discount' => 'decimal|required',
@@ -75,7 +75,7 @@ class OrderDetailController extends Controller
         $valid = $request->validate([
             'order_id' => 'integer',
             'drink_unit_id' => 'integer',
-            'amount' => 'integer',
+            'quantity' => 'integer',
             'promo_id' => 'integer',
             'unit_price' => 'integer',
             'discount' => 'decimal',

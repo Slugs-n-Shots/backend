@@ -8,7 +8,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 450
@@ -24,7 +24,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 450
@@ -40,7 +40,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 590
@@ -56,7 +56,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 650
@@ -72,7 +72,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 750
@@ -88,7 +88,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 750
@@ -104,7 +104,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 750
@@ -120,7 +120,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 890
@@ -136,7 +136,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "dl",
                 "unit_en": "dl",
                 "unit_price": 100
@@ -152,7 +152,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "db",
                 "unit_en": "pcs",
                 "unit_price": 100
@@ -168,7 +168,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "adag",
                 "unit_en": "dozen",
                 "unit_price": 150
@@ -184,7 +184,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 400
@@ -200,7 +200,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 400
@@ -216,7 +216,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 400
@@ -232,7 +232,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 400
@@ -248,7 +248,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 400
@@ -264,7 +264,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "adag",
                 "unit_en": "dozen",
                 "unit_price": 150
@@ -280,7 +280,7 @@
         "active": true,
         "units": [
             {
-                "amount": 5,
+                "quantity": 5,
                 "unit_hu": "dl",
                 "unit_en": "dl",
                 "unit_price": 890
@@ -296,7 +296,7 @@
         "active": true,
         "units": [
             {
-                "amount": 5,
+                "quantity": 5,
                 "unit_hu": "dl",
                 "unit_en": "dl",
                 "unit_price": 890
@@ -312,7 +312,7 @@
         "active": true,
         "units": [
             {
-                "amount": 5,
+                "quantity": 5,
                 "unit_hu": "dl",
                 "unit_en": "dl",
                 "unit_price": 890
@@ -328,7 +328,7 @@
         "active": true,
         "units": [
             {
-                "amount": 5,
+                "quantity": 5,
                 "unit_hu": "dl",
                 "unit_en": "dl",
                 "unit_price": 890
@@ -344,7 +344,7 @@
         "active": true,
         "units": [
             {
-                "amount": 5,
+                "quantity": 5,
                 "unit_hu": "dl",
                 "unit_en": "dl",
                 "unit_price": 890
@@ -360,7 +360,7 @@
         "active": true,
         "units": [
             {
-                "amount": 5,
+                "quantity": 5,
                 "unit_hu": "dl",
                 "unit_en": "dl",
                 "unit_price": 890
@@ -376,7 +376,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "dl",
                 "unit_en": "dl",
                 "unit_price": 200
@@ -392,7 +392,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "dl",
                 "unit_en": "dl",
                 "unit_price": 200
@@ -408,7 +408,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "dl",
                 "unit_en": "dl",
                 "unit_price": 200
@@ -424,7 +424,7 @@
         "active": true,
         "units": [
             {
-                "amount": 0.25,
+                "quantity": 0.25,
                 "unit_hu": "l",
                 "unit_en": "l",
                 "unit_price": 650
@@ -440,7 +440,7 @@
         "active": true,
         "units": [
             {
-                "amount": 0.25,
+                "quantity": 0.25,
                 "unit_hu": "l",
                 "unit_en": "l",
                 "unit_price": 650
@@ -456,7 +456,7 @@
         "active": true,
         "units": [
             {
-                "amount": 0.25,
+                "quantity": 0.25,
                 "unit_hu": "l",
                 "unit_en": "l",
                 "unit_price": 650
@@ -472,7 +472,7 @@
         "active": true,
         "units": [
             {
-                "amount": 0.25,
+                "quantity": 0.25,
                 "unit_hu": "l",
                 "unit_en": "l",
                 "unit_price": 580
@@ -488,7 +488,7 @@
         "active": true,
         "units": [
             {
-                "amount": 0.25,
+                "quantity": 0.25,
                 "unit_hu": "l",
                 "unit_en": "l",
                 "unit_price": 580
@@ -504,7 +504,7 @@
         "active": true,
         "units": [
             {
-                "amount": 0.25,
+                "quantity": 0.25,
                 "unit_hu": "l",
                 "unit_en": "l",
                 "unit_price": 580
@@ -520,7 +520,7 @@
         "active": true,
         "units": [
             {
-                "amount": 0.25,
+                "quantity": 0.25,
                 "unit_hu": "l",
                 "unit_en": "l",
                 "unit_price": 580
@@ -536,7 +536,7 @@
         "active": true,
         "units": [
             {
-                "amount": 0.25,
+                "quantity": 0.25,
                 "unit_hu": "l",
                 "unit_en": "l",
                 "unit_price": 580
@@ -552,7 +552,7 @@
         "active": true,
         "units": [
             {
-                "amount": 0.25,
+                "quantity": 0.25,
                 "unit_hu": "l",
                 "unit_en": "l",
                 "unit_price": 990
@@ -568,7 +568,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 890
@@ -584,7 +584,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 590
@@ -600,13 +600,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 745
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 1490
@@ -622,13 +622,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 745
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 1490
@@ -644,13 +644,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 745
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 1490
@@ -666,13 +666,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 745
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 1490
@@ -688,13 +688,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 745
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 1490
@@ -710,13 +710,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 895
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 1790
@@ -732,13 +732,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 375
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 750
@@ -754,13 +754,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 395
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 790
@@ -776,13 +776,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 395
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 790
@@ -798,13 +798,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 450
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 900
@@ -820,13 +820,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 450
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 900
@@ -842,13 +842,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 450
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 900
@@ -864,13 +864,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 475
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 950
@@ -886,13 +886,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 795
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 1590
@@ -908,13 +908,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 325
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 650
@@ -930,13 +930,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 395
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 790
@@ -952,13 +952,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 395
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 790
@@ -974,13 +974,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 395
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 790
@@ -996,13 +996,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 475
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 950
@@ -1018,13 +1018,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 645
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 1290
@@ -1040,13 +1040,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 650
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 1300
@@ -1062,13 +1062,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 695
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 1390
@@ -1084,13 +1084,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 745
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 1490
@@ -1106,13 +1106,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 745
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 1490
@@ -1128,13 +1128,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 395
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 790
@@ -1150,13 +1150,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 375
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 750
@@ -1172,13 +1172,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 595
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 1190
@@ -1194,13 +1194,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 645
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 1290
@@ -1216,13 +1216,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 395
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 790
@@ -1238,13 +1238,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 410
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 820
@@ -1260,13 +1260,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 410
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 820
@@ -1282,13 +1282,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 410
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 820
@@ -1304,13 +1304,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 410
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 820
@@ -1326,13 +1326,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 745
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 1490
@@ -1348,13 +1348,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 345
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 690
@@ -1370,13 +1370,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 395
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 790
@@ -1392,13 +1392,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 395
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 790
@@ -1414,13 +1414,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 700
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 1400
@@ -1436,13 +1436,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 375
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 750
@@ -1458,13 +1458,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 425
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 850
@@ -1480,13 +1480,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 425
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 850
@@ -1502,13 +1502,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 845
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 1690
@@ -1524,13 +1524,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 845
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 1690
@@ -1546,13 +1546,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 975
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 1950
@@ -1568,13 +1568,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 450
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 900
@@ -1590,13 +1590,13 @@
         "active": true,
         "units": [
             {
-                "amount": 2,
+                "quantity": 2,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 450
             },
             {
-                "amount": 4,
+                "quantity": 4,
                 "unit_hu": "cl",
                 "unit_en": "cl",
                 "unit_price": 900
@@ -1612,7 +1612,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 1290
@@ -1628,7 +1628,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 1290
@@ -1644,7 +1644,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 1390
@@ -1660,7 +1660,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 1390
@@ -1676,7 +1676,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 1390
@@ -1692,13 +1692,13 @@
         "active": true,
         "units": [
             {
-                "amount": 0.33,
+                "quantity": 0.33,
                 "unit_hu": "l",
                 "unit_en": "l",
                 "unit_price": 450
             },
             {
-                "amount": 0.75,
+                "quantity": 0.75,
                 "unit_hu": "l",
                 "unit_en": "l",
                 "unit_price": 890
@@ -1714,13 +1714,13 @@
         "active": true,
         "units": [
             {
-                "amount": 0.33,
+                "quantity": 0.33,
                 "unit_hu": "l",
                 "unit_en": "l",
                 "unit_price": 450
             },
             {
-                "amount": 0.75,
+                "quantity": 0.75,
                 "unit_hu": "l",
                 "unit_en": "l",
                 "unit_price": 890
@@ -1736,7 +1736,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "dl",
                 "unit_en": "dl",
                 "unit_price": 60
@@ -1752,7 +1752,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 1
@@ -1768,7 +1768,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 1
@@ -1784,7 +1784,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 1
@@ -1800,7 +1800,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 1
@@ -1816,7 +1816,7 @@
         "active": true,
         "units": [
             {
-                "amount": 0.33,
+                "quantity": 0.33,
                 "unit_hu": "l",
                 "unit_en": "l",
                 "unit_price": 690
@@ -1832,7 +1832,7 @@
         "active": true,
         "units": [
             {
-                "amount": 0.5,
+                "quantity": 0.5,
                 "unit_hu": "l",
                 "unit_en": "l",
                 "unit_price": 750
@@ -1848,7 +1848,7 @@
         "active": true,
         "units": [
             {
-                "amount": 0.5,
+                "quantity": 0.5,
                 "unit_hu": "l",
                 "unit_en": "l",
                 "unit_price": 750
@@ -1864,7 +1864,7 @@
         "active": true,
         "units": [
             {
-                "amount": 0.5,
+                "quantity": 0.5,
                 "unit_hu": "l",
                 "unit_en": "l",
                 "unit_price": 790
@@ -1880,7 +1880,7 @@
         "active": true,
         "units": [
             {
-                "amount": 0.5,
+                "quantity": 0.5,
                 "unit_hu": "l",
                 "unit_en": "l",
                 "unit_price": 750
@@ -1896,7 +1896,7 @@
         "active": true,
         "units": [
             {
-                "amount": 0.5,
+                "quantity": 0.5,
                 "unit_hu": "l",
                 "unit_en": "l",
                 "unit_price": 750
@@ -1912,7 +1912,7 @@
         "active": true,
         "units": [
             {
-                "amount": 0.5,
+                "quantity": 0.5,
                 "unit_hu": "l",
                 "unit_en": "l",
                 "unit_price": 850
@@ -1928,7 +1928,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 1190
@@ -1944,7 +1944,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 1190
@@ -1960,7 +1960,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 1190
@@ -1976,7 +1976,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 1190
@@ -1992,7 +1992,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 1190
@@ -2008,7 +2008,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 1190
@@ -2024,7 +2024,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 1290
@@ -2040,7 +2040,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 1390
@@ -2056,7 +2056,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 1690
@@ -2072,7 +2072,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 1790
@@ -2088,7 +2088,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 1990
@@ -2104,7 +2104,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 1990
@@ -2120,7 +2120,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 2490
@@ -2136,7 +2136,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 990
@@ -2152,7 +2152,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 990
@@ -2168,7 +2168,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 990
@@ -2184,7 +2184,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 1190
@@ -2200,7 +2200,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 1390
@@ -2216,7 +2216,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 2190
@@ -2232,7 +2232,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 2190
@@ -2248,7 +2248,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 2290
@@ -2264,7 +2264,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 2290
@@ -2280,7 +2280,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 2290
@@ -2296,7 +2296,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": null,
                 "unit_en": null,
                 "unit_price": 2690
@@ -2312,7 +2312,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "dl",
                 "unit_en": "dl",
                 "unit_price": 390
@@ -2328,7 +2328,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "dl",
                 "unit_en": "dl",
                 "unit_price": 390
@@ -2344,13 +2344,13 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "dl",
                 "unit_en": "dl",
                 "unit_price": 450
             },
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "üveg",
                 "unit_en": "bottle",
                 "unit_price": 3375
@@ -2366,13 +2366,13 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "dl",
                 "unit_en": "dl",
                 "unit_price": 530
             },
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "üveg",
                 "unit_en": "bottle",
                 "unit_price": 3975
@@ -2388,13 +2388,13 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "dl",
                 "unit_en": "dl",
                 "unit_price": 550
             },
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "üveg",
                 "unit_en": "bottle",
                 "unit_price": 4125
@@ -2410,13 +2410,13 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "dl",
                 "unit_en": "dl",
                 "unit_price": 1
             },
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "üveg",
                 "unit_en": "bottle",
                 "unit_price": 1
@@ -2432,13 +2432,13 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "dl",
                 "unit_en": "dl",
                 "unit_price": 1
             },
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "üveg",
                 "unit_en": "bottle",
                 "unit_price": 1
@@ -2454,13 +2454,13 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "dl",
                 "unit_en": "dl",
                 "unit_price": 1
             },
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "üveg",
                 "unit_en": "bottle",
                 "unit_price": 1
@@ -2476,13 +2476,13 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "dl",
                 "unit_en": "dl",
                 "unit_price": 1
             },
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "üveg",
                 "unit_en": "bottle",
                 "unit_price": 1
@@ -2498,13 +2498,13 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "dl",
                 "unit_en": "dl",
                 "unit_price": 490
             },
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "üveg",
                 "unit_en": "bottle",
                 "unit_price": 3675
@@ -2520,13 +2520,13 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "dl",
                 "unit_en": "dl",
                 "unit_price": 570
             },
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "üveg",
                 "unit_en": "bottle",
                 "unit_price": 4275
@@ -2542,13 +2542,13 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "dl",
                 "unit_en": "dl",
                 "unit_price": 690
             },
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "üveg",
                 "unit_en": "bottle",
                 "unit_price": 5175
@@ -2564,13 +2564,13 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "dl",
                 "unit_en": "dl",
                 "unit_price": 740
             },
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "üveg",
                 "unit_en": "bottle",
                 "unit_price": 5550
@@ -2586,7 +2586,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "üveg",
                 "unit_en": "bottle",
                 "unit_price": 5900
@@ -2602,7 +2602,7 @@
         "active": true,
         "units": [
             {
-                "amount": 0.33,
+                "quantity": 0.33,
                 "unit_hu": "l",
                 "unit_en": "l",
                 "unit_price": 860
@@ -2618,7 +2618,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "üveg",
                 "unit_en": "bottle",
                 "unit_price": 2900
@@ -2634,7 +2634,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "üveg",
                 "unit_en": "bottle",
                 "unit_price": 2900
@@ -2650,7 +2650,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "üveg",
                 "unit_en": "bottle",
                 "unit_price": 4900
@@ -2666,7 +2666,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "üveg",
                 "unit_en": "bottle",
                 "unit_price": 4900
@@ -2682,7 +2682,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "üveg",
                 "unit_en": "bottle",
                 "unit_price": 5990
@@ -2698,7 +2698,7 @@
         "active": true,
         "units": [
             {
-                "amount": 1,
+                "quantity": 1,
                 "unit_hu": "üveg",
                 "unit_en": "bottle",
                 "unit_price": 6590

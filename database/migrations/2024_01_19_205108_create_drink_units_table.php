@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('drink_units', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('drink_id');
-            $table->decimal('amount', 8, 2);
+            $table->decimal('quantity', 8, 2);
             $table->string('unit_en')->nullable();
             $table->string('unit_hu')->nullable();
             $table->decimal('unit_price', 8, 2);
             $table->boolean('active')->default(true);
-            $table->unique(['drink_id', 'amount', 'unit_en']);
+            $table->unique(['drink_id', 'quantity', 'unit_en']);
             $table->timestamps();
 
             $table->foreign('drink_id')->references('id')->on('drinks');

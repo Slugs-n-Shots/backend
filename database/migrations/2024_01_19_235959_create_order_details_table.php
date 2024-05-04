@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('order_id');
             $table->unsignedBigInteger('drink_unit_id');
-            $table->integer('amount');
+            $table->integer('quantity');
             $table->unsignedBigInteger('promo_id')->nullable();
             $table->integer('unit_price');
             $table->decimal('discount', 5, 2)->nullable()->default(0);

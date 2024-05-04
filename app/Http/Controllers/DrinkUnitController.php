@@ -22,7 +22,7 @@ class DrinkUnitController extends Controller
     public function store(Request $request)
     {
         $valid = $request->validate([
-            'amount' => 'float|required',
+            'quantity' => 'float|required',
             'unit_en' => 'string|sometimes|nullable',
             'unit_hu' => 'string|sometimes|nullable',
             'active' => 'boolean|sometimes'
@@ -46,7 +46,7 @@ class DrinkUnitController extends Controller
     public function update(Request $request, DrinkUnit $drinkUnit)
     {
         $valid = $request->validate([
-            'amount' => 'float|required',
+            'quantity' => 'float|required',
             'unit_en' => 'string|sometimes|nullable',
             'unit_hu' => 'string|sometimes|nullable',
             'active' => 'boolean|required',
