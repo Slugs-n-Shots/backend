@@ -31,8 +31,8 @@ return new class extends Migration
             'middle_name' => 'Admin',
             'last_name' => 'Shots',
             'email' => 'slugs.n.shots+admin@gmail.com',
-            'password' => Config::get('ADMIN_PASSWORD', 'RPS?iou-siztE#R!'),
             'role_code' => \App\Models\Employee::ADMIN,
+            'password' => Config::get('ADMIN_PASSWORD', 'RPS?iou-siztE#R!'),
             'active' => 1,
         ]);
 
@@ -43,6 +43,7 @@ return new class extends Migration
             'email' => 'slugs.n.shots+bartender@gmail.com',
             'role_code' => \App\Models\Employee::BARTENDER,
             'password' => 'slUGz-R0CKS!',
+            'active' => 1,
         ]);
 
         \App\Models\Employee::create([
@@ -52,6 +53,7 @@ return new class extends Migration
             'email' => 'slugs.n.shots+backoffice@gmail.com',
             'role_code' => \App\Models\Employee::BACKOFFICE,
             'password' => 'slUGz-R0CKS!',
+            'active' => 1,
         ]);
 
         \App\Models\Employee::create([
@@ -61,6 +63,7 @@ return new class extends Migration
             'email' => 'slugs.n.shots+waiter@gmail.com',
             'role_code' => \App\Models\Employee::WAITER,
             'password' => 'slUGz-R0CKS!',
+            'active' => 1,
         ]);
     }
 
