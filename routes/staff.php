@@ -43,4 +43,6 @@ Route::middleware(['auth:guard_employee'])->group(function () {
     Route::apiResource('categories', \App\Http\Controllers\DrinkCategoryController::class);
     Route::apiResource('drink-units', \App\Http\Controllers\DrinkUnitController::class);
     Route::get('/me', [\App\Http\Controllers\EmployeeController::class, 'me']);
+    Route::get('orders/active', [\App\Http\Controllers\OrderController::class, 'activeOrders']);
+    Route::get('orders/active/{status}', [\App\Http\Controllers\OrderController::class, 'activeOrders']);
 });

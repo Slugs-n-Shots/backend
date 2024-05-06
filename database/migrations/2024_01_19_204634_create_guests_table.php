@@ -28,14 +28,18 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
-        (new \App\Models\Guest())->fill([
+        $guest = \App\Models\Guest::create([
             'first_name' => 'Shots',
             'middle_name' => 'Guest',
             'last_name' => 'Slugs',
             'email' => 'slugs.n.shots+guest@gmail.com',
             'password' => 'slUGz-R0CKS!',
             'active' => true,
-        ])->save();
+        ]);
+        $guest->email_verified_at = \Date::now();
+
+        echo json_encode($guest->all());
+        $guest->save();
     }
 
     /**

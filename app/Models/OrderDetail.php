@@ -19,7 +19,7 @@ class OrderDetail extends Model
     protected $fillable = [
         'order_id',
         'drink_unit_id',
-        'quantity',
+        'ordered_quantity',
         'promo_id',
         'unit_price',
         'discount',

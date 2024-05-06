@@ -129,6 +129,14 @@ class OrderController extends Controller
         return $order;
     }
 
+    public function activeOrders(Request $request)
+    {
+        if ($request->has('status')) {
+
+        };
+        return Order::all();
+    }
+
     public function makeOrder(Request $request)
     {
         $guest = Auth::user();
@@ -140,14 +148,21 @@ class OrderController extends Controller
         $total = 0;
         foreach ($request->cart as $item) {
             $drink_unit = DrinkUnit::where('drink_id', $item['drink_id'])
-            ->where('quantity', $item['quantity'])
-            ->where('unit_en', $item['unit'])->first();
+                ->where('quantity', $item['quantity'])
+                ->where('unit_en', $item['unit'])->first();
+            if ($drink_unit == null) {
+                return [
+                    'drink_id' => $item['drink_id'],
+                    'quantity' => $item['quantity'],
+                    'unit_en' => $item['unit'],
+                ];
+            }
             // return $drink_unit;
 
             $order_det = OrderDetail::create([
                 'order_id' => $order->id,
                 'drink_unit_id' => $drink_unit->id,
-                'quantity' => $item['quantity'],
+                'ordered_quantity' => $item['ordered_quantity'],
                 'promo_id' => null,
                 'unit_price' => $drink_unit->quantity,
                 'discount' => 0,
