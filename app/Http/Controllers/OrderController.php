@@ -167,7 +167,7 @@ class OrderController extends Controller
                 'unit_price' => $drink_unit->quantity,
                 'discount' => 0,
             ]);
-            $total += $item['quantity'] * $drink_unit->unit_price;
+            $total += $item['ordered_quantity'] * $drink_unit->unit_price;
             $order_det->save();
         }
 
@@ -179,5 +179,14 @@ class OrderController extends Controller
             'discounts' => [],
             'total' => $total,
         ];
+    }
+
+    public function myOrders(Request $request)
+    {
+        if ($request->has('status') && $request->status === 'active')
+        info('Aktív');
+        $guest = request()->user();
+        return Order::with(['details', 'details.drinkUnit.drink'])->where('guest_id', $guest->id)->
+        orderBy('recorded_at', 'desc')->get();
     }
 }

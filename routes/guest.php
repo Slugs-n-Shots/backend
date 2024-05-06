@@ -27,5 +27,6 @@ Route::middleware(['auth:guard_guest'])->group(function () {
     Route::get('/me', [GuestController::class, 'me']);
     Route::post('/me', [GuestController::class, 'updateSelf']);
     Route::post('/update-password', [GuestController::class, 'updatePassword']);
+    Route::get('/orders/{status?}', [OrderController::class, 'myOrders'])->whereIn('status', ['active']);
     Route::post('/orders', [OrderController::class, 'makeOrder']);
 });

@@ -2,7 +2,7 @@
     "clientName": "Thunder Client",
     "collectionName": "Slugs'n'Shots (Guest requests)",
     "collectionId": "97cebc83-3b76-4ee8-a5a5-c68a1c2dd5f7",
-    "dateExported": "2024-05-04T10:37:19.955Z",
+    "dateExported": "2024-05-06T21:47:32.039Z",
     "version": "1.2",
     "folders": [
         {
@@ -18,6 +18,13 @@
             "containerId": "",
             "created": "2024-04-30T19:54:01.174Z",
             "sortNum": 2000
+        },
+        {
+            "_id": "14d556d5-5044-482f-b3bf-63ae57d75cd6",
+            "name": "Orders",
+            "containerId": "",
+            "created": "2024-05-06T18:24:25.976Z",
+            "sortNum": 12000
         }
     ],
     "requests": [
@@ -117,11 +124,11 @@
             "method": "POST",
             "sortNum": 80000,
             "created": "2024-04-30T19:54:01.178Z",
-            "modified": "2024-04-30T19:54:01.178Z",
+            "modified": "2024-05-04T10:39:08.265Z",
             "headers": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"email\": \"slugs.n.shots+guest1@gmail.com\",\n  \"password\": \"slUGz-R0CKS!\"\n}",
+                "raw": "{\n  \"email\": \"slugs.n.shots+guest@gmail.com\",\n  \"password\": \"slUGz-R0CKS!\"\n}",
                 "form": []
             },
             "postReq": {
@@ -290,6 +297,22 @@
                 "type": "bearer",
                 "bearer": "{{guestAccessToken}}"
             }
+        },
+        {
+            "_id": "c2054dd9-96a1-4cb6-b2c9-eb4c9c359edb",
+            "colId": "97cebc83-3b76-4ee8-a5a5-c68a1c2dd5f7",
+            "containerId": "14d556d5-5044-482f-b3bf-63ae57d75cd6",
+            "name": "myOrders",
+            "url": "orders/active",
+            "method": "GET",
+            "sortNum": 190000,
+            "created": "2024-05-06T18:24:34.440Z",
+            "modified": "2024-05-06T18:26:13.170Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{guestAccessToken}}"
+            }
         }
     ],
     "settings": {
@@ -308,5 +331,5 @@
         },
         "envId": "125b80eb-8b38-419d-ac47-7ee3ce7e8dcf"
     },
-    "ref": "nGcfpdkefTibuCXYXcY0ov_LNlaWORGDxjrxaMppU7zqwNPLOybFTVdUgzFAB2R07Ed3GbEsXZg6rA-GMPsZKg"
+    "ref": "nGcfpdkefTibuCXYXcY0om1MklU2_Lr80Kt4Df0HQhjLWxrERQpV4_SSmQji-d9_41khwCfaRfWZASLOkB2lkA"
 }
