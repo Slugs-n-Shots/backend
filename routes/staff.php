@@ -45,4 +45,5 @@ Route::middleware(['auth:guard_employee'])->group(function () {
     Route::get('/me', [\App\Http\Controllers\EmployeeController::class, 'me']);
     Route::get('orders/active', [\App\Http\Controllers\OrderController::class, 'activeOrders']);
     Route::get('orders/active/{status}', [\App\Http\Controllers\OrderController::class, 'activeOrders']);
+    Route::get('orders/waiting', [\App\Http\Controllers\OrderController::class, 'waitingOrders']);
 });

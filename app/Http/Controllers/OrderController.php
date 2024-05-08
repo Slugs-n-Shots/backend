@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DrinkUnit;
+use App\Models\Employee;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
@@ -181,12 +182,59 @@ class OrderController extends Controller
         ];
     }
 
+    /**
+     * for guests
+     */
     public function myOrders(Request $request)
     {
         if ($request->has('status') && $request->status === 'active')
-        info('Aktív');
+            info('Aktív');
         $guest = request()->user();
-        return Order::with(['details', 'details.drinkUnit.drink'])->where('guest_id', $guest->id)->
-        orderBy('recorded_at', 'desc')->get();
+        return Order::with(['details', 'details.drinkUnit.drink'])->where('guest_id', $guest->id)->orderBy('recorded_at', 'desc')->get();
+    }
+
+    /**
+     * for staff - orders assigned to me
+     * I am the last assigned employee, and my assignment is not closed (date is null)
+     */
+    public function MyOpenTasks()
+    {
+        $employee = request()->user();
+        $orders = Order::where(function ($query) use ($employee) {
+            $query->where('recorded_by', $employee->id)
+                ->whereNull('recorded_at');
+        })
+            ->orWhere(function ($query) use ($employee) {
+                $query->where('made_by', $employee->id)
+                    ->whereNull('made_at');
+            })
+            ->orWhere(function ($query) use ($employee) {
+                $query->where('served_by', $employee->id)
+                    ->whereNull('served_at');
+            })
+            ->get();
+
+        return $orders;
+    }
+
+    /**
+     * Start working on an active orders
+     * bartender can made recorded orders
+     * waiter can serve serve made orders
+     */
+    public function waitingOrders()
+    {
+        $orders = null;
+        $employee = request()->user();
+
+        if ($employee->isBartender()) {
+            // not made
+            $orders = Order::with(['details', 'guest', 'details.drinkUnit.drink'])->whereNull('made_by')->orderBy('recorded_at', 'desc')->get();
+        } elseif ($employee->isWaiter()) {
+            // made but not served
+            $orders = Order::with(['details', 'details.drinkUnit.drink'])->whereNotNull('made_at')
+            ->whereNull('served_by')->orderBy('recorded_at', 'desc')->get();
+        }
+        return $orders;
     }
 }

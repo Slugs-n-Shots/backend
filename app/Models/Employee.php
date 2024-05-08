@@ -158,4 +158,23 @@ class Employee extends Authenticatable implements JWTSubject
     {
         return $claims['role'] && $claims['role'] == 'staff';
     }
+
+    public function isAdmin()
+    {
+        return $this->role_code == Employee::ADMIN;
+    }
+
+    public function isBartender()
+    {
+        return in_array($this->role_code, [Employee::ADMIN, Employee::BARTENDER]);
+    }
+
+    public function isWaiter()
+    {
+        return in_array($this->role_code, [Employee::ADMIN, Employee::WAITER]);
+    }
+    public function isBackoffice()
+    {
+        return in_array($this->role_code, [Employee::ADMIN, Employee::BACKOFFICE]);
+    }
 }
