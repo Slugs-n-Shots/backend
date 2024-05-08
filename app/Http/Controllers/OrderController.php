@@ -233,8 +233,41 @@ class OrderController extends Controller
         } elseif ($employee->isWaiter()) {
             // made but not served
             $orders = Order::with(['details', 'details.drinkUnit.drink'])->whereNotNull('made_at')
-            ->whereNull('served_by')->orderBy('recorded_at', 'desc')->get();
+                ->whereNull('served_by')->orderBy('recorded_at', 'desc')->get();
         }
         return $orders;
+    }
+
+    public function assignOrder($order_id)
+    {
+        $employee = request()->user();
+        $order = Order::findOrFail($order_id);
+        if ($employee->isBartender()) {
+            if ($order->made_at == null) {
+                $order->fill(['made_by' => $employee->id]);
+                if ($order->save()) {
+                    return "Order assigned successfully";
+                } else {
+                    return $order->getErrors()->toArray();
+                }
+            }
+        }
+        if ($employee->isWaiter()) {
+            if ($order->made_at == null) {
+                return response(__('This order cannot be assigned to you, because it has not completed yet.'), 40   );
+            } elseif ($order->recorded_at == null) {
+                $order->fill(['served_by' => $employee->id]);
+                if ($order->save()) {
+                    return "Order assigned successfully";
+                } else {
+                    return $order->getErrors()->toArray();
+                }
+            }
+        }
+    }
+
+    public function lastOrderId()
+    {
+        return Order::OrderBy('recorded_at', 'desc')->first();
     }
 }
