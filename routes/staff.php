@@ -47,5 +47,8 @@ Route::middleware(['auth:guard_employee'])->group(function () {
     Route::get('orders/active/{status}', [\App\Http\Controllers\OrderController::class, 'activeOrders']);
     Route::get('orders/waiting', [\App\Http\Controllers\OrderController::class, 'waitingOrders']);
     Route::post('orders/assign/{order_id}', [\App\Http\Controllers\OrderController::class, 'assignOrder']);
+    Route::post('orders/undo-assign/{order_id}', [\App\Http\Controllers\OrderController::class, 'undoAssignOrder']);
     Route::get('orders/lastid', [\App\Http\Controllers\OrderController::class, 'lastOrderId']);
+    Route::get('orders/my-tasks', [\App\Http\Controllers\OrderController::class, 'myOpenTasks']);
+    Route::post('orders/done/{order_id}', [\App\Http\Controllers\OrderController::class, 'doneOrder']);
 });

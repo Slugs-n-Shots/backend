@@ -197,14 +197,11 @@ class OrderController extends Controller
      * for staff - orders assigned to me
      * I am the last assigned employee, and my assignment is not closed (date is null)
      */
-    public function MyOpenTasks()
+    public function myOpenTasks()
     {
         $employee = request()->user();
-        $orders = Order::where(function ($query) use ($employee) {
-            $query->where('recorded_by', $employee->id)
-                ->whereNull('recorded_at');
-        })
-            ->orWhere(function ($query) use ($employee) {
+        $orders = Order::with(['details', 'guest', 'details.drinkUnit.drink'])
+            ->where(function ($query) use ($employee) {
                 $query->where('made_by', $employee->id)
                     ->whereNull('made_at');
             })
@@ -212,7 +209,7 @@ class OrderController extends Controller
                 $query->where('served_by', $employee->id)
                     ->whereNull('served_at');
             })
-            ->get();
+            ->orderBy('recorded_at', 'desc')->get();
 
         return $orders;
     }
@@ -232,7 +229,7 @@ class OrderController extends Controller
             $orders = Order::with(['details', 'guest', 'details.drinkUnit.drink'])->whereNull('made_by')->orderBy('recorded_at', 'desc')->get();
         } elseif ($employee->isWaiter()) {
             // made but not served
-            $orders = Order::with(['details', 'details.drinkUnit.drink'])->whereNotNull('made_at')
+            $orders = Order::with(['details', 'guest', 'details.drinkUnit.drink'])->whereNotNull('made_at')
                 ->whereNull('served_by')->orderBy('recorded_at', 'desc')->get();
         }
         return $orders;
@@ -246,22 +243,45 @@ class OrderController extends Controller
             if ($order->made_at == null) {
                 $order->fill(['made_by' => $employee->id]);
                 if ($order->save()) {
-                    return "Order assigned successfully";
+                    return __("Order assigned successfully");
                 } else {
                     return $order->getErrors()->toArray();
                 }
             }
         }
         if ($employee->isWaiter()) {
-            if ($order->made_at == null) {
-                return response(__('This order cannot be assigned to you, because it has not completed yet.'), 40   );
-            } elseif ($order->recorded_at == null) {
+            if ($order->made_at === null) {
+                return response(__('This order cannot be assigned to you, because it has not completed yet.'), 40);
+            } elseif ($order->served_at === null) {
                 $order->fill(['served_by' => $employee->id]);
                 if ($order->save()) {
-                    return "Order assigned successfully";
+                    return __("Order assigned successfully");
                 } else {
                     return $order->getErrors()->toArray();
                 }
+            }
+        }
+
+        return $order;
+    }
+
+    public function doneOrder($order_id)
+    {
+        $order = Order::findOrFail($order_id);
+        $employee = request()->user();
+        if ($order->served_by == $employee->id && $order->served_at === null) {
+            $order->fill(['served_at' => now()]);
+            if ($order->save()) {
+                return __("Order marked as served.");
+            } else {
+                return $order->getErrors()->toArray();
+            }
+        } elseif ($order->made_by == $employee->id && $order->made_at === null) {
+            $order->fill(['made_at' => now()]);
+            if ($order->save()) {
+                return __("Order marked as completed.");
+            } else {
+                return $order->getErrors()->toArray();
             }
         }
     }
@@ -269,5 +289,26 @@ class OrderController extends Controller
     public function lastOrderId()
     {
         return Order::OrderBy('recorded_at', 'desc')->first();
+    }
+
+    public function undoAssignOrder($order_id)
+    {
+        $order = Order::findOrFail($order_id);
+        $employee = request()->user();
+        if ($order->served_by == $employee->id && $order->served_at === null) {
+            $order->fill(['served_by' => null]);
+            if ($order->save()) {
+                return __("Order assignment was reverted successfully.");
+            } else {
+                return $order->getErrors()->toArray();
+            }
+        } elseif ($order->made_by == $employee->id && $order->made_at === null) {
+            $order->fill(['made_by' => null]);
+            if ($order->save()) {
+                return __("Order assignment was reverted successfully.");
+            } else {
+                return $order->getErrors()->toArray();
+            }
+        }
     }
 }
