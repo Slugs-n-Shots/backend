@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Drink;
+use App\Models\DrinkUnit;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class DrinkController extends Controller
 {
@@ -35,8 +39,14 @@ class DrinkController extends Controller
         }
         if ($request->with) {
             $with = array_intersect(explode(',', strtolower($request->with)), self::$valid_withs);
+        } else {
+            $with = 'units';
         }
-        return Drink::with($with)->get()->makeVisible($visible)->makeHidden($hidden);
+        return Drink::with($with)
+            // ->limit(10)
+            ->get()
+            ->makeVisible($visible)
+            ->makeHidden($hidden);
     }
 
     /**
@@ -44,19 +54,38 @@ class DrinkController extends Controller
      */
     public function store(Request $request)
     {
-        // return response($request->all(), 404);
-        $valid = $request->validate([
-            'name_en' => 'string|required|unique:drinks,name_en',
-            'name_hu' => 'string|required|unique:drinks,name_hu',
-            'category_id' => 'integer|required',
-            'description_en' => 'string|sometimes|nullable',
-            'description_hu' => 'string|sometimes|nullable',
-            'active' => 'boolean|sometimes',
-        ]);
         $drink = new Drink();
-        $drink->fill($valid)->save();
-        event(new \App\Events\DrinkCreated($drink));
-        return $drink;
+        DB::transaction(function () use ($request, $drink) {
+            $validator = Validator::make($request->all(), [
+                'name_en' => 'string|required|unique:drinks,name_en',
+                'name_hu' => 'string|required|unique:drinks,name_hu',
+                'category_id' => 'integer|required',
+                'description_en' => 'string|sometimes|nullable',
+                'description_hu' => 'string|sometimes|nullable',
+                'active' => 'boolean|sometimes',
+            ]);
+
+            $drink->fill($validator->valid())->save();
+
+            foreach ($request->units as $idx => $unit) {
+                if ($unit['quantity'] <= 0) {
+                    $validator->errors()->add("units.{$idx}.quantity", __("Quantity should be larger than 0."));
+                }
+                $drink_unit = DrinkUnit::create([
+                    'quantity' => $unit['quantity'],
+                ]);
+                $locales = config('app.available_locales');
+                foreach ($locales as $code) {
+                    if ($code != 'en') {
+                        $drink_unit->{"unit_{$code}"} = __($unit->unit, [], $code);
+                    }
+                }
+
+                $drink_unit->save();
+            }
+            event(new \App\Events\DrinkCreated($drink));
+            return $this->show($request, $drink->id);
+        });
     }
 
     /**
@@ -83,6 +112,8 @@ class DrinkController extends Controller
 
         if ($request->with) {
             $with = array_intersect(explode(',', strtolower($request->with)), self::$valid_withs);
+        } else {
+            $with = 'units';
         }
         return Drink::with($with)->findOrFail($id)->makeVisible($visible)->makeHidden($hidden);
     }
@@ -92,18 +123,100 @@ class DrinkController extends Controller
      */
     public function update(Request $request, Drink $drink)
     {
-        $valid = $request->validate([
-            'name_en' => 'string|sometimes|unique:drinks,name_en,' . $drink->id,
-            'name_hu' => 'string|sometimes|unique:drinks,name_hu,' . $drink->id,
-            'category_id' => 'integer|sometimes',
-            'description_en' => 'string|sometimes|nullable',
-            'description_hu' => 'string|sometimes|nullable',
-            'active' => 'boolean|sometimes',
-        ]);
+        return DB::transaction(function () use ($request, $drink) {
+            $validator = Validator::make($request->all(), [
+                'name_en' => 'string|sometimes|unique:drinks,name_en,' . $drink->id,
+                'name_hu' => 'string|sometimes|unique:drinks,name_hu,' . $drink->id,
+                'category_id' => 'integer|sometimes',
+                'description_en' => 'string|sometimes|nullable',
+                'description_hu' => 'string|sometimes|nullable',
+                'active' => 'boolean|sometimes',
+            ]);
 
-        $drink->fill($valid)->save();
-        event(new \App\Events\DrinkUpdated($drink));
-        return $this->show($request, $drink->id);
+            $drink->fill($validator->valid())->save();
+
+            $locales = config('app.available_locales');
+            foreach ($request->units as $idx => $unit) {
+                if ($unit['quantity'] <= 0) {
+                    $validator->errors()->add("units.{$idx}.quantity", __("Quantity should be larger than 0."));
+                }
+
+                $drink_units = DrinkUnit::where('drink_id', $drink->id)->get();
+
+                foreach ($drink_units as $key => $unit) {
+                    // $unit->quantity = 1000;
+                    // $unit->save();
+
+                    $filtered = array_filter($request->units, function ($req_unit) use ($unit) {
+                        return ($req_unit['drink_id'] == $unit->drink_id);
+                    });
+                    if (count($filtered)) {
+                        $req_unit = (object)($filtered[0]);
+                        // echo json_encode($unit) . "\n";
+
+                        $values = [
+                            'quantity' => $req_unit->quantity,
+                            'unit_price' => $req_unit->unit_price,
+                            'unit_en' => $req_unit->unit,
+                            'unit_hu' => __($req_unit->unit, [], 'hu'),
+                        ];
+                        $unit->fill($values);
+                        // echo json_encode($unit) . "\n";
+                        // return $unit;
+//                        echo "unit saved\n";
+                        $unit->save();
+                    } else {
+                        $unit->delete();
+                    }
+                }
+
+                if ($validator->errors()->isNotEmpty()) {
+                    throw new ValidationException($validator);
+                }
+
+                /*
+{
+  "drink_units": [
+    {
+      "id": 1,
+      "drink_id": 1,
+      "quantity": 1,
+      "unit_price": 450,
+      "unit": null,
+      "unit_code": null
+    }
+  ],
+  "req_units": [
+    {
+      "id": 1,
+      "drink_id": 1,
+      "quantity": 1,
+      "unit_price": "99900",
+      "unit": "bottle",
+      "unit_code": null
+    }
+  ]
+}
+*/
+
+                // $drink_unit = DrinkUnit::create([
+                //     'quantity' => $unit['quantity'],
+                //     'unit_en' => $unit['unit_code'],
+                // ]);
+                // $locales = config('app.available_locales');
+                // foreach ($locales as $language => $code) {
+                //     if ($code != 'en') {
+                //         $drink_unit->{"unit_{$code}"} = __($unit->unit_code, [], $code);
+                //     }
+                // }
+                // $drink_unit->save();
+            }
+
+            // event(new \App\Events\DrinkUpdated($drink));
+            // return $this->show($request, $drink->id);
+            return $this->show($request, $drink->id);
+        });
+        // return $request->all();
     }
 
     /**

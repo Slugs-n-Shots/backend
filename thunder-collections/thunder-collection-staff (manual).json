@@ -2,7 +2,7 @@
     "clientName": "Thunder Client",
     "collectionName": "Slugs'n'Shots (Staff requests)",
     "collectionId": "654a7e0e-5030-4613-ba97-257e664404b8",
-    "dateExported": "2024-05-04T10:37:29.578Z",
+    "dateExported": "2024-05-11T11:01:08.401Z",
     "version": "1.2",
     "folders": [
         {
@@ -237,7 +237,7 @@
             "method": "PUT",
             "sortNum": 13000,
             "created": "2024-05-04T10:30:49.136Z",
-            "modified": "2024-05-04T10:30:49.136Z",
+            "modified": "2024-05-11T09:48:36.635Z",
             "headers": [],
             "params": [
                 {
@@ -329,19 +329,34 @@
             "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
             "containerId": "f17722a3-df8c-4655-b008-a629618e0309",
             "name": "staff drinks/{drink}",
-            "url": "drinks/{drink}",
+            "url": "drinks/{drink_id}?nolang=1&lang=hu",
             "method": "PUT",
             "sortNum": 19000,
             "created": "2024-05-04T10:30:49.142Z",
-            "modified": "2024-05-04T10:30:49.142Z",
+            "modified": "2024-05-11T10:55:27.270Z",
             "headers": [],
             "params": [
                 {
-                    "name": "drink",
+                    "name": "drink_id",
                     "value": "1",
                     "isPath": true
+                },
+                {
+                    "name": "nolang",
+                    "value": "1",
+                    "isPath": false
+                },
+                {
+                    "name": "lang",
+                    "value": "hu",
+                    "isPath": false
                 }
-            ]
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name_en\": \"Espresso\",\n  \"name_hu\": \"Espresso\",\n  \"category_id\": 7,\n  \"description_en\": \"Strong, concentrated coffee made by forcing hot water through finely ground coffee beans.\",\n  \"description_hu\": \"Erős, koncentrált kávé, melyet forró vízzel préselnek át finom őrölt kávébabokon.\",\n  \"picture\": null,\n  \"active\": true,\n  \"units\": [\n    {\n      \"id\": 1,\n      \"drink_id\": 1,\n      \"quantity\": 11,\n      \"unit_price\": 99900,\n      \"unit\": \"bottle\",\n      \"unit_code\": null\n    }\n  ]\n}",
+                "form": []
+            }
         },
         {
             "_id": "0a74e365-8460-438b-9c56-ddd58010a313",
@@ -669,8 +684,12 @@
             "method": "GET",
             "sortNum": 49000,
             "created": "2024-05-04T10:31:33.750Z",
-            "modified": "2024-05-04T10:31:39.714Z",
-            "headers": []
+            "modified": "2024-05-04T10:38:58.190Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{staffAccessToken}}"
+            }
         }
     ],
     "settings": {
@@ -684,10 +703,14 @@
                 "value": "application/json"
             }
         ],
+        "auth": {
+            "type": "bearer",
+            "bearer": "{{staffAccessToken}}"
+        },
         "options": {
             "baseUrl": "localhost:8000/api/staff/"
         },
         "envId": "125b80eb-8b38-419d-ac47-7ee3ce7e8dcf"
     },
-    "ref": "W5eXFIt8KYK_Y-qVTXv5cGiD_YxN6BcVix5zS0am_33PgXb52sLgca3MG-_UHiipmoQaobONiDTMr0MNuqpbDg"
+    "ref": "W5eXFIt8KYK_Y-qVTXv5cKVdIZPOYqNMZ4sMsv9ImmBdo6hhkEumdXoKtFQWEr9YXVp9GVJefzBD4Qf3ltXgvw"
 }
