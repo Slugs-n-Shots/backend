@@ -13,18 +13,16 @@ use Illuminate\Queue\SerializesModels;
 
 class DrinkUnitDeleted
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable, InteractsWithSockets; //, SerializesModels;
 
-    public $id;
-    public $class;
+    public $drinkUnit;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(string $class, int $id)
+    public function __construct(DrinkUnit $drinkUnit)
     {
-        $this->class = $class;
-        $this->id = $id;
+        $this->drinkUnit = $drinkUnit;
     }
 
     /**

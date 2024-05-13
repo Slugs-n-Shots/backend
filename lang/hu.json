@@ -29,5 +29,10 @@
     "(and :count more error)": "(és további :count hiba)",
     "(and :count more errors)": "(és további :count hiba)",
     "Your password has been updated": "A jelszavad frissítve lett.",
+    "glass": "pohár" ,
+    "bottle": "üveg" ,
+    "doze": "adag" ,
+    "pcs": "db" ,
     "":""
 }
+

@@ -2,7 +2,7 @@
     "clientName": "Thunder Client",
     "collectionName": "Slugs'n'Shots (Staff requests)",
     "collectionId": "654a7e0e-5030-4613-ba97-257e664404b8",
-    "dateExported": "2024-05-11T11:01:08.401Z",
+    "dateExported": "2024-05-13T16:01:48.943Z",
     "version": "1.2",
     "folders": [
         {
@@ -271,26 +271,78 @@
             "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
             "containerId": "f17722a3-df8c-4655-b008-a629618e0309",
             "name": "staff drinks",
-            "url": "drinks",
+            "url": "drinks?nolang=true",
             "method": "GET",
             "sortNum": 15000,
             "created": "2024-05-04T10:30:49.138Z",
-            "modified": "2024-05-04T10:30:49.138Z",
+            "modified": "2024-05-11T11:59:30.185Z",
             "headers": [],
-            "params": []
+            "params": [
+                {
+                    "name": "nolang",
+                    "value": "true",
+                    "isPath": false
+                }
+            ]
         },
         {
             "_id": "6af622f0-ecb9-4e4c-bab8-92f57106f226",
             "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
             "containerId": "f17722a3-df8c-4655-b008-a629618e0309",
             "name": "staff drinks",
-            "url": "drinks",
+            "url": "drinks?nolang=true",
             "method": "POST",
             "sortNum": 16000,
             "created": "2024-05-04T10:30:49.139Z",
-            "modified": "2024-05-04T10:30:49.139Z",
+            "modified": "2024-05-11T13:06:58.615Z",
             "headers": [],
-            "params": []
+            "params": [
+                {
+                    "name": "nolang",
+                    "value": "true",
+                    "isPath": false
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name_en\": \"Test Drink #8\",\n  \"name_hu\": \"Teszt ital #8\",\n  \"category_id\": 7,\n  \"description_en\": \"Strong, for testing\",\n  \"description_hu\": \"Erős, teszteléshez\",\n  \"picture\": null,\n  \"active\": true,\n  \"units\": [\n    {\n      \"id\": 214,\n      \"drink_id\": 155,\n      \"quantity\": \"2\",\n      \"unit_en\": \"cl\",\n      \"unit_hu\": \"cl\",\n      \"unit_price\": 320,\n      \"unit\": \"cl\",\n      \"unit_code\": \"cl\"\n    },\n    {\n      \"id\": 215,\n      \"drink_id\": 155,\n      \"quantity\": \"5\",\n      \"unit_en\": \"cl\",\n      \"unit_hu\": \"cl\",\n      \"unit_price\": \"4000\",\n      \"unit\": \"cl\",\n      \"unit_code\": \"cl\"\n    }\n  ]\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "a063e772-65f2-4abc-be76-35bcd0f43523",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "f17722a3-df8c-4655-b008-a629618e0309",
+            "name": "staff drinks",
+            "url": "drinks/{drink_id}",
+            "method": "PUT",
+            "sortNum": 16500,
+            "created": "2024-05-13T09:27:30.872Z",
+            "modified": "2024-05-13T09:30:03.859Z",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "*/*",
+                    "isDisabled": true
+                },
+                {
+                    "name": "User-Agent",
+                    "value": "Thunder Client (https://www.thunderclient.com)",
+                    "isDisabled": true
+                }
+            ],
+            "params": [
+                {
+                    "name": "drink_id",
+                    "value": "1",
+                    "isPath": true
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name_en\": \"Espresso\",\n  \"name_hu\": \"Espresso\",\n  \"category_id\": 7,\n  \"description_en\": \"Strong, concentrated coffee made by forcing hot water through finely ground coffee beans.\",\n  \"description_hu\": \"Erős, koncentrált kávé, melyet forró vízzel préselnek át finom őrölt kávébabokon.\",\n  \"picture\": null,\n  \"active\": true,\n  \"units\": [\n    {\n      \"id\": 1,\n      \"drink_id\": 1,\n      \"quantity\": 2,\n      \"unit_en\": \"glass\",\n      \"unit_hu\": \"glass\",\n      \"unit_price\": 862,\n      \"unit\": \"glass\",\n      \"unit_code\": \"glass\"\n    },\n    {\n      \"id\": null,\n      \"drink_id\": 1,\n      \"quantity\": \"4\",\n      \"unit_en\": \"cl\",\n      \"unit_hu\": \"cl\",\n      \"unit_price\": \"11\",\n      \"unit\": \"cl\"\n    }\n  ]\n}",
+                "form": []
+            }
         },
         {
             "_id": "8ac32d3e-52a5-4dbb-9099-3379e0f2e55c",
@@ -314,7 +366,7 @@
             "method": "GET",
             "sortNum": 18000,
             "created": "2024-05-04T10:30:49.141Z",
-            "modified": "2024-05-04T10:30:49.141Z",
+            "modified": "2024-05-13T16:01:40.245Z",
             "headers": [],
             "params": [
                 {
@@ -650,6 +702,34 @@
             "params": []
         },
         {
+            "_id": "7af557d8-ff49-4d56-96dc-90a1dcb61ed3",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "5853a023-9c05-4f85-9bb1-c9fb1b7695e9",
+            "name": "staff login (admin)",
+            "url": "login",
+            "method": "POST",
+            "sortNum": 37000,
+            "created": "2024-05-13T09:30:55.723Z",
+            "modified": "2024-05-13T09:31:53.614Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\": \"slugs.n.shots+admin@gmail.com\",\n  \"password\": \"RPS?iou-siztE#R!\"\n}",
+                "form": []
+            },
+            "postReq": {
+                "inlineScripts": [
+                    {
+                        "script": [
+                            "console.log('response', tc.response.text);\r",
+                            "let responseData = tc.response.json;\r",
+                            "tc.setVar(\"staffAccessToken\", responseData.access_token);"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
             "_id": "148bf139-548a-4148-8c5e-7956296740f6",
             "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
             "containerId": "5853a023-9c05-4f85-9bb1-c9fb1b7695e9",
@@ -674,6 +754,62 @@
             "modified": "2024-05-04T10:30:49.163Z",
             "headers": [],
             "params": []
+        },
+        {
+            "_id": "52fece8c-6f1f-4d73-b084-4b0de4122764",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "5853a023-9c05-4f85-9bb1-c9fb1b7695e9",
+            "name": "staff login (bartender)",
+            "url": "login",
+            "method": "POST",
+            "sortNum": 42000,
+            "created": "2024-05-13T09:30:36.337Z",
+            "modified": "2024-05-13T09:30:36.337Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\": \"slugs.n.shots+bartender@gmail.com\",\n  \"password\": \"slUGz-R0CKS!\"\n}",
+                "form": []
+            },
+            "postReq": {
+                "inlineScripts": [
+                    {
+                        "script": [
+                            "console.log('response', tc.response.text);\r",
+                            "let responseData = tc.response.json;\r",
+                            "tc.setVar(\"staffAccessToken\", responseData.access_token);"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "_id": "18665cbc-ff36-43c0-9a6a-898133c3a5bf",
+            "colId": "654a7e0e-5030-4613-ba97-257e664404b8",
+            "containerId": "5853a023-9c05-4f85-9bb1-c9fb1b7695e9",
+            "name": "staff login (waiter)",
+            "url": "login",
+            "method": "POST",
+            "sortNum": 42000,
+            "created": "2024-05-13T09:30:52.109Z",
+            "modified": "2024-05-13T09:31:20.935Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\": \"slugs.n.shots+waiter@gmail.com\",\n  \"password\": \"slUGz-R0CKS!\"\n}",
+                "form": []
+            },
+            "postReq": {
+                "inlineScripts": [
+                    {
+                        "script": [
+                            "console.log('response', tc.response.text);\r",
+                            "let responseData = tc.response.json;\r",
+                            "tc.setVar(\"staffAccessToken\", responseData.access_token);"
+                        ]
+                    }
+                ]
+            }
         },
         {
             "_id": "2dc37f3a-dc31-4cc6-9ba1-143ab47c0073",
@@ -712,5 +848,5 @@
         },
         "envId": "125b80eb-8b38-419d-ac47-7ee3ce7e8dcf"
     },
-    "ref": "W5eXFIt8KYK_Y-qVTXv5cKVdIZPOYqNMZ4sMsv9ImmBdo6hhkEumdXoKtFQWEr9YXVp9GVJefzBD4Qf3ltXgvw"
+    "ref": "W5eXFIt8KYK_Y-qVTXv5cCT3f15xZWEHYKMvjD5ZkqYd1mj7HSA5NTphSx6MPPMg3ikPBGc8T3E9_hA-KmOzAg"
 }

@@ -42,7 +42,13 @@ class DrinkController extends Controller
         } else {
             $with = 'units';
         }
-        return Drink::with($with)
+
+        return Drink::with(['units' => function ($query) {
+            $query->get()->each(function ($child) {
+                $child->makeVisible(['unit_en', 'unit_hu']);
+            });
+
+        }])->with($with)
             // ->limit(10)
             ->get()
             ->makeVisible($visible)
@@ -55,7 +61,7 @@ class DrinkController extends Controller
     public function store(Request $request)
     {
         $drink = new Drink();
-        DB::transaction(function () use ($request, $drink) {
+        return DB::transaction(function () use ($request, $drink) {
             $validator = Validator::make($request->all(), [
                 'name_en' => 'string|required|unique:drinks,name_en',
                 'name_hu' => 'string|required|unique:drinks,name_hu',
@@ -71,17 +77,16 @@ class DrinkController extends Controller
                 if ($unit['quantity'] <= 0) {
                     $validator->errors()->add("units.{$idx}.quantity", __("Quantity should be larger than 0."));
                 }
-                $drink_unit = DrinkUnit::create([
-                    'quantity' => $unit['quantity'],
-                ]);
-                $locales = config('app.available_locales');
-                foreach ($locales as $code) {
-                    if ($code != 'en') {
-                        $drink_unit->{"unit_{$code}"} = __($unit->unit, [], $code);
-                    }
+                if ($unit['unit_price'] <= 0) {
+                    $validator->errors()->add("units.{$idx}.unit_price", __("The unit price should be larger than 0."));
                 }
-
-                $drink_unit->save();
+                $drink_unit = DrinkUnit::create([
+                    'drink_id' => $drink->id,
+                    'unit_price' => $unit['unit_price'],
+                    'unit_en' => $unit['unit_en'],
+                    'unit_hu' => $unit['unit_hu'],
+                    'quantity' => $unit['quantity'],
+                ])->save();
             }
             event(new \App\Events\DrinkCreated($drink));
             return $this->show($request, $drink->id);
@@ -135,7 +140,7 @@ class DrinkController extends Controller
 
             $drink->fill($validator->valid())->save();
 
-            $locales = config('app.available_locales');
+            // iterate through the existing units
             foreach ($request->units as $idx => $unit) {
                 if ($unit['quantity'] <= 0) {
                     $validator->errors()->add("units.{$idx}.quantity", __("Quantity should be larger than 0."));
@@ -143,14 +148,14 @@ class DrinkController extends Controller
 
                 $drink_units = DrinkUnit::where('drink_id', $drink->id)->get();
 
-                foreach ($drink_units as $key => $unit) {
-                    // $unit->quantity = 1000;
-                    // $unit->save();
+                echo "drink_units: " . json_encode($drink_units) . "\n";
+                foreach ($drink_units as $unit) {
 
+                    // find the unit in the post
                     $filtered = array_filter($request->units, function ($req_unit) use ($unit) {
-                        return ($req_unit['drink_id'] == $unit->drink_id);
+                        return ($req_unit['id'] == $unit->id);
                     });
-                    if (count($filtered)) {
+                    if (count($filtered)) { // if we have unit in the post, save it
                         $req_unit = (object)($filtered[0]);
                         // echo json_encode($unit) . "\n";
 
@@ -163,10 +168,30 @@ class DrinkController extends Controller
                         $unit->fill($values);
                         // echo json_encode($unit) . "\n";
                         // return $unit;
-//                        echo "unit saved\n";
-                        $unit->save();
-                    } else {
+                        //                        echo "unit saved\n";
+                        echo "saved: " . json_encode($unit) . "\n";
+                        // $unit->save();
+                    } else { // if we do not have the unit in the post, delete it.
+                        echo "deleted: " . json_encode($unit) . "\n";
                         $unit->delete();
+                    }
+                }
+
+                // save new units
+                foreach ($request->units as $idx => $unit) {
+                    if (empty($unit['id'])) {
+                        if ($unit['quantity'] <= 0) {
+                            $validator->errors()->add("units.{$idx}.quantity", __("Quantity should be larger than 0."));
+                        }
+                        $drink_unit = DrinkUnit::create([
+                            'drink_id' => $drink->id,
+                            'unit_price' => $unit['unit_price'],
+                            'unit_en' => $unit['unit_en'],
+                            'unit_hu' => $unit['unit_hu'],
+                            'quantity' => $unit['quantity'],
+                        ]);
+
+                        $drink_unit->save();
                     }
                 }
 
