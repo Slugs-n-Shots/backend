@@ -148,7 +148,7 @@ class DrinkController extends Controller
 
                 $drink_units = DrinkUnit::where('drink_id', $drink->id)->get();
 
-                echo "drink_units: " . json_encode($drink_units) . "\n";
+                // echo "drink_units: " . json_encode($drink_units) . "\n";
                 foreach ($drink_units as $unit) {
 
                     // find the unit in the post
@@ -169,10 +169,10 @@ class DrinkController extends Controller
                         // echo json_encode($unit) . "\n";
                         // return $unit;
                         //                        echo "unit saved\n";
-                        echo "saved: " . json_encode($unit) . "\n";
+                        // echo "saved: " . json_encode($unit) . "\n";
                         // $unit->save();
                     } else { // if we do not have the unit in the post, delete it.
-                        echo "deleted: " . json_encode($unit) . "\n";
+                        // echo "deleted: " . json_encode($unit) . "\n";
                         $unit->delete();
                     }
                 }
