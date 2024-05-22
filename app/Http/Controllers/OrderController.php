@@ -32,7 +32,6 @@ class OrderController extends Controller
      * served_by => employee.id
      */
 
-
     protected static $valid_withs = ['order_details'];
 
     /**
@@ -133,7 +132,6 @@ class OrderController extends Controller
     public function activeOrders(Request $request)
     {
         if ($request->has('status')) {
-
         };
         return Order::all();
     }
@@ -185,12 +183,15 @@ class OrderController extends Controller
     /**
      * for guests
      */
-    public function myOrders(Request $request)
+    public function myOrders(Request $request, $status = null)
     {
-        if ($request->has('status') && $request->status === 'active')
-            info('Aktív');
         $guest = request()->user();
-        return Order::with(['details', 'details.drinkUnit.drink'])->where('guest_id', $guest->id)->orderBy('recorded_at', 'desc')->get();
+        return Order::with(['details', 'details.drinkUnit.drink'])
+            ->where('guest_id', $guest->id)
+            ->when($status === 'active', function ($query) use ($request) {
+                $query->whereNull('served_at');
+            })
+            ->orderBy('recorded_at', 'desc')->get();
     }
 
     /**

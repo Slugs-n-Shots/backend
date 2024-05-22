@@ -127,7 +127,7 @@ class DrinkCategoryController extends Controller
             // nem lehet szülőt beállítani, ha már más kategóriáknak szülője a kategória
             $children = DrinkCategory::where('parent_id', $category->id)->count();
             if ($children > 0) {
-                $validator->errors()->add('parent_id', __(":category cannot be subcategory if it has children category already.", ['parent' => $request->name ?? $category->name]));
+                $validator->errors()->add('parent_id', __(":category cannot be a subcategory if it has children category already.", ['category' => $request->name ?? $category->name]));
             }
         }
 

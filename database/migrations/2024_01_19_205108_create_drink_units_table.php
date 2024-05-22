@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('drink_id');
             $table->decimal('quantity', 8, 2);
-            $table->string('unit_en')->nullable();
-            $table->string('unit_hu')->nullable();
+            $table->string('unit_en');
+            $table->string('unit_hu');
             $table->decimal('unit_price', 8, 2);
             $table->boolean('active')->default(true);
             $table->unique(['drink_id', 'quantity', 'unit_en']);

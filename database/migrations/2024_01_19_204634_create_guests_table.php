@@ -38,7 +38,6 @@ return new class extends Migration
         ]);
         $guest->email_verified_at = \Date::now();
 
-        echo json_encode($guest->all());
         $guest->save();
     }
 
