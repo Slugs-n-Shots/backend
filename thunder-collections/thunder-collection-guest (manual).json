@@ -2,7 +2,7 @@
     "clientName": "Thunder Client",
     "collectionName": "Slugs'n'Shots (Guest requests)",
     "collectionId": "97cebc83-3b76-4ee8-a5a5-c68a1c2dd5f7",
-    "dateExported": "2024-05-11T11:00:49.906Z",
+    "dateExported": "2024-05-22T22:11:28.080Z",
     "version": "1.2",
     "folders": [
         {
@@ -28,6 +28,34 @@
         }
     ],
     "requests": [
+        {
+            "_id": "fed1717a-be5a-4491-8514-a6d1870cfdfa",
+            "colId": "97cebc83-3b76-4ee8-a5a5-c68a1c2dd5f7",
+            "containerId": "3336b74b-1e74-4e49-8640-d52a11608156",
+            "name": "login",
+            "url": "login",
+            "method": "POST",
+            "sortNum": 27500,
+            "created": "2024-04-30T19:54:01.178Z",
+            "modified": "2024-05-04T10:39:08.265Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\": \"slugs.n.shots+guest@gmail.com\",\n  \"password\": \"slUGz-R0CKS!\"\n}",
+                "form": []
+            },
+            "postReq": {
+                "inlineScripts": [
+                    {
+                        "script": [
+                            "console.log('response', tc.response.text);\r",
+                            "let responseData = tc.response.json;\r",
+                            "tc.setVar(\"guestAccessToken\", responseData.access_token);"
+                        ]
+                    }
+                ]
+            }
+        },
         {
             "_id": "606dc98f-846d-4d57-8e8f-9677a39d029d",
             "colId": "97cebc83-3b76-4ee8-a5a5-c68a1c2dd5f7",
@@ -113,34 +141,6 @@
                 "type": "json",
                 "raw": "{\n  \"email\": \"slugs.n.shots+guest1@gmail.com\"\n}",
                 "form": []
-            }
-        },
-        {
-            "_id": "fed1717a-be5a-4491-8514-a6d1870cfdfa",
-            "colId": "97cebc83-3b76-4ee8-a5a5-c68a1c2dd5f7",
-            "containerId": "3336b74b-1e74-4e49-8640-d52a11608156",
-            "name": "login",
-            "url": "login",
-            "method": "POST",
-            "sortNum": 80000,
-            "created": "2024-04-30T19:54:01.178Z",
-            "modified": "2024-05-04T10:39:08.265Z",
-            "headers": [],
-            "body": {
-                "type": "json",
-                "raw": "{\n  \"email\": \"slugs.n.shots+guest@gmail.com\",\n  \"password\": \"slUGz-R0CKS!\"\n}",
-                "form": []
-            },
-            "postReq": {
-                "inlineScripts": [
-                    {
-                        "script": [
-                            "console.log('response', tc.response.text);\r",
-                            "let responseData = tc.response.json;\r",
-                            "tc.setVar(\"guestAccessToken\", responseData.access_token);"
-                        ]
-                    }
-                ]
             }
         },
         {
@@ -307,7 +307,7 @@
             "method": "GET",
             "sortNum": 190000,
             "created": "2024-05-06T18:24:34.440Z",
-            "modified": "2024-05-06T18:26:13.170Z",
+            "modified": "2024-05-18T09:46:34.664Z",
             "headers": [],
             "auth": {
                 "type": "bearer",
@@ -331,5 +331,5 @@
         },
         "envId": "125b80eb-8b38-419d-ac47-7ee3ce7e8dcf"
     },
-    "ref": "nGcfpdkefTibuCXYXcY0oiKcgBzYXflT5_5KmeKImD3Y4piL08G8HjQuJZTorkC7r2b05i3ks7cVbE7Fr3wCcg"
+    "ref": "nGcfpdkefTibuCXYXcY0ou2TezA_YotADBKnkINPreQj3IWDreUF4K-BpU17fBWUqz-WWn1QYWblbZKdBx5voQ"
 }
