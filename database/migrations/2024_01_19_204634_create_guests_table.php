@@ -23,7 +23,7 @@ return new class extends Migration
             $table->boolean('reservee')->nullable();
             $table->string('picture', 64)->nullable();
             $table->boolean('active')->default(true);
-            $table->json('data')->default('{}');
+            $table->json('data')->nullable(); //->default('{}');
             // $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

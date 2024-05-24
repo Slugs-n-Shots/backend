@@ -108,7 +108,7 @@ class GuestAuthController extends Controller
         // to send the link, we will examine the response then see the message we
         // need to show to the user. Finally, we'll send out a proper response.
 
-        $guest = Guest::where(['email', $request->email])->get();
+        $guest = Guest::where('email', $request->email)->get();
 
         if ($guest === null) {
             return response()->json(['message' => __('Invalid data #3')], 401);
