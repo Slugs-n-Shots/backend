@@ -21,3 +21,5 @@ yarn-error.log
 *.code-workspace
 _ide_helper.php
 _ide_helper_models.php
+storage/api-docs/api-docs.json
+AGENTS.md
