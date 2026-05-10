@@ -44,12 +44,11 @@ class DrinkController extends Controller
         }
 
         return Drink::with(['units' => function ($query) {
-            $query->get()->each(function ($child) {
+            $query->each(function ($child) {
                 $child->makeVisible(['unit_en', 'unit_hu']);
             });
 
         }])->with($with)
-            // ->limit(10)
             ->get()
             ->makeVisible($visible)
             ->makeHidden($hidden);
@@ -198,50 +197,11 @@ class DrinkController extends Controller
                 if ($validator->errors()->isNotEmpty()) {
                     throw new ValidationException($validator);
                 }
-
-                /*
-{
-  "drink_units": [
-    {
-      "id": 1,
-      "drink_id": 1,
-      "quantity": 1,
-      "unit_price": 450,
-      "unit": null,
-      "unit_code": null
-    }
-  ],
-  "req_units": [
-    {
-      "id": 1,
-      "drink_id": 1,
-      "quantity": 1,
-      "unit_price": "99900",
-      "unit": "bottle",
-      "unit_code": null
-    }
-  ]
-}
-*/
-
-                // $drink_unit = DrinkUnit::create([
-                //     'quantity' => $unit['quantity'],
-                //     'unit_en' => $unit['unit_code'],
-                // ]);
-                // $locales = config('app.available_locales');
-                // foreach ($locales as $language => $code) {
-                //     if ($code != 'en') {
-                //         $drink_unit->{"unit_{$code}"} = __($unit->unit_code, [], $code);
-                //     }
-                // }
-                // $drink_unit->save();
             }
 
-            // event(new \App\Events\DrinkUpdated($drink));
-            // return $this->show($request, $drink->id);
+            event(new \App\Events\DrinkUpdated($drink));
             return $this->show($request, $drink->id);
         });
-        // return $request->all();
     }
 
     /**

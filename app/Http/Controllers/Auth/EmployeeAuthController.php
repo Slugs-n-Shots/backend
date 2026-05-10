@@ -146,44 +146,11 @@ class EmployeeAuthController extends Controller
     public function register(Request $request): Response
     {
         return response(__("Page not found."), 404);
-
-        // $request->validate([
-        //     'name' => ['required', 'string', 'max:255'],
-        //     'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . Employee::class],
-        //     'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        // ]);
-
-        // $employee = Employee::create([
-        //     'name' => $request->name,
-        //     'email' => $request->email,
-        //     'password' => Hash::make($request->password),
-        // ]);
-
-        // event(new Registered($employee));
-
-        // Auth::login($employee);
-
-        // return response()->noContent();
     }
+
     public function confirmRegistration(Request $request)
     {
         return response(__("Page not found."), 404);
-
-        // if ($request->user()->hasVerifiedEmail()) {
-        //     return redirect()->intended(
-        //         config('app.frontend_url').RouteServiceProvider::HOME.'?verified=1'
-        //     );
-        // }
-
-        // if ($request->user()->markEmailAsVerified()) {
-        //     event(new Verified($request->user()));
-        // }
-
-
-        // return redirect()->intended(
-        //     config('app.frontend_url').RouteServiceProvider::HOME.'?verified=1'
-        // );
-
     }
 
     public function reset()

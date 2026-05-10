@@ -57,11 +57,11 @@ class Order extends Model
 
     public function getStatusAttribute()
     {
-        if (!empty($this->served_at)) {
+        if ($this->served_at !== null) {
             $status = __('served');
-        } elseif (!empty($this->made_at)) {
+        } elseif ($this->made_at !== null) {
             $status = __('ready');
-        } elseif (!empty($this->recorded_at)) {
+        } elseif ($this->recorded_at !== null) {
             $status = __('in progress');
         } else {
             $status = __('pending');

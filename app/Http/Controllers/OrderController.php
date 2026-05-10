@@ -105,7 +105,9 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        return $order->delete();
+        if ($order->delete()) {
+            return response()->noContent();
+        }
     }
 
     public function scheme()

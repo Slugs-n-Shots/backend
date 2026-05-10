@@ -146,7 +146,8 @@ class DrinkCategoryController extends Controller
     public function destroy($id) // DrinkCategory $category
     {
         $category = DrinkCategory::findOrFail($id);
-        $category->delete();
-        return $category;
+        if ($category->delete()) {
+            return response()->noContent();
+        }
     }
 }

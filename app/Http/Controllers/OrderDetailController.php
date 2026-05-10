@@ -91,6 +91,8 @@ class OrderDetailController extends Controller
      */
     public function destroy(OrderDetail $orderDetail)
     {
-        return $orderDetail->delete();
+        if ($orderDetail->delete()) {
+            return response()->noContent();
+        }
     }
 }

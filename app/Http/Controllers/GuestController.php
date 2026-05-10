@@ -138,7 +138,7 @@ class GuestController extends Controller
             throw new ValidationException($validator);
         }
 
-        $user->password = $request->password;
+        $user->password = Hash::make($request->password);
         $user->save();
 
         return $user;

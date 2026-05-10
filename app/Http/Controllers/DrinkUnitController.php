@@ -61,6 +61,8 @@ class DrinkUnitController extends Controller
      */
     public function destroy(DrinkUnit $drinkUnit)
     {
-        return $drinkUnit->delete();
+        if ($drinkUnit->delete()) {
+            return response()->noContent();
+        }
     }
 }

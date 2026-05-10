@@ -79,7 +79,9 @@ class ReceiptController extends Controller
      */
     public function destroy(Receipt $receipt)
     {
-        return $receipt->delete();
+        if ($receipt->delete()) {
+            return response()->noContent();
+        }
     }
 
     public function scheme()

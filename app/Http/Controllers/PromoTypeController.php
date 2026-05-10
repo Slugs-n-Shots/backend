@@ -70,7 +70,9 @@ class PromoTypeController extends Controller
      */
     public function destroy(PromoType $promoType)
     {
-        return $promoType->delete();
+        if ($promoType->delete()) {
+            return response()->noContent();
+        }
     }
 
     public function scheme()

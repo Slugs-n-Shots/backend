@@ -23,7 +23,7 @@ class EmployeeController extends Controller
     public function index(Request $request)
     {
         $visible = ['created_at'];
-        return Employee::get()->makeVisible($visible);
+        return Employee::all()->makeVisible($visible);
     }
 
     /**

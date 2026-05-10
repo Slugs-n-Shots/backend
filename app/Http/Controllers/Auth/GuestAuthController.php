@@ -33,7 +33,7 @@ class GuestAuthController extends Controller
     public function login(Request $request)
     {
         Auth::shouldUse($this->guard);
-        $credentials = request(['email', 'password']);
+        $credentials = $request->only(['email', 'password']);
 
         if (!$token = Auth::attempt($credentials)) {
             return response()->json(['message' => __('Whoops! It seems something didn\'t go as planned.')], 401);
@@ -108,9 +108,9 @@ class GuestAuthController extends Controller
         // to send the link, we will examine the response then see the message we
         // need to show to the user. Finally, we'll send out a proper response.
 
-        $guest = Guest::where('email', $request->email)->get();
+        $guestExists = Guest::where('email', $request->email)->exists();
 
-        if ($guest === null) {
+        if (!$guestExists) {
             return response()->json(['message' => __('Invalid data #3')], 401);
         }
 
@@ -160,7 +160,7 @@ class GuestAuthController extends Controller
         $guest = Guest::findOrFail($request->id);
         $data = $guest->data;
         error_log(json_encode($data, JSON_PRETTY_PRINT));
-        if (empty($data['pw_reset_token']) || empty($data['pw_reset_exp'])) {
+        if (!isset($data['pw_reset_token']) || !isset($data['pw_reset_exp'])) {
             return response()->json(['message' => __('Invalid user or token')], 401);
         }
 
@@ -206,7 +206,7 @@ class GuestAuthController extends Controller
             'middle_name' => $request->middle_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
-            'password' => $request->password,
+            'password' => Hash::make($request->password),
         ]);
 
         VerifyEmail::$createUrlCallback = function ($notifiable) {
@@ -239,11 +239,11 @@ class GuestAuthController extends Controller
         $guest = Guest::findOrFail($request->id);
         $data = $guest->data;
 
-        if (empty($data['confirm_token']) || empty($data['confirm_exp'])) {
+        if (!isset($data['confirm_token']) || !isset($data['confirm_exp'])) {
             return response()->json(['message' => __('Invalid user or token')], 401);
         }
 
-        if (!empty($guest->hasVerifiedEmail())) {
+        if ($guest->hasVerifiedEmail()) {
             return response()->json(['message' => __('Your email is already verified')], 200);
         }
 
@@ -263,13 +263,9 @@ class GuestAuthController extends Controller
             'email_verified_at' => \Date::now(),
         ])->save();
 
-        event(new PasswordReset($guest));
+        event(new Verified($guest));
 
         return response()->json(['message' => __('Your account has been activated')]);
-
-        if ($request->user()->markEmailAsVerified()) {
-            event(new Verified($request->user()));
-        }
     }
 
     // fiók kezelés - regisztráció #3
@@ -294,10 +290,10 @@ class GuestAuthController extends Controller
             };
             $guest->sendEmailVerificationNotification();
         }
-        return ['message' => __('We have received your request. ' .
+        return response()->json(['message' => __('We have received your request. ' .
             'If there is an unconfirmed registration associated with ' .
             'the provided email address, we have sent a confirmation email. ' .
-            'Please check your inbox, including the spam or promotions folder.')];
+            'Please check your inbox, including the spam or promotions folder.')]);
     }
 
 }
