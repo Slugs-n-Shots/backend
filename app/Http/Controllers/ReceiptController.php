@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Receipt;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Validation\Rule;
 
 class ReceiptController extends Controller
 {
@@ -31,10 +32,10 @@ class ReceiptController extends Controller
         $valid = $request->validate([
             'serno' => 'string|required',
             'guest_id' => 'integer|required',
-            'issued_at' => 'datetime|required',
+            'issued_at' => 'date|required',
             'paid_for' => 'integer|required',
-            'paid_at' => 'datetime|required',
-            'payment_method' => 'string|required',
+            'paid_at' => 'date|required',
+            'payment_method' => ['string', 'required', Rule::in(Receipt::PAYMENT_METHODS)],
             'table' => 'string|sometimes|nullable',
         ]);
         $receipt = new Receipt();
@@ -63,10 +64,10 @@ class ReceiptController extends Controller
         $valid = $request->validate([
             'serno' => 'string|required',
             'guest_id' => 'integer|required',
-            'issued_at' => 'datetime|required',
+            'issued_at' => 'date|required',
             'paid_for' => 'integer|required',
-            'paid_at' => 'datetime|required',
-            'payment_method' => 'string|required',
+            'paid_at' => 'date|required',
+            'payment_method' => ['string', 'required', Rule::in(Receipt::PAYMENT_METHODS)],
             'table' => 'string|sometimes|nullable',
         ]);
 

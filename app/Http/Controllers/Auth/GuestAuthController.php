@@ -35,10 +35,11 @@ class GuestAuthController extends Controller
         Auth::shouldUse($this->guard);
         $credentials = $request->only(['email', 'password']);
 
-        if (!$token = Auth::attempt($credentials)) {
+        $user = Guest::where('email', $credentials['email'] ?? null)->first();
+
+        if (!$user || !Hash::check($credentials['password'] ?? '', $user->password)) {
             return response()->json(['message' => __('Whoops! It seems something didn\'t go as planned.')], 401);
         }
-        $user = Auth::user();
 
         if (!$user->active) {
             return response()->json(['message' => __('Your account is inactive and may not log in.')], 401);
@@ -48,6 +49,7 @@ class GuestAuthController extends Controller
             return response()->json(['message' => __('You may need to confirm your email address before log in.')], 401);
         }
 
+        $token = Auth::login($user);
         return $this->respondWithToken($token);
     }
 
@@ -159,7 +161,6 @@ class GuestAuthController extends Controller
 
         $guest = Guest::findOrFail($request->id);
         $data = $guest->data;
-        error_log(json_encode($data, JSON_PRETTY_PRINT));
         if (!isset($data['pw_reset_token']) || !isset($data['pw_reset_exp'])) {
             return response()->json(['message' => __('Invalid user or token')], 401);
         }

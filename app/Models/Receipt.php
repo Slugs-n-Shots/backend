@@ -10,13 +10,22 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Receipt extends Model
 {
     use HasFactory;
+
+    public const PAYMENT_METHOD_CASH = 'cash';
+    public const PAYMENT_METHOD_CARD = 'card';
+
+    public const PAYMENT_METHODS = [
+        self::PAYMENT_METHOD_CASH,
+        self::PAYMENT_METHOD_CARD,
+    ];
+
     /**
      * serno: string
      * guest_id: integer
      * issued_at: datetime
      * paid_for: integer
      * paid_at: datetime
-     * payment_method: string ('készpénz', 'bankkártya')
+     * payment_method: string ('cash', 'card')
      * table: ?string
      *
      * Relations
@@ -51,6 +60,15 @@ class Receipt extends Model
         'created_at',
         'updated_at',
     ];
+
+    protected $appends = [
+        'payment_method_name',
+    ];
+
+    public function getPaymentMethodNameAttribute()
+    {
+        return __($this->payment_method);
+    }
 
     function details(): HasMany {
         return $this->hasMany(OrderDetail::class, 'receipt_id', 'id');

@@ -8,7 +8,9 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Validation\ValidationException;
 
 class OrderController extends Controller
 {
@@ -32,7 +34,7 @@ class OrderController extends Controller
      * served_by => employee.id
      */
 
-    protected static $valid_withs = ['order_details'];
+    protected static $valid_withs = ['details'];
 
     /**
      * Display a listing of the resource.
@@ -133,53 +135,61 @@ class OrderController extends Controller
 
     public function activeOrders(Request $request)
     {
-        if ($request->has('status')) {
-        };
-        return Order::all();
+        return Order::when($request->status === 'active', function ($query) {
+            $query->whereNull('served_at');
+        })->get();
     }
 
     public function makeOrder(Request $request)
     {
-        $guest = Auth::user();
-        $order = Order::create([
-            'guest_id' => $guest->id,
-            'recorded_at' => now(),
+        $valid = $request->validate([
+            'cart' => ['required', 'array', 'min:1'],
+            'cart.*.drink_id' => ['required', 'integer'],
+            'cart.*.quantity' => ['required', 'numeric'],
+            'cart.*.unit' => ['required', 'string'],
+            'cart.*.ordered_quantity' => ['required', 'integer', 'min:1'],
         ]);
-        $order->save();
-        $total = 0;
-        foreach ($request->cart as $item) {
-            $drink_unit = DrinkUnit::where('drink_id', $item['drink_id'])
-                ->where('quantity', $item['quantity'])
-                ->where('unit_en', $item['unit'])->first();
-            if ($drink_unit == null) {
-                return [
-                    'drink_id' => $item['drink_id'],
-                    'quantity' => $item['quantity'],
-                    'unit_en' => $item['unit'],
-                ];
-            }
-            // return $drink_unit;
 
-            $order_det = OrderDetail::create([
-                'order_id' => $order->id,
-                'drink_unit_id' => $drink_unit->id,
-                'ordered_quantity' => $item['ordered_quantity'],
-                'promo_id' => null,
-                'unit_price' => $drink_unit->quantity,
-                'discount' => 0,
+        return DB::transaction(function () use ($valid) {
+            $guest = Auth::user();
+            $order = Order::create([
+                'guest_id' => $guest->id,
+                'recorded_at' => now(),
             ]);
-            $total += $item['ordered_quantity'] * $drink_unit->unit_price;
-            $order_det->save();
-        }
 
-        $new_order = Order::with(['details', 'details.drinkUnit.drink'])->find($order->id);
-        return (object)[
-            'message' => __('Your selections are being prepared and will be served shortly. Stay tuned!'),
-            'cart' => $request->cart,
-            'order' => $new_order,
-            'discounts' => [],
-            'total' => $total,
-        ];
+            $total = 0;
+            foreach ($valid['cart'] as $idx => $item) {
+                $drink_unit = DrinkUnit::where('drink_id', $item['drink_id'])
+                    ->where('quantity', $item['quantity'])
+                    ->where('unit_en', $item['unit'])
+                    ->first();
+
+                if ($drink_unit === null) {
+                    throw ValidationException::withMessages([
+                        "cart.{$idx}" => [__('Invalid drink unit selected.')],
+                    ]);
+                }
+
+                OrderDetail::create([
+                    'order_id' => $order->id,
+                    'drink_unit_id' => $drink_unit->id,
+                    'ordered_quantity' => $item['ordered_quantity'],
+                    'promo_id' => null,
+                    'unit_price' => $drink_unit->unit_price,
+                    'discount' => 0,
+                ]);
+                $total += $item['ordered_quantity'] * $drink_unit->unit_price;
+            }
+
+            $new_order = Order::with(['details', 'details.drinkUnit.drink'])->find($order->id);
+            return (object)[
+                'message' => __('Your selections are being prepared and will be served shortly. Stay tuned!'),
+                'cart' => $valid['cart'],
+                'order' => $new_order,
+                'discounts' => [],
+                'total' => $total,
+            ];
+        });
     }
 
     /**
@@ -254,7 +264,7 @@ class OrderController extends Controller
         }
         if ($employee->isWaiter()) {
             if ($order->made_at === null) {
-                return response(__('This order cannot be assigned to you, because it has not completed yet.'), 40);
+                return response(__('This order cannot be assigned to you, because it has not completed yet.'), 409);
             } elseif ($order->served_at === null) {
                 $order->fill(['served_by' => $employee->id]);
                 if ($order->save()) {

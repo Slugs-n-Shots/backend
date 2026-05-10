@@ -33,8 +33,9 @@
     "bottle": "üveg" ,
     "doze": "adag" ,
     "pcs": "db" ,
+    "cash": "készpénz",
+    "card": "kártyás",
     "You may need to confirm your email address before log in.": "Belépés előtt meg kell erősítsd az e-mail címedet.",
     "Unauthorized?":"Jogosulatlan?",
     "":""
 }
-

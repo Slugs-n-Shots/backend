@@ -18,7 +18,7 @@ return new class extends Migration
             $table->datetime('issued_at');
             $table->unsignedBigInteger('paid_for');
             $table->datetime('paid_at');
-            $table->string('payment_method', 16); // CHECK ([payment_method] IN ('készpénz', 'bankkártya'))
+            $table->string('payment_method', 16); // cash or card
             $table->string('table', 36)->nullable();
             $table->timestamps();
 
