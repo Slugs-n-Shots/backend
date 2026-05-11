@@ -86,9 +86,15 @@ class DrinkControllerTest extends TestCase
             'description_en' => self::$sampleDrink->description_en,
             'description_hu' => self::$sampleDrink->description_hu,
             'category_id' => $category->id,
+            'units' => [[
+                'quantity' => 1,
+                'unit_hu' => 'pohár',
+                'unit_en' => 'glass',
+                'unit_price' => 450
+            ]]
         ]);
 
-        $response->assertStatus(201);
+        $response->assertStatus(200);
 
     }
     public function test_index()

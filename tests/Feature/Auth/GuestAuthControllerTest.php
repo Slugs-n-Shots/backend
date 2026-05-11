@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Feature\Auth;
 
 use App\Http\Controllers\Auth\GuestAuthController;
 use App\Models\Guest;
