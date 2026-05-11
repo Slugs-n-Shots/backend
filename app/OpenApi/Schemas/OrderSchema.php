@@ -32,7 +32,7 @@ use OpenApi\Attributes as OA;
                 new OA\Property(
                     property: 'details',
                     type: 'array',
-                    items: new OA\Items(ref: '#/components/schemas/OrderDetail')
+                    items: new OA\Items(ref: '#/components/schemas/OrderDetailWithDrinkUnit')
                 ),
             ]
         ),
