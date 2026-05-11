@@ -21,8 +21,14 @@ class DrinkDeleted
     /**
      * Create a new event instance.
      */
-    public function __construct(string $class, int $id)
+    public function __construct(Drink|string $class, ?int $id = null)
     {
+        if ($class instanceof Drink) {
+            $this->class = $class::class;
+            $this->id = $class->id;
+            return;
+        }
+
         $this->class = $class;
         $this->id = $id;
     }

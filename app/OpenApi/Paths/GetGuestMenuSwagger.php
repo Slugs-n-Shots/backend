@@ -9,6 +9,9 @@ use OpenApi\Attributes as OA;
     operationId: 'getGuestMenu',
     summary: 'Get the active drink menu',
     tags: ['Guest menu'],
+    parameters: [
+        new OA\Parameter(name: 'lang', in: 'query', required: false, description: 'Response locale used for computed name, description, category_name and unit fields.', schema: new OA\Schema(type: 'string', enum: ['en', 'hu'], example: 'en')),
+    ],
     responses: [
         new OA\Response(
             response: 200,

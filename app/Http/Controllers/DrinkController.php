@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 
 class DrinkController extends Controller
 {
@@ -64,21 +63,21 @@ class DrinkController extends Controller
             $validator = Validator::make($request->all(), [
                 'name_en' => 'string|required|unique:drinks,name_en',
                 'name_hu' => 'string|required|unique:drinks,name_hu',
-                'category_id' => 'integer|required',
+                'category_id' => 'integer|required|exists:drink_categories,id',
                 'description_en' => 'string|sometimes|nullable',
                 'description_hu' => 'string|sometimes|nullable',
                 'active' => 'boolean|sometimes',
+                'units' => 'array|required|min:1',
+                'units.*.quantity' => 'numeric|required|gt:0',
+                'units.*.unit_price' => 'numeric|required|gt:0',
+                'units.*.unit_en' => 'string|required',
+                'units.*.unit_hu' => 'string|required',
             ]);
 
-            $drink->fill($validator->valid())->save();
+            $validated = $validator->validate();
+            $drink->fill($validated)->save();
 
-            foreach ($request->units as $idx => $unit) {
-                if ($unit['quantity'] <= 0) {
-                    $validator->errors()->add("units.{$idx}.quantity", __("Quantity should be larger than 0."));
-                }
-                if ($unit['unit_price'] <= 0) {
-                    $validator->errors()->add("units.{$idx}.unit_price", __("The unit price should be larger than 0."));
-                }
+            foreach ($request->units as $unit) {
                 $drink_unit = DrinkUnit::create([
                     'drink_id' => $drink->id,
                     'unit_price' => $unit['unit_price'],
@@ -131,71 +130,49 @@ class DrinkController extends Controller
             $validator = Validator::make($request->all(), [
                 'name_en' => 'string|sometimes|unique:drinks,name_en,' . $drink->id,
                 'name_hu' => 'string|sometimes|unique:drinks,name_hu,' . $drink->id,
-                'category_id' => 'integer|sometimes',
+                'category_id' => 'integer|sometimes|exists:drink_categories,id',
                 'description_en' => 'string|sometimes|nullable',
                 'description_hu' => 'string|sometimes|nullable',
                 'active' => 'boolean|sometimes',
+                'units' => 'array|sometimes',
+                'units.*.id' => [
+                    'integer',
+                    'sometimes',
+                    Rule::exists('drink_units', 'id')->where('drink_id', $drink->id),
+                ],
+                'units.*.quantity' => 'numeric|required_with:units|gt:0',
+                'units.*.unit_price' => 'numeric|required_with:units|gt:0',
+                'units.*.unit_en' => 'string|required_with:units',
+                'units.*.unit_hu' => 'string|required_with:units',
             ]);
 
-            $drink->fill($validator->valid())->save();
+            $validated = $validator->validate();
+            $drink->fill($validated)->save();
 
-            // iterate through the existing units
-            foreach ($request->units as $idx => $unit) {
-                if ($unit['quantity'] <= 0) {
-                    $validator->errors()->add("units.{$idx}.quantity", __("Quantity should be larger than 0."));
-                }
+            if ($request->has('units')) {
+                $unitIds = collect($request->units)->pluck('id')->filter()->all();
+                DrinkUnit::where('drink_id', $drink->id)
+                    ->whereNotIn('id', $unitIds)
+                    ->delete();
 
-                $drink_units = DrinkUnit::where('drink_id', $drink->id)->get();
+                foreach ($request->units as $unit) {
+                    $values = [
+                        'unit_price' => $unit['unit_price'],
+                        'unit_en' => $unit['unit_en'],
+                        'unit_hu' => $unit['unit_hu'],
+                        'quantity' => $unit['quantity'],
+                    ];
 
-                // echo "drink_units: " . json_encode($drink_units) . "\n";
-                foreach ($drink_units as $unit) {
-
-                    // find the unit in the post
-                    $filtered = array_filter($request->units, function ($req_unit) use ($unit) {
-                        return ($req_unit['id'] == $unit->id);
-                    });
-                    if (count($filtered)) { // if we have unit in the post, save it
-                        $req_unit = (object)($filtered[0]);
-                        // echo json_encode($unit) . "\n";
-
-                        $values = [
-                            'quantity' => $req_unit->quantity,
-                            'unit_price' => $req_unit->unit_price,
-                            'unit_en' => $req_unit->unit,
-                            'unit_hu' => __($req_unit->unit, [], 'hu'),
-                        ];
-                        $unit->fill($values);
-                        // echo json_encode($unit) . "\n";
-                        // return $unit;
-                        //                        echo "unit saved\n";
-                        // echo "saved: " . json_encode($unit) . "\n";
-                        // $unit->save();
-                    } else { // if we do not have the unit in the post, delete it.
-                        // echo "deleted: " . json_encode($unit) . "\n";
-                        $unit->delete();
-                    }
-                }
-
-                // save new units
-                foreach ($request->units as $idx => $unit) {
-                    if (empty($unit['id'])) {
-                        if ($unit['quantity'] <= 0) {
-                            $validator->errors()->add("units.{$idx}.quantity", __("Quantity should be larger than 0."));
-                        }
-                        $drink_unit = DrinkUnit::create([
+                    if (!empty($unit['id'])) {
+                        DrinkUnit::where('drink_id', $drink->id)
+                            ->where('id', $unit['id'])
+                            ->update($values);
+                    } else {
+                        DrinkUnit::create([
                             'drink_id' => $drink->id,
-                            'unit_price' => $unit['unit_price'],
-                            'unit_en' => $unit['unit_en'],
-                            'unit_hu' => $unit['unit_hu'],
-                            'quantity' => $unit['quantity'],
+                            ...$values,
                         ]);
-
-                        $drink_unit->save();
                     }
-                }
-
-                if ($validator->errors()->isNotEmpty()) {
-                    throw new ValidationException($validator);
                 }
             }
 

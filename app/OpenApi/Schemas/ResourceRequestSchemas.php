@@ -7,6 +7,21 @@ use OpenApi\Attributes as OA;
 #[OA\Schema(
     schema: 'DrinkRequest',
     type: 'object',
+    required: ['name_en', 'name_hu', 'category_id', 'units'],
+    example: [
+        'name_en' => 'Espresso',
+        'name_hu' => 'Eszpresszo',
+        'category_id' => 1,
+        'description_en' => 'Strong coffee.',
+        'description_hu' => 'Eros kave.',
+        'active' => true,
+        'units' => [[
+            'quantity' => 1,
+            'unit_en' => 'cup',
+            'unit_hu' => 'csésze',
+            'unit_price' => 650,
+        ]],
+    ],
     properties: [
         new OA\Property(property: 'name_en', type: 'string', example: 'Espresso'),
         new OA\Property(property: 'name_hu', type: 'string', example: 'Eszpresszo'),
@@ -15,6 +30,35 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'description_hu', type: ['string', 'null'], example: 'Eros kave.'),
         new OA\Property(property: 'active', type: 'boolean', example: true),
         new OA\Property(property: 'units', type: 'array', items: new OA\Items(ref: '#/components/schemas/DrinkUnitRequest')),
+    ]
+)]
+#[OA\Schema(
+    schema: 'DrinkUpdateRequest',
+    type: 'object',
+    example: [
+        'name_en' => 'Double Espresso',
+        'active' => true,
+        'units' => [[
+            'id' => 1,
+            'quantity' => 2,
+            'unit_en' => 'cup',
+            'unit_hu' => 'csésze',
+            'unit_price' => 950,
+        ]],
+    ],
+    properties: [
+        new OA\Property(property: 'name_en', type: 'string', example: 'Double Espresso'),
+        new OA\Property(property: 'name_hu', type: 'string', example: 'Dupla eszpresszo'),
+        new OA\Property(property: 'category_id', type: 'integer', format: 'int64', example: 1),
+        new OA\Property(property: 'description_en', type: ['string', 'null'], example: 'Strong coffee.'),
+        new OA\Property(property: 'description_hu', type: ['string', 'null'], example: 'Eros kave.'),
+        new OA\Property(property: 'active', type: 'boolean', example: true),
+        new OA\Property(
+            property: 'units',
+            description: 'When present, this replaces the drink unit list: omitted existing unit IDs are deleted, existing IDs are updated, and items without an ID are created.',
+            type: 'array',
+            items: new OA\Items(ref: '#/components/schemas/DrinkUnitUpdateRequest')
+        ),
     ]
 )]
 #[OA\Schema(
@@ -30,14 +74,39 @@ use OpenApi\Attributes as OA;
 #[OA\Schema(
     schema: 'DrinkUnitRequest',
     type: 'object',
-    required: ['quantity'],
+    required: ['quantity', 'unit_en', 'unit_hu', 'unit_price'],
+    example: [
+        'quantity' => 1,
+        'unit_en' => 'cup',
+        'unit_hu' => 'csésze',
+        'unit_price' => 650,
+    ],
     properties: [
         new OA\Property(property: 'drink_id', type: 'integer', format: 'int64', example: 1),
         new OA\Property(property: 'quantity', type: 'number', format: 'float', example: 0.5),
-        new OA\Property(property: 'unit_en', type: ['string', 'null'], example: 'l'),
-        new OA\Property(property: 'unit_hu', type: ['string', 'null'], example: 'l'),
+        new OA\Property(property: 'unit_en', type: 'string', example: 'l'),
+        new OA\Property(property: 'unit_hu', type: 'string', example: 'l'),
         new OA\Property(property: 'unit_price', type: 'number', format: 'float', example: 1200),
         new OA\Property(property: 'active', type: 'boolean', example: true),
+    ]
+)]
+#[OA\Schema(
+    schema: 'DrinkUnitUpdateRequest',
+    type: 'object',
+    required: ['quantity', 'unit_en', 'unit_hu', 'unit_price'],
+    example: [
+        'id' => 1,
+        'quantity' => 2,
+        'unit_en' => 'cup',
+        'unit_hu' => 'csésze',
+        'unit_price' => 950,
+    ],
+    properties: [
+        new OA\Property(property: 'id', type: 'integer', format: 'int64', example: 1),
+        new OA\Property(property: 'quantity', type: 'number', format: 'float', example: 2),
+        new OA\Property(property: 'unit_en', type: 'string', example: 'cup'),
+        new OA\Property(property: 'unit_hu', type: 'string', example: 'csésze'),
+        new OA\Property(property: 'unit_price', type: 'number', format: 'float', example: 950),
     ]
 )]
 #[OA\Schema(
