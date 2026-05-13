@@ -1,0 +1,387 @@
+<?php
+
+namespace Tests\Feature\Http\Controllers;
+
+use App\Models\Employee;
+use App\Models\Guest;
+use App\Models\Table;
+use App\Models\TableMember;
+use App\Models\TableSession;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Tests\TestCase;
+
+class TableControllerTest extends TestCase
+{
+    use DatabaseMigrations;
+
+    private string $password = 'Password1!';
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        DB::connection()->getSchemaBuilder()->enableForeignKeyConstraints();
+    }
+
+    public function test_staff_can_create_list_update_delete_and_regenerate_table_guid(): void
+    {
+        $staffToken = $this->staffToken();
+
+        $createResponse = $this
+            ->withToken($staffToken)
+            ->postJson('/api/staff/tables', [
+                'name' => 'Asztal 1',
+                'active' => true,
+            ]);
+
+        $createResponse->assertCreated()
+            ->assertJsonPath('name', 'Asztal 1')
+            ->assertJsonPath('active', true)
+            ->assertJsonPath('status', 'available')
+            ->assertJsonStructure(['id', 'guid']);
+
+        $tableId = $createResponse->json('id');
+        $oldGuid = $createResponse->json('guid');
+        $this->assertNotEmpty($oldGuid);
+        $this->assertDatabaseHas('tables', [
+            'id' => $tableId,
+            'name' => 'Asztal 1',
+            'guid' => $oldGuid,
+            'active' => true,
+        ]);
+
+        $this
+            ->withToken($staffToken)
+            ->getJson('/api/staff/tables')
+            ->assertOk()
+            ->assertJsonFragment(['name' => 'Asztal 1']);
+
+        $this
+            ->withToken($staffToken)
+            ->putJson("/api/staff/tables/{$tableId}", [
+                'name' => 'Asztal 1A',
+                'active' => false,
+            ])
+            ->assertOk()
+            ->assertJsonPath('name', 'Asztal 1A')
+            ->assertJsonPath('active', false)
+            ->assertJsonPath('status', 'inactive');
+
+        $regenerateResponse = $this
+            ->withToken($staffToken)
+            ->postJson("/api/staff/tables/{$tableId}/regenerate-guid");
+
+        $regenerateResponse->assertOk()
+            ->assertJsonPath('id', $tableId);
+        $this->assertNotSame($oldGuid, $regenerateResponse->json('guid'));
+
+        $this
+            ->withToken($staffToken)
+            ->deleteJson("/api/staff/tables/{$tableId}")
+            ->assertNoContent();
+
+        $this->assertSoftDeleted('tables', ['id' => $tableId]);
+    }
+
+    public function test_guest_can_list_available_tables_claim_one_and_get_current_table(): void
+    {
+        $guestToken = $this->guestToken();
+        $available = Table::factory()->create(['name' => 'Asztal 2']);
+        TableSession::factory()->create([
+            'table_id' => Table::factory()->create(['name' => 'Foglalt asztal'])->id,
+            'owner_guest_id' => Guest::factory()->create()->id,
+        ]);
+        Table::factory()->create(['name' => 'Inaktív asztal', 'active' => false]);
+        Table::factory()->create(['name' => 'Törölt asztal'])->delete();
+
+        $availableResponse = $this
+            ->withToken($guestToken)
+            ->getJson('/api/guest/tables/available');
+
+        $availableResponse->assertOk()
+            ->assertJsonCount(1, 'tables')
+            ->assertJsonPath('tables.0.id', $available->id)
+            ->assertJsonPath('tables.0.name', 'Asztal 2')
+            ->assertJsonPath('tables.0.guid', $available->guid)
+            ->assertJsonPath('tables.0.status', 'available')
+            ->assertJsonPath('tables.0.is_owner', false);
+
+        $claimResponse = $this
+            ->withToken($guestToken)
+            ->postJson('/api/guest/tables/claim', ['guid' => $available->guid]);
+
+        $claimResponse->assertOk()
+            ->assertJsonPath('table.id', $available->id)
+            ->assertJsonPath('table.name', 'Asztal 2')
+            ->assertJsonPath('table.guid', $available->guid)
+            ->assertJsonPath('table.status', 'reserved')
+            ->assertJsonPath('table.is_owner', true)
+            ->assertJsonPath('table_session.table_id', $available->id)
+            ->assertJsonPath('table_session.owner_guest_id', Guest::where('email', 'guest-table@example.com')->value('id'))
+            ->assertJsonPath('table_session.status', TableSession::STATUS_OPEN);
+
+        $this->assertDatabaseHas('table_sessions', [
+            'table_id' => $available->id,
+            'owner_guest_id' => Guest::where('email', 'guest-table@example.com')->value('id'),
+            'status' => TableSession::STATUS_OPEN,
+            'closed_at' => null,
+        ]);
+        $this->assertNotNull(TableSession::where('table_id', $available->id)->first()->opened_at);
+
+        $this
+            ->withToken($guestToken)
+            ->getJson('/api/guest/tables/current')
+            ->assertOk()
+            ->assertJsonPath('table.id', $available->id)
+            ->assertJsonPath('table.is_owner', true)
+            ->assertJsonPath('table_session.table_id', $available->id)
+            ->assertJsonPath('table_session.status', TableSession::STATUS_OPEN);
+    }
+
+    public function test_current_table_returns_null_when_guest_has_no_table(): void
+    {
+        $this
+            ->withToken($this->guestToken('guest-no-table@example.com'))
+            ->getJson('/api/guest/tables/current')
+            ->assertOk()
+            ->assertJsonPath('table', null)
+            ->assertJsonPath('table_session', null);
+    }
+
+    public function test_current_table_returns_approved_member_table(): void
+    {
+        $memberToken = $this->guestToken('guest-current-member@example.com');
+        $memberId = Guest::where('email', 'guest-current-member@example.com')->value('id');
+        $session = TableSession::factory()->create();
+        TableMember::factory()->create([
+            'table_session_id' => $session->id,
+            'guest_id' => $memberId,
+            'status' => TableMember::STATUS_APPROVED,
+        ]);
+
+        $this
+            ->withToken($memberToken)
+            ->getJson('/api/guest/tables/current')
+            ->assertOk()
+            ->assertJsonPath('table.id', $session->table_id)
+            ->assertJsonPath('table.is_owner', false)
+            ->assertJsonPath('table_session.id', $session->id)
+            ->assertJsonPath('table_session.status', TableSession::STATUS_OPEN);
+    }
+
+    public function test_unauthenticated_table_requests_are_rejected(): void
+    {
+        $this->postJson('/api/staff/tables', [])->assertUnauthorized();
+        $this->postJson('/api/guest/tables/claim', [])->assertUnauthorized();
+    }
+
+    public function test_staff_table_validation_pessimistic_cases(): void
+    {
+        $staffToken = $this->staffToken();
+
+        $this
+            ->withToken($staffToken)
+            ->postJson('/api/staff/tables', [])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['name']);
+
+        $this
+            ->withToken($staffToken)
+            ->postJson('/api/staff/tables', ['active' => true])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['name']);
+
+        $table = Table::factory()->create();
+
+        $this
+            ->withToken($staffToken)
+            ->putJson("/api/staff/tables/{$table->id}", ['name' => ''])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['name']);
+    }
+
+    public function test_guest_table_validation_pessimistic_cases(): void
+    {
+        $guestToken = $this->guestToken();
+
+        $this
+            ->withToken($guestToken)
+            ->postJson('/api/guest/tables/claim', [])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['guid']);
+
+        $this
+            ->withToken($guestToken)
+            ->postJson('/api/guest/tables/claim', ['guid' => 'not-a-guid'])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['guid']);
+
+        $this
+            ->withToken($guestToken)
+            ->postJson('/api/guest/tables/claim', ['guid' => '00000000-0000-0000-0000-000000000000'])
+            ->assertNotFound();
+    }
+
+    public function test_guest_token_cannot_access_staff_table_routes(): void
+    {
+        $this
+            ->withToken($this->guestToken())
+            ->getJson('/api/staff/tables')
+            ->assertUnauthorized();
+    }
+
+    public function test_staff_token_cannot_access_guest_table_routes(): void
+    {
+        $this
+            ->withToken($this->staffToken())
+            ->getJson('/api/guest/tables/available')
+            ->assertUnauthorized();
+    }
+
+    public function test_claim_rejects_inactive_reserved_soft_deleted_and_second_owned_table(): void
+    {
+        $firstGuestToken = $this->guestToken('guest-claim-one@example.com');
+        $secondGuestToken = $this->guestToken('guest-claim-two@example.com');
+        $reservedByOther = Guest::factory()->create([
+            'email' => 'other-owner@example.com',
+            'email_verified_at' => now(),
+        ]);
+
+        $inactive = Table::factory()->create(['active' => false]);
+        $reserved = Table::factory()->create();
+        TableSession::factory()->create([
+            'table_id' => $reserved->id,
+            'owner_guest_id' => $reservedByOther->id,
+        ]);
+        $deleted = Table::factory()->create();
+        $deletedGuid = $deleted->guid;
+        $deleted->delete();
+
+        $this
+            ->withToken($firstGuestToken)
+            ->postJson('/api/guest/tables/claim', ['guid' => $inactive->guid])
+            ->assertStatus(409);
+
+        $this
+            ->withToken($firstGuestToken)
+            ->postJson('/api/guest/tables/claim', ['guid' => $reserved->guid])
+            ->assertStatus(409);
+
+        $this
+            ->withToken($firstGuestToken)
+            ->postJson('/api/guest/tables/claim', ['guid' => $deletedGuid])
+            ->assertNotFound();
+
+        $firstTable = Table::factory()->create();
+        $secondTable = Table::factory()->create();
+
+        $this
+            ->withToken($firstGuestToken)
+            ->postJson('/api/guest/tables/claim', ['guid' => $firstTable->guid])
+            ->assertOk();
+
+        $this
+            ->withToken($firstGuestToken)
+            ->postJson('/api/guest/tables/claim', ['guid' => $secondTable->guid])
+            ->assertStatus(409);
+
+        $this
+            ->withToken($secondGuestToken)
+            ->postJson('/api/guest/tables/claim', ['guid' => $firstTable->guid])
+            ->assertStatus(409);
+    }
+
+    public function test_table_can_be_claimed_again_after_previous_session_is_closed_on_same_business_day(): void
+    {
+        $firstGuestToken = $this->guestToken('guest-repeat-one@example.com');
+        $secondGuestToken = $this->guestToken('guest-repeat-two@example.com');
+        $table = Table::factory()->create();
+
+        $firstClaim = $this
+            ->withToken($firstGuestToken)
+            ->postJson('/api/guest/tables/claim', ['guid' => $table->guid]);
+
+        $firstClaim->assertOk()
+            ->assertJsonPath('table_session.table_id', $table->id)
+            ->assertJsonPath('table_session.status', TableSession::STATUS_OPEN);
+
+        $firstSession = TableSession::findOrFail($firstClaim->json('table_session.id'));
+        $firstSession->close();
+
+        Auth::forgetGuards();
+
+        $secondClaim = $this
+            ->withToken($secondGuestToken)
+            ->postJson('/api/guest/tables/claim', ['guid' => $table->guid]);
+
+        $secondClaim->assertOk()
+            ->assertJsonPath('table.id', $table->id)
+            ->assertJsonPath('table_session.table_id', $table->id)
+            ->assertJsonPath('table_session.status', TableSession::STATUS_OPEN);
+
+        $this->assertDatabaseCount('table_sessions', 2);
+    }
+
+    public function test_reserved_table_guid_cannot_be_regenerated(): void
+    {
+        $owner = Guest::factory()->create(['email_verified_at' => now()]);
+        $table = Table::factory()->create();
+        TableSession::factory()->create([
+            'table_id' => $table->id,
+            'owner_guest_id' => $owner->id,
+        ]);
+
+        $this
+            ->withToken($this->staffToken())
+            ->postJson("/api/staff/tables/{$table->id}/regenerate-guid")
+            ->assertStatus(409);
+    }
+
+    private function staffToken(string $email = 'staff-table@example.com'): string
+    {
+        Employee::factory()->create([
+            'email' => $email,
+            'password' => $this->password,
+            'role_code' => Employee::ADMIN,
+            'active' => true,
+        ]);
+
+        $response = $this->postJson('/api/staff/login', [
+            'email' => $email,
+            'password' => $this->password,
+        ]);
+        $response->assertOk();
+        $token = $response->json('access_token');
+        $this->assertNotEmpty($token);
+
+        Auth::forgetGuards();
+
+        return $token;
+    }
+
+    private function guestToken(string $email = 'guest-table@example.com'): string
+    {
+        Guest::factory()->create([
+            'email' => $email,
+            'email_verified_at' => now(),
+            'password' => Hash::make($this->password),
+            'active' => true,
+        ]);
+
+        $response = $this->postJson('/api/guest/login', [
+            'email' => $email,
+            'password' => $this->password,
+        ]);
+        $response->assertOk();
+        $token = $response->json('access_token');
+        $this->assertNotEmpty($token);
+
+        Auth::forgetGuards();
+
+        return $token;
+    }
+
+}
