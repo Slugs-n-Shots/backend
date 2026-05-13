@@ -144,9 +144,13 @@ class Guest extends Authenticatable implements JWTSubject, MustVerifyEmail
         return $this->hasMany(Order::class, 'guest_id', 'id');
     }
 
+    public function tableMemberships(): HasMany
+    {
+        return $this->hasMany(TableMember::class);
+    }
+
     public function checkCustomClaims($claims)
     {
-        echo json_encode($claims);
-        return $claims['role'] && $claims['role'] == 'guest';
+        return ($claims['role'] ?? null) === 'guest';
     }
 }

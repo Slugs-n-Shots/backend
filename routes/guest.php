@@ -5,7 +5,10 @@ use App\Http\Controllers\Auth\GuestAuthController as AuthController;
 use App\Http\Controllers\DrinkController;
 use App\Http\Controllers\GuestController as GuestController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\TableController;
+use App\Http\Controllers\TableMemberController;
 
+// Auth és regisztráció
 Route::post('/register', [AuthController::class, 'register']); // +regisztráció
 Route::post('/confirm-registration', [AuthController::class, 'confirmRegistration']); // +regisztráció
 
@@ -18,15 +21,30 @@ Route::post('/verify/resend', [AuthController::class, 'resendEmailVerificationMa
 
 Route::get('/refresh', [AuthController::class, 'refresh'])->middleware(['refresh.jwt']); // token frissítés
 
+// Publikus menü
 Route::get('/menu', [DrinkController::class, 'menu']);
 Route::get('/menu-tree', [DrinkController::class, 'menuTree']);
 Route::get('/drinks/card/{drink}', [DrinkController::class, 'card']);
 
 Route::middleware(['auth:guard_guest'])->group(function () {
+    // Auth és profil
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [GuestController::class, 'me']);
     Route::post('/me', [GuestController::class, 'updateSelf']);
     Route::post('/update-password', [GuestController::class, 'updatePassword']);
+
+    // Asztalok
+    Route::get('/tables/available', [TableController::class, 'available']);
+    Route::post('/tables/claim', [TableController::class, 'claim']);
+    Route::get('/tables/current', [TableController::class, 'current']);
+    Route::post('/tables/join', [TableMemberController::class, 'join']);
+    Route::get('/tables/current/members', [TableMemberController::class, 'members']);
+    Route::post('/tables/members/{member}/approve', [TableMemberController::class, 'approve']);
+    Route::post('/tables/members/{member}/reject', [TableMemberController::class, 'reject']);
+    Route::post('/tables/members/{member}/toggle-ordering', [TableMemberController::class, 'toggleOrdering']);
+    Route::delete('/tables/members/{member}', [TableMemberController::class, 'destroy']);
+
+    // Rendelések
     Route::get('/orders/{status?}', [OrderController::class, 'myOrders'])->whereIn('status', ['active']);
     Route::post('/orders', [OrderController::class, 'makeOrder']);
 });

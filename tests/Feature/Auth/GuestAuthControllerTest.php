@@ -135,6 +135,30 @@ class GuestAuthControllerTest extends TestCase
     }
 
     /** @test */
+    public function guest_registration_endpoint_creates_guest_without_logging_in()
+    {
+        Event::fake();
+
+        $response = $this->postJson('/api/guest/register', [
+            'first_name' => 'Test',
+            'last_name' => 'User',
+            'email' => 'test@example.com',
+            'password' => $this->password,
+        ]);
+
+        $response->assertOk()
+            ->assertJsonStructure(['message']);
+
+        $guest = Guest::where('email', 'test@example.com')->first();
+        $this->assertNotNull($guest);
+        $this->assertSame('Test', $guest->first_name);
+        $this->assertSame('User', $guest->last_name);
+        $this->assertTrue(Hash::check($this->password, $guest->password));
+        $this->assertGuest();
+        Event::assertDispatched(\Illuminate\Auth\Events\Registered::class);
+    }
+
+    /** @test */
     public function confirm_registration_uses_isset_for_token_validation()
     {
         // Arrange

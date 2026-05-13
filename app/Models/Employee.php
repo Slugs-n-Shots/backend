@@ -156,7 +156,7 @@ class Employee extends Authenticatable implements JWTSubject
 
     public function checkCustomClaims($claims)
     {
-        return $claims['role'] && $claims['role'] == 'staff';
+        return ($claims['role'] ?? null) === 'staff';
     }
 
     public function isAdmin()
