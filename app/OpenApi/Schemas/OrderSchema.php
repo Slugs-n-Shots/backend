@@ -18,7 +18,8 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'served_by', type: ['integer', 'null'], format: 'int64', example: null),
         new OA\Property(property: 'served_at', type: ['string', 'null'], format: 'date-time', example: null),
         new OA\Property(property: 'table', type: ['string', 'null'], example: 'A12'),
-        new OA\Property(property: 'status', type: 'string', example: 'in progress'),
+        new OA\Property(property: 'status', type: 'string', enum: ['open', 'preparing', 'ready', 'served', 'cancelled'], example: 'open'),
+        new OA\Property(property: 'table_session_id', type: ['integer', 'null'], format: 'int64', example: 3),
     ]
 )]
 #[OA\Schema(

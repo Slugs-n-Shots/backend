@@ -55,6 +55,7 @@ Route::middleware(['auth:guard_employee'])->group(function () {
     Route::apiResource('drink-units', \App\Http\Controllers\DrinkUnitController::class);
 
     // Rendelések
+    Route::post('orders', [\App\Http\Controllers\OrderController::class, 'staffStore']);
     Route::get('orders/active', [\App\Http\Controllers\OrderController::class, 'activeOrders']);
     Route::get('orders/active/{status}', [\App\Http\Controllers\OrderController::class, 'activeOrders']);
     Route::get('orders/waiting', [\App\Http\Controllers\OrderController::class, 'waitingOrders']);

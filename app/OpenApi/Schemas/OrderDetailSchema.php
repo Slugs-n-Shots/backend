@@ -17,6 +17,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'unit_price', type: 'integer', example: 1200),
         new OA\Property(property: 'discount', type: ['number', 'null'], format: 'float', example: 0),
         new OA\Property(property: 'receipt_id', type: ['integer', 'null'], format: 'int64', example: null),
+        new OA\Property(property: 'payment_status', type: 'string', enum: ['pending', 'paid'], example: 'pending'),
     ]
 )]
 #[OA\Schema(

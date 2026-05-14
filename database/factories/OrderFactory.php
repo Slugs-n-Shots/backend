@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Guest;
+use App\Models\Order;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -15,6 +16,7 @@ class OrderFactory extends Factory
         return [
             'guest_id' => Guest::factory(),
             'recorded_at' => now(),
+            'status' => Order::STATUS_OPEN,
         ];
     }
 }

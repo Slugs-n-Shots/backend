@@ -105,6 +105,22 @@ use OpenApi\Attributes as OA;
             minItems: 1,
             items: new OA\Items(ref: '#/components/schemas/MakeOrderCartItem')
         ),
+        new OA\Property(property: 'table_session_id', type: ['integer', 'null'], format: 'int64', example: 3),
+    ]
+)]
+#[OA\Schema(
+    schema: 'StaffCreateOrderRequest',
+    type: 'object',
+    required: ['guest_id', 'cart'],
+    properties: [
+        new OA\Property(property: 'guest_id', type: 'integer', format: 'int64', example: 12),
+        new OA\Property(property: 'table_session_id', type: ['integer', 'null'], format: 'int64', example: 3),
+        new OA\Property(
+            property: 'cart',
+            type: 'array',
+            minItems: 1,
+            items: new OA\Items(ref: '#/components/schemas/MakeOrderCartItem')
+        ),
     ]
 )]
 #[OA\Schema(
@@ -142,7 +158,8 @@ use OpenApi\Attributes as OA;
             'served_by' => null,
             'served_at' => null,
             'table' => null,
-            'status' => 'in progress',
+            'status' => 'open',
+            'table_session_id' => 3,
             'details' => [
                 [
                     'id' => 1,
@@ -153,6 +170,7 @@ use OpenApi\Attributes as OA;
                     'unit_price' => 650,
                     'discount' => 0,
                     'receipt_id' => null,
+                    'payment_status' => 'pending',
                     'drink_unit' => [
                         'id' => 1,
                         'drink_id' => 1,

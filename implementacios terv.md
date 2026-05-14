@@ -223,6 +223,7 @@ Döntések:
 - Döntés: a rendelési tételeken legyen fizetési státusz, első körben `pending` és `paid`.
 - Döntés: a sikertelen vagy félbehagyott fizetés a fizetési próbálkozás státuszában jelenjen meg; az érintett rendelési tételek maradjanak `pending` állapotban.
 - Döntés: a nyugtára azok a rendelési tételek kerülnek, amelyek fizetett státuszba kerültek; a nyugta tételei természetesen fizetettnek számítanak.
+- Döntés: csak asztalhoz kötött rendelés lehet utólag fizetős; minden asztal nélküli rendelés azonnali fizetéses.
 - Döntés: a meglévő rendelés endpointok változhatnak, nem kell őket mindenáron kompatibilitási rétegként megtartani.
 - Döntés: minden módosított vagy kivezetett rendelés endpoint kerüljön be a frontend TODO-ba utánkövetendő/fejlesztendő API-változásként.
 

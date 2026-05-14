@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\DrinkUnit;
-use App\Models\Employee;
+use App\Models\Guest;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\TableMember;
+use App\Models\TableSession;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -133,11 +135,13 @@ class OrderController extends Controller
         return $order;
     }
 
-    public function activeOrders(Request $request)
+    public function activeOrders(Request $request, ?string $status = null)
     {
-        return Order::when($request->status === 'active', function ($query) {
-            $query->whereNull('served_at');
-        })->get();
+        return Order::when(
+            $status !== null,
+            fn ($query) => $query->where('status', $status),
+            fn ($query) => $query->whereIn('status', [Order::STATUS_OPEN, Order::STATUS_PREPARING, Order::STATUS_READY])
+        )->get();
     }
 
     public function makeOrder(Request $request)
@@ -148,44 +152,65 @@ class OrderController extends Controller
             'cart.*.quantity' => ['required', 'numeric'],
             'cart.*.unit' => ['required', 'string'],
             'cart.*.ordered_quantity' => ['required', 'integer', 'min:1'],
+            'table_session_id' => ['sometimes', 'integer', 'exists:table_sessions,id'],
         ]);
 
         return DB::transaction(function () use ($valid) {
             $guest = Auth::user();
-            $order = Order::create([
+            $tableSession = $this->resolveGuestTableSession($guest, $valid['table_session_id'] ?? null);
+
+            [$order, $total] = $this->createOrderFromCart($valid['cart'], [
                 'guest_id' => $guest->id,
                 'recorded_at' => now(),
+                'status' => Order::STATUS_OPEN,
+                'table_session_id' => $tableSession->id,
             ]);
-
-            $total = 0;
-            foreach ($valid['cart'] as $idx => $item) {
-                $drink_unit = DrinkUnit::where('drink_id', $item['drink_id'])
-                    ->where('quantity', $item['quantity'])
-                    ->where('unit_en', $item['unit'])
-                    ->first();
-
-                if ($drink_unit === null) {
-                    throw ValidationException::withMessages([
-                        "cart.{$idx}" => [__('Invalid drink unit selected.')],
-                    ]);
-                }
-
-                OrderDetail::create([
-                    'order_id' => $order->id,
-                    'drink_unit_id' => $drink_unit->id,
-                    'ordered_quantity' => $item['ordered_quantity'],
-                    'promo_id' => null,
-                    'unit_price' => $drink_unit->unit_price,
-                    'discount' => 0,
-                ]);
-                $total += $item['ordered_quantity'] * $drink_unit->unit_price;
-            }
 
             $new_order = Order::with(['details', 'details.drinkUnit.drink'])->find($order->id);
             return (object)[
                 'message' => __('Your selections are being prepared and will be served shortly. Stay tuned!'),
                 'cart' => $valid['cart'],
                 'order' => $new_order,
+                'discounts' => [],
+                'total' => $total,
+            ];
+        });
+    }
+
+    public function staffStore(Request $request)
+    {
+        $valid = $request->validate([
+            'guest_id' => ['required', 'integer', 'exists:guests,id'],
+            'cart' => ['required', 'array', 'min:1'],
+            'cart.*.drink_id' => ['required', 'integer'],
+            'cart.*.quantity' => ['required', 'numeric'],
+            'cart.*.unit' => ['required', 'string'],
+            'cart.*.ordered_quantity' => ['required', 'integer', 'min:1'],
+            'table_session_id' => ['sometimes', 'integer', 'exists:table_sessions,id'],
+        ]);
+
+        return DB::transaction(function () use ($valid) {
+            $guest = Guest::findOrFail($valid['guest_id']);
+            $tableSessionId = $valid['table_session_id'] ?? null;
+
+            if ($tableSessionId !== null) {
+                $this->ensureStaffMayUseTableSession($guest, $tableSessionId);
+            }
+
+            [$order, $total] = $this->createOrderFromCart($valid['cart'], [
+                'guest_id' => $guest->id,
+                'recorded_by' => request()->user()->id,
+                'recorded_at' => now(),
+                'status' => Order::STATUS_OPEN,
+                'table_session_id' => $tableSessionId,
+            ]);
+
+            $newOrder = Order::with(['details', 'details.drinkUnit.drink'])->find($order->id);
+
+            return (object)[
+                'message' => __('Order recorded successfully.'),
+                'cart' => $valid['cart'],
+                'order' => $newOrder,
                 'discounts' => [],
                 'total' => $total,
             ];
@@ -201,7 +226,7 @@ class OrderController extends Controller
         return Order::with(['details', 'details.drinkUnit.drink'])
             ->where('guest_id', $guest->id)
             ->when($status === 'active', function ($query) use ($request) {
-                $query->whereNull('served_at');
+                $query->whereIn('status', [Order::STATUS_OPEN, Order::STATUS_PREPARING, Order::STATUS_READY]);
             })
             ->orderBy('recorded_at', 'desc')->get();
     }
@@ -239,11 +264,19 @@ class OrderController extends Controller
 
         if ($employee->isBartender()) {
             // not made
-            $orders = Order::with(['details', 'guest', 'details.drinkUnit.drink'])->whereNull('made_by')->orderBy('recorded_at', 'desc')->get();
+            $orders = Order::with(['details', 'guest', 'details.drinkUnit.drink'])
+                ->where('status', Order::STATUS_OPEN)
+                ->whereNull('made_by')
+                ->orderBy('recorded_at', 'desc')
+                ->get();
         } elseif ($employee->isWaiter()) {
             // made but not served
-            $orders = Order::with(['details', 'guest', 'details.drinkUnit.drink'])->whereNotNull('made_at')
-                ->whereNull('served_by')->orderBy('recorded_at', 'desc')->get();
+            $orders = Order::with(['details', 'guest', 'details.drinkUnit.drink'])
+                ->where('status', Order::STATUS_READY)
+                ->whereNotNull('made_at')
+                ->whereNull('served_by')
+                ->orderBy('recorded_at', 'desc')
+                ->get();
         }
         return $orders;
     }
@@ -253,8 +286,11 @@ class OrderController extends Controller
         $employee = request()->user();
         $order = Order::findOrFail($order_id);
         if ($employee->isBartender()) {
-            if ($order->made_at == null) {
-                $order->fill(['made_by' => $employee->id]);
+            if ($order->status === Order::STATUS_OPEN && $order->made_at == null) {
+                $order->fill([
+                    'made_by' => $employee->id,
+                    'status' => Order::STATUS_PREPARING,
+                ]);
                 if ($order->save()) {
                     return __("Order assigned successfully");
                 } else {
@@ -263,7 +299,7 @@ class OrderController extends Controller
             }
         }
         if ($employee->isWaiter()) {
-            if ($order->made_at === null) {
+            if ($order->status !== Order::STATUS_READY) {
                 return response(__('This order cannot be assigned to you, because it has not completed yet.'), 409);
             } elseif ($order->served_at === null) {
                 $order->fill(['served_by' => $employee->id]);
@@ -283,14 +319,20 @@ class OrderController extends Controller
         $order = Order::findOrFail($order_id);
         $employee = request()->user();
         if ($order->served_by == $employee->id && $order->served_at === null) {
-            $order->fill(['served_at' => now()]);
+            $order->fill([
+                'served_at' => now(),
+                'status' => Order::STATUS_SERVED,
+            ]);
             if ($order->save()) {
                 return __("Order marked as served.");
             } else {
                 return $order->getErrors()->toArray();
             }
         } elseif ($order->made_by == $employee->id && $order->made_at === null) {
-            $order->fill(['made_at' => now()]);
+            $order->fill([
+                'made_at' => now(),
+                'status' => Order::STATUS_READY,
+            ]);
             if ($order->save()) {
                 return __("Order marked as completed.");
             } else {
@@ -316,12 +358,137 @@ class OrderController extends Controller
                 return $order->getErrors()->toArray();
             }
         } elseif ($order->made_by == $employee->id && $order->made_at === null) {
-            $order->fill(['made_by' => null]);
+            $order->fill([
+                'made_by' => null,
+                'status' => Order::STATUS_OPEN,
+            ]);
             if ($order->save()) {
                 return __("Order assignment was reverted successfully.");
             } else {
                 return $order->getErrors()->toArray();
             }
+        }
+    }
+
+    private function createOrderFromCart(array $cart, array $orderAttributes): array
+    {
+        $order = Order::create($orderAttributes);
+
+        $total = 0;
+        foreach ($cart as $idx => $item) {
+            $drinkUnit = DrinkUnit::where('drink_id', $item['drink_id'])
+                ->where('quantity', $item['quantity'])
+                ->where('unit_en', $item['unit'])
+                ->first();
+
+            if ($drinkUnit === null) {
+                throw ValidationException::withMessages([
+                    "cart.{$idx}" => [__('Invalid drink unit selected.')],
+                ]);
+            }
+
+            OrderDetail::create([
+                'order_id' => $order->id,
+                'drink_unit_id' => $drinkUnit->id,
+                'ordered_quantity' => $item['ordered_quantity'],
+                'promo_id' => null,
+                'unit_price' => $drinkUnit->unit_price,
+                'discount' => 0,
+                'payment_status' => OrderDetail::PAYMENT_STATUS_PENDING,
+            ]);
+            $total += $item['ordered_quantity'] * $drinkUnit->unit_price;
+        }
+
+        return [$order, $total];
+    }
+
+    private function resolveGuestTableSession(Guest $guest, ?int $tableSessionId): TableSession
+    {
+        if ($tableSessionId === null) {
+            $tableSession = $this->currentGuestTableSession($guest);
+
+            if ($tableSession === null) {
+                abort(response()->json([
+                    'message' => __('Only table-bound orders can be paid later.'),
+                ], 409));
+            }
+
+            return $tableSession;
+        }
+
+        $tableSession = TableSession::findOrFail($tableSessionId);
+        $this->ensureOpenTableSession($tableSession);
+
+        if ($tableSession->owner_guest_id === $guest->id) {
+            return $tableSession;
+        }
+
+        $membership = TableMember::where('table_session_id', $tableSession->id)
+            ->where('guest_id', $guest->id)
+            ->first();
+
+        if ($membership?->status !== TableMember::STATUS_APPROVED) {
+            abort(403);
+        }
+
+        if (!$membership->can_order) {
+            abort(response()->json([
+                'message' => __('This table member cannot order.'),
+            ], 409));
+        }
+
+        return $tableSession;
+    }
+
+    private function currentGuestTableSession(Guest $guest): ?TableSession
+    {
+        $ownedSession = TableSession::where('owner_guest_id', $guest->id)
+            ->where('status', TableSession::STATUS_OPEN)
+            ->whereNull('closed_at')
+            ->first();
+
+        if ($ownedSession !== null) {
+            return $ownedSession;
+        }
+
+        $membership = TableMember::with('tableSession')
+            ->where('guest_id', $guest->id)
+            ->where('status', TableMember::STATUS_APPROVED)
+            ->where('can_order', true)
+            ->whereHas('tableSession', function ($query) {
+                $query->where('status', TableSession::STATUS_OPEN)
+                    ->whereNull('closed_at');
+            })
+            ->first();
+
+        return $membership?->tableSession;
+    }
+
+    private function ensureStaffMayUseTableSession(Guest $guest, int $tableSessionId): void
+    {
+        $tableSession = TableSession::findOrFail($tableSessionId);
+        $this->ensureOpenTableSession($tableSession);
+
+        if ($tableSession->owner_guest_id === $guest->id) {
+            return;
+        }
+
+        $isApprovedMember = TableMember::where('table_session_id', $tableSession->id)
+            ->where('guest_id', $guest->id)
+            ->where('status', TableMember::STATUS_APPROVED)
+            ->exists();
+
+        if (!$isApprovedMember) {
+            abort(403);
+        }
+    }
+
+    private function ensureOpenTableSession(TableSession $tableSession): void
+    {
+        if ($tableSession->status !== TableSession::STATUS_OPEN || $tableSession->closed_at !== null) {
+            abort(response()->json([
+                'message' => __('This table session is already closed.'),
+            ], 409));
         }
     }
 }

@@ -5,12 +5,12 @@ namespace App\OpenApi\Paths;
 use OpenApi\Attributes as OA;
 
 #[OA\Post(
-    path: '/guest/orders',
-    operationId: 'guestMakeOrder',
-    summary: 'Create an order as a guest',
-    tags: ['Guest orders'],
+    path: '/staff/orders',
+    operationId: 'staffCreateOrder',
+    summary: 'Create an order for a guest as staff',
+    tags: ['Staff orders'],
     security: [['bearerAuth' => []]],
-    requestBody: new OA\RequestBody(required: true, content: new OA\JsonContent(ref: '#/components/schemas/MakeOrderRequest')),
+    requestBody: new OA\RequestBody(required: true, content: new OA\JsonContent(ref: '#/components/schemas/StaffCreateOrderRequest')),
     responses: [
         new OA\Response(response: 200, description: 'Created order summary.', content: new OA\JsonContent(ref: '#/components/schemas/MakeOrderResponse')),
         new OA\Response(response: 401, ref: '#/components/responses/Unauthorized'),
@@ -19,6 +19,6 @@ use OpenApi\Attributes as OA;
         new OA\Response(response: 422, ref: '#/components/responses/ValidationError'),
     ]
 )]
-final class GuestMakeOrderSwagger
+final class StaffCreateOrderSwagger
 {
 }

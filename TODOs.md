@@ -43,6 +43,7 @@ Ezeknél a feladatoknál a technikai irány látszik, de az üzleti folyamatot m
 - Döntés: a nyugta létrejöhet rendeléskor, ilyenkor a rendelés rögtön fizetettnek számít.
 - Döntés: a nyugta létrejöhet később is, amikor a vendég egy vagy több rendelési tételt fizet, például távozáskor.
 - Döntés: asztal csak akkor zárható, ha minden hozzá tartozó rendelési tétel fizetett; az asztal zárása az asztal felelősének feladata.
+- Döntés: csak asztalhoz kötött rendelés lehet utólag fizetős; minden asztal nélküli rendelés azonnali fizetéses.
 - Döntés: saját rendelésénél fizetést indíthat a látogató és a vendég.
 - Döntés: asztaltársaságnál bármelyik asztaltag indíthat fizetést az asztal tételeire.
 - Döntés: az adminisztrátor bárkinek a rendelését fizetettnek jelölheti.
@@ -120,3 +121,11 @@ Ezeknél a feladatoknál a technikai irány látszik, de az üzleti folyamatot m
 - Táblaszintű és üzleti megszorítások szétválasztása a dokumentációban: ami tranzakciós üzleti szabály, ne DB constraintként legyen leírva.
 - Dockeres fejlesztői parancsok következetes dokumentálása a sima helyi PHP parancsok helyett.
 - Unit tesztek megírása az OpenAPI-nál megírt paraméter és válasz szabályok szerint működni
+
+## Jövőbeni fejlesztések
+
+- eldönteni, hogy az itallap gyorsítótárazása hogyan történjen:
+  - kliens oldalon - az összes nyelven
+  - kliens oldalon - csak az aktív nyelven
+  - szerver oldalon - előre letárolt szerverválasszal, nyelvenként
+  - szerver oldalon - cache eljárással tárolt (pl redis), nyelvenként

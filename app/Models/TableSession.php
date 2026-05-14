@@ -61,6 +61,11 @@ class TableSession extends Model
             ->where('status', TableMember::STATUS_PENDING);
     }
 
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
+
     public function close(): bool
     {
         $this->status = self::STATUS_CLOSED;

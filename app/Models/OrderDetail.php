@@ -11,6 +11,9 @@ class OrderDetail extends Model
 {
     use HasFactory;
 
+    public const PAYMENT_STATUS_PENDING = 'pending';
+    public const PAYMENT_STATUS_PAID = 'paid';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -24,6 +27,7 @@ class OrderDetail extends Model
         'unit_price',
         'discount',
         'receipt_id',
+        'payment_status',
     ];
 
     /**

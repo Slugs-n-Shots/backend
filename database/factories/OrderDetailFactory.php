@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\DrinkUnit;
 use App\Models\Order;
+use App\Models\OrderDetail;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,6 +22,7 @@ class OrderDetailFactory extends Factory
             'unit_price' => fake()->numberBetween(300, 3000),
             'discount' => 0,
             'receipt_id' => null,
+            'payment_status' => OrderDetail::PAYMENT_STATUS_PENDING,
         ];
     }
 }

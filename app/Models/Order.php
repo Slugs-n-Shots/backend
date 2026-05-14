@@ -4,11 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
     use HasFactory;
+
+    public const STATUS_OPEN = 'open';
+    public const STATUS_PREPARING = 'preparing';
+    public const STATUS_READY = 'ready';
+    public const STATUS_SERVED = 'served';
+    public const STATUS_CANCELLED = 'cancelled';
 
     /**
      * The attributes that are mass assignable.
@@ -24,6 +31,8 @@ class Order extends Model
         'served_by',
         'served_at',
         'table',
+        'status',
+        'table_session_id',
     ];
 
     /**
@@ -36,17 +45,13 @@ class Order extends Model
         'updated_at',
     ];
 
-    protected $appends = [
-        'status'
-    ];
-
     protected $casts = [
         'recorded_at' => 'datetime',
         'made_at' => 'datetime',
         'served_at' => 'datetime',
     ];
 
-    public function guest()
+    public function guest(): BelongsTo
     {
         return $this->belongsTo(Guest::class, 'guest_id');
     }
@@ -55,17 +60,13 @@ class Order extends Model
         return $this->hasMany(OrderDetail::class);
     }
 
-    public function getStatusAttribute()
+    public function tableSession(): BelongsTo
     {
-        if ($this->served_at !== null) {
-            $status = __('served');
-        } elseif ($this->made_at !== null) {
-            $status = __('ready');
-        } elseif ($this->recorded_at !== null) {
-            $status = __('in progress');
-        } else {
-            $status = __('pending');
-        }
-        return $status;
+        return $this->belongsTo(TableSession::class);
+    }
+
+    public function getStatusLabelAttribute(): string
+    {
+        return __($this->status);
     }
 }
