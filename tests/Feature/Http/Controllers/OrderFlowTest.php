@@ -231,6 +231,98 @@ class OrderFlowTest extends TestCase
             ->assertJsonPath('order.details.0.payment_status', OrderDetail::PAYMENT_STATUS_PENDING);
     }
 
+    public function test_table_order_is_rejected_when_owner_limit_would_be_exceeded(): void
+    {
+        $owner = Guest::factory()->create(['email_verified_at' => now()]);
+        $session = TableSession::factory()->create([
+            'owner_guest_id' => $owner->id,
+            'owner_spending_limit' => 1000,
+        ]);
+        $existingUnit = $this->createDrinkUnit('Existing', 1, 'glass', 800);
+        $newUnit = $this->createDrinkUnit('New', 1, 'glass', 300);
+        $order = Order::factory()->create([
+            'guest_id' => $owner->id,
+            'table_session_id' => $session->id,
+        ]);
+        OrderDetail::factory()->create([
+            'order_id' => $order->id,
+            'drink_unit_id' => $existingUnit->id,
+            'ordered_quantity' => 1,
+            'unit_price' => 800,
+            'payment_status' => OrderDetail::PAYMENT_STATUS_PENDING,
+        ]);
+
+        $this
+            ->actingAs($owner, 'guard_guest')
+            ->postJson('/api/guest/orders?lang=en', [
+                'cart' => [$this->cartItem($newUnit)],
+                'table_session_id' => $session->id,
+            ])
+            ->assertStatus(409);
+    }
+
+    public function test_lower_staff_config_limit_is_used_when_owner_limit_is_higher(): void
+    {
+        config(['tables.default_staff_spending_limit' => 1000]);
+
+        $owner = Guest::factory()->create(['email_verified_at' => now()]);
+        $session = TableSession::factory()->create([
+            'owner_guest_id' => $owner->id,
+            'owner_spending_limit' => 5000,
+        ]);
+        $unit = $this->createDrinkUnit('Limit Soda', 1, 'glass', 1200);
+
+        $this
+            ->actingAs($owner, 'guard_guest')
+            ->postJson('/api/guest/orders?lang=en', [
+                'cart' => [$this->cartItem($unit)],
+                'table_session_id' => $session->id,
+            ])
+            ->assertStatus(409);
+    }
+
+    public function test_staff_session_override_replaces_config_limit(): void
+    {
+        config(['tables.default_staff_spending_limit' => 3000]);
+
+        $owner = Guest::factory()->create(['email_verified_at' => now()]);
+        $session = TableSession::factory()->create([
+            'owner_guest_id' => $owner->id,
+            'staff_spending_limit_override' => 1000,
+        ]);
+        $unit = $this->createDrinkUnit('Override Soda', 1, 'glass', 1200);
+
+        $this
+            ->actingAs($owner, 'guard_guest')
+            ->postJson('/api/guest/orders?lang=en', [
+                'cart' => [$this->cartItem($unit)],
+                'table_session_id' => $session->id,
+            ])
+            ->assertStatus(409);
+    }
+
+    public function test_zero_spending_limits_are_treated_as_unlimited(): void
+    {
+        config(['tables.default_staff_spending_limit' => 0]);
+
+        $owner = Guest::factory()->create(['email_verified_at' => now()]);
+        $session = TableSession::factory()->create([
+            'owner_guest_id' => $owner->id,
+            'owner_spending_limit' => 0,
+            'staff_spending_limit_override' => 0,
+        ]);
+        $unit = $this->createDrinkUnit('Unlimited Soda', 1, 'glass', 1200);
+
+        $this
+            ->actingAs($owner, 'guard_guest')
+            ->postJson('/api/guest/orders?lang=en', [
+                'cart' => [$this->cartItem($unit)],
+                'table_session_id' => $session->id,
+            ])
+            ->assertOk()
+            ->assertJsonPath('order.table_session_id', $session->id);
+    }
+
     public function test_staff_status_flow_updates_machine_status(): void
     {
         $bartender = Employee::factory()->create(['role_code' => Employee::BARTENDER]);

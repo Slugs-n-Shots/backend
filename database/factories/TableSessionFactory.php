@@ -26,6 +26,10 @@ class TableSessionFactory extends Factory
             'opened_at' => now(),
             'closed_at' => null,
             'status' => TableSession::STATUS_OPEN,
+            'owner_spending_limit' => null,
+            'staff_spending_limit_override' => null,
+            'staff_spending_limit_override_set_by' => null,
+            'staff_spending_limit_override_set_at' => null,
         ];
     }
 }

@@ -40,6 +40,81 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'opened_at', type: 'string', format: 'date-time', example: '2026-05-14T18:30:00.000000Z'),
         new OA\Property(property: 'closed_at', type: ['string', 'null'], format: 'date-time', example: null),
         new OA\Property(property: 'status', type: 'string', enum: ['open', 'closed'], example: 'open'),
+        new OA\Property(property: 'owner_spending_limit', type: ['integer', 'null'], example: 5000),
+        new OA\Property(property: 'staff_spending_limit_override', type: ['integer', 'null'], example: 3000),
+        new OA\Property(property: 'effective_spending_limit', type: ['integer', 'null'], example: 3000),
+    ]
+)]
+#[OA\Schema(
+    schema: 'OwnerSpendingLimitRequest',
+    title: 'Owner spending limit request',
+    required: ['owner_spending_limit'],
+    properties: [
+        new OA\Property(property: 'owner_spending_limit', type: ['integer', 'null'], minimum: 0, example: 5000),
+    ],
+    type: 'object'
+)]
+#[OA\Schema(
+    schema: 'StaffSpendingLimitOverrideRequest',
+    title: 'Staff spending limit override request',
+    required: ['staff_spending_limit_override'],
+    properties: [
+        new OA\Property(property: 'staff_spending_limit_override', type: ['integer', 'null'], minimum: 0, example: 3000),
+    ],
+    type: 'object'
+)]
+#[OA\Schema(
+    schema: 'TableSessionLimitResponse',
+    title: 'Table session limit response',
+    type: 'object',
+    properties: [
+        new OA\Property(property: 'table_session', ref: '#/components/schemas/TableSession'),
+        new OA\Property(
+            property: 'limits',
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'owner_spending_limit', type: ['integer', 'null'], example: 5000),
+                new OA\Property(property: 'default_staff_spending_limit', type: ['integer', 'null'], example: 4000),
+                new OA\Property(property: 'staff_spending_limit_override', type: ['integer', 'null'], example: 3000),
+                new OA\Property(property: 'staff_spending_limit', type: ['integer', 'null'], example: 3000),
+                new OA\Property(property: 'effective_spending_limit', type: ['integer', 'null'], example: 3000),
+                new OA\Property(property: 'pending_total', type: 'integer', example: 1200),
+            ]
+        ),
+    ]
+)]
+#[OA\Schema(
+    schema: 'TableGuestConsumption',
+    title: 'Table guest consumption',
+    type: 'object',
+    properties: [
+        new OA\Property(property: 'guest_id', type: 'integer', format: 'int64', example: 8),
+        new OA\Property(property: 'name', type: 'string', example: 'Minta Vendég'),
+        new OA\Property(property: 'total', type: 'integer', example: 3100),
+        new OA\Property(property: 'payable_total', type: 'integer', example: 2700),
+        new OA\Property(property: 'paid_total', type: 'integer', example: 400),
+    ]
+)]
+#[OA\Schema(
+    schema: 'CurrentTableStatsResponse',
+    title: 'Current table stats response',
+    type: 'object',
+    properties: [
+        new OA\Property(property: 'table_session', ref: '#/components/schemas/TableSession'),
+        new OA\Property(
+            property: 'stats',
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'payable_total', type: 'integer', example: 2700),
+                new OA\Property(property: 'effective_spending_limit', type: ['integer', 'null'], example: 5000),
+                new OA\Property(property: 'remaining_spending_limit', type: ['integer', 'null'], example: 2300),
+                new OA\Property(
+                    property: 'per_guest_consumption',
+                    type: 'array',
+                    items: new OA\Items(ref: '#/components/schemas/TableGuestConsumption')
+                ),
+            ]
+        ),
     ]
 )]
 #[OA\Schema(

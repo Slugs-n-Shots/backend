@@ -13,10 +13,12 @@ class Receipt extends Model
 
     public const PAYMENT_METHOD_CASH = 'cash';
     public const PAYMENT_METHOD_CARD = 'card';
+    public const PAYMENT_METHOD_ADMIN_MARKED_PAID = 'admin_marked_paid';
 
     public const PAYMENT_METHODS = [
         self::PAYMENT_METHOD_CASH,
         self::PAYMENT_METHOD_CARD,
+        self::PAYMENT_METHOD_ADMIN_MARKED_PAID,
     ];
 
     /**
@@ -49,6 +51,9 @@ class Receipt extends Model
         'paid_at',
         'payment_method',
         'table',
+        'table_session_id',
+        'payment_attempt_id',
+        'access_guid',
     ];
 
     /**
@@ -67,7 +72,10 @@ class Receipt extends Model
 
     public function getPaymentMethodNameAttribute()
     {
-        return __($this->payment_method);
+        return match ($this->payment_method) {
+            self::PAYMENT_METHOD_ADMIN_MARKED_PAID => __('settled on site'),
+            default => __($this->payment_method),
+        };
     }
 
     function details(): HasMany {
@@ -76,5 +84,15 @@ class Receipt extends Model
 
     function guest(): BelongsTo {
         return $this->belongsTo(Guest::class, 'guest_id', 'id');
+    }
+
+    public function tableSession(): BelongsTo
+    {
+        return $this->belongsTo(TableSession::class);
+    }
+
+    public function paymentAttempt(): BelongsTo
+    {
+        return $this->belongsTo(PaymentAttempt::class);
     }
 }

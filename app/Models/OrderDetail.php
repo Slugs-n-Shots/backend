@@ -48,4 +48,8 @@ class OrderDetail extends Model
         return $this->hasOne(DrinkUnit::class, 'id', 'drink_unit_id');
     }
 
+    public function receipt(): BelongsTo
+    {
+        return $this->belongsTo(Receipt::class);
+    }
 }

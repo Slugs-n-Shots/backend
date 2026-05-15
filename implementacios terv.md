@@ -395,6 +395,57 @@ Teszt:
 - limit működik,
 - inaktív ital ne legyen rendelhető gyorslistából, de korábbi előzményként opcionálisan jelölhető.
 
+### 4/a. Asztalfogyasztási limit
+
+Risk tier: Tier 2, mert rendelési jogosultságot és fizetési kényszert érint.
+
+Cél:
+- Asztalhoz legyen beállítható fogyasztási limit.
+- Legyen owner által beállított limit.
+- Legyen konfigurációból érkező alapértelmezett staff limit.
+- Az admin session szinten felülírhassa az alapértelmezett staff limitet.
+- Ha mindkét limit létezik, mindig az alacsonyabb limit legyen a mérvadó.
+- `null` vagy `0` limitérték azt jelenti, hogy az adott oldalról nincs limit.
+- A limit a nyitott/függő, még nem fizetett asztaltételek összegére vonatkozzon.
+- Ha egy rendelés túllépné a mérvadó limitet, a rendelés előtt fizetni kell a nyitott/függő tételekből.
+- Owner számára legyen stat endpoint fizetendő összeggel, mérvadó limittel, hátralévő kerettel és fejenkénti fogyasztással.
+
+API vázlat:
+- `GET /api/guest/tables/current/stats`
+- `POST /api/guest/tables/current/spending-limit`
+- `POST /api/staff/table-sessions/{tableSession}/spending-limit`
+
+Javasolt mezők:
+- `table_sessions.owner_spending_limit`, nullable integer
+- `table_sessions.staff_spending_limit_override`, nullable integer
+- `table_sessions.staff_spending_limit_override_set_by`, nullable employee FK
+- `table_sessions.staff_spending_limit_override_set_at`, nullable datetime
+
+Javasolt konfiguráció:
+- `tables.default_staff_spending_limit`, nullable integer
+
+Döntések:
+- Owner limitet csak az asztal felelőse állíthat.
+- Az alapértelmezett staff limit konfigurációból érkezik.
+- Session szintű staff limit override-ot csak admin állíthat, auditáltan.
+- Ha nincs session override, a konfigurált alapértelmezett staff limit számít.
+- `null` és `0` owner/staff limit nem vesz részt a minimum számításban.
+- Limit csökkentésekor, ha az aktuális pending fogyasztás már meghaladja az új limitet, új rendelés nem adható le, amíg fizetés nem történik.
+- Limit nélküli asztalnál a korábbi rendelési/fizetési szabályok érvényesek.
+- A staff limit adminisztratív üzleti kontroll, ezért owner nem írhatja felül.
+
+Teszt:
+- owner limit alatt rendelés engedélyezett,
+- owner limit felett rendelés 409,
+- staff limit és owner limit közül az alacsonyabb érvényesül,
+- config staff limit érvényesül session override hiányában,
+- admin session override felülírja a config staff limitet,
+- `0` limitérték nem blokkol rendelést,
+- owner stat tartalmazza a fizetendő összeget, limitet, hátralévő keretet és vendégenkénti bontást,
+- részfizetés után újra rendelhető, ha a pending összeg limit alá csökken,
+- nem owner nem állíthat owner limitet,
+- admin staff-limit override állítás auditált.
+
 ### 9. Riportok
 
 Risk tier: Tier 2, aggregált üzleti adatok és exportfájlok.

@@ -158,6 +158,8 @@ class OrderController extends Controller
         return DB::transaction(function () use ($valid) {
             $guest = Auth::user();
             $tableSession = $this->resolveGuestTableSession($guest, $valid['table_session_id'] ?? null);
+            $cartTotal = $this->calculateCartTotal($valid['cart']);
+            $this->ensureTableSpendingLimitAllows($tableSession, $cartTotal);
 
             [$order, $total] = $this->createOrderFromCart($valid['cart'], [
                 'guest_id' => $guest->id,
@@ -195,6 +197,9 @@ class OrderController extends Controller
 
             if ($tableSessionId !== null) {
                 $this->ensureStaffMayUseTableSession($guest, $tableSessionId);
+                $tableSession = TableSession::findOrFail($tableSessionId);
+                $cartTotal = $this->calculateCartTotal($valid['cart']);
+                $this->ensureTableSpendingLimitAllows($tableSession, $cartTotal);
             }
 
             [$order, $total] = $this->createOrderFromCart($valid['cart'], [
@@ -402,6 +407,28 @@ class OrderController extends Controller
         return [$order, $total];
     }
 
+    private function calculateCartTotal(array $cart): int
+    {
+        $total = 0;
+
+        foreach ($cart as $idx => $item) {
+            $drinkUnit = DrinkUnit::where('drink_id', $item['drink_id'])
+                ->where('quantity', $item['quantity'])
+                ->where('unit_en', $item['unit'])
+                ->first();
+
+            if ($drinkUnit === null) {
+                throw ValidationException::withMessages([
+                    "cart.{$idx}" => [__('Invalid drink unit selected.')],
+                ]);
+            }
+
+            $total += $item['ordered_quantity'] * $drinkUnit->unit_price;
+        }
+
+        return $total;
+    }
+
     private function resolveGuestTableSession(Guest $guest, ?int $tableSessionId): TableSession
     {
         if ($tableSessionId === null) {
@@ -490,5 +517,35 @@ class OrderController extends Controller
                 'message' => __('This table session is already closed.'),
             ], 409));
         }
+    }
+
+    private function ensureTableSpendingLimitAllows(TableSession $tableSession, int $newOrderTotal): void
+    {
+        $limit = $tableSession->effectiveSpendingLimit();
+
+        if ($limit === null) {
+            return;
+        }
+
+        $pendingTotal = $this->pendingTotalForTableSession($tableSession);
+
+        if ($pendingTotal + $newOrderTotal > $limit) {
+            abort(response()->json([
+                'message' => __('The table spending limit would be exceeded. Please pay pending items before ordering more.'),
+                'limit' => $limit,
+                'pending_total' => $pendingTotal,
+                'new_order_total' => $newOrderTotal,
+            ], 409));
+        }
+    }
+
+    private function pendingTotalForTableSession(TableSession $tableSession): int
+    {
+        return (int) OrderDetail::where('payment_status', OrderDetail::PAYMENT_STATUS_PENDING)
+            ->whereHas('order', function ($query) use ($tableSession) {
+                $query->where('table_session_id', $tableSession->id);
+            })
+            ->selectRaw('COALESCE(SUM(unit_price * ordered_quantity), 0) as total')
+            ->value('total');
     }
 }

@@ -50,6 +50,7 @@ Route::middleware(['auth:guard_employee'])->group(function () {
     // Asztalok
     Route::post('tables/{table}/regenerate-guid', [\App\Http\Controllers\TableController::class, 'regenerateGuid']);
     Route::apiResource('tables', \App\Http\Controllers\TableController::class);
+    Route::post('table-sessions/{tableSession}/spending-limit', [\App\Http\Controllers\TableController::class, 'updateStaffSpendingLimit']);
 
     // Mértékegységek
     Route::apiResource('drink-units', \App\Http\Controllers\DrinkUnitController::class);
@@ -64,4 +65,5 @@ Route::middleware(['auth:guard_employee'])->group(function () {
     Route::get('orders/lastid', [\App\Http\Controllers\OrderController::class, 'lastOrderId']);
     Route::get('orders/my-tasks', [\App\Http\Controllers\OrderController::class, 'myOpenTasks']);
     Route::post('orders/done/{order_id}', [\App\Http\Controllers\OrderController::class, 'doneOrder']);
+    Route::post('order-details/mark-paid', [\App\Http\Controllers\PaymentController::class, 'staffMarkPaid']);
 });

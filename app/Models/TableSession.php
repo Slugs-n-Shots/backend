@@ -21,12 +21,17 @@ class TableSession extends Model
         'opened_at',
         'closed_at',
         'status',
+        'owner_spending_limit',
+        'staff_spending_limit_override',
+        'staff_spending_limit_override_set_by',
+        'staff_spending_limit_override_set_at',
     ];
 
     protected $casts = [
         'business_date' => 'date',
         'opened_at' => 'datetime',
         'closed_at' => 'datetime',
+        'staff_spending_limit_override_set_at' => 'datetime',
     ];
 
     protected $hidden = [
@@ -64,6 +69,32 @@ class TableSession extends Model
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function effectiveSpendingLimit(): ?int
+    {
+        $limits = array_filter([
+            $this->normalizeSpendingLimit($this->owner_spending_limit),
+            $this->staffSpendingLimit(),
+        ], static fn ($limit) => $limit !== null);
+
+        return $limits === [] ? null : min($limits);
+    }
+
+    public function staffSpendingLimit(): ?int
+    {
+        return $this->normalizeSpendingLimit(
+            $this->staff_spending_limit_override ?? config('tables.default_staff_spending_limit')
+        );
+    }
+
+    private function normalizeSpendingLimit(mixed $limit): ?int
+    {
+        if ($limit === null || (int) $limit <= 0) {
+            return null;
+        }
+
+        return (int) $limit;
     }
 
     public function close(): bool

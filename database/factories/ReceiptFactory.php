@@ -22,6 +22,9 @@ class ReceiptFactory extends Factory
             'paid_at' => now(),
             'payment_method' => fake()->randomElement(Receipt::PAYMENT_METHODS),
             'table' => null,
+            'table_session_id' => null,
+            'payment_attempt_id' => null,
+            'access_guid' => null,
         ];
     }
 }

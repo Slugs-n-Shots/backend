@@ -4,6 +4,8 @@ namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Employee;
 use App\Models\Guest;
+use App\Models\Order;
+use App\Models\OrderDetail;
 use App\Models\Table;
 use App\Models\TableMember;
 use App\Models\TableSession;
@@ -338,6 +340,162 @@ class TableControllerTest extends TestCase
             ->withToken($this->staffToken())
             ->postJson("/api/staff/tables/{$table->id}/regenerate-guid")
             ->assertStatus(409);
+    }
+
+    public function test_owner_can_update_current_table_spending_limit(): void
+    {
+        $owner = Guest::factory()->create(['email_verified_at' => now()]);
+        $session = TableSession::factory()->create(['owner_guest_id' => $owner->id]);
+
+        $this
+            ->actingAs($owner, 'guard_guest')
+            ->postJson('/api/guest/tables/current/spending-limit', [
+                'owner_spending_limit' => 2500,
+            ])
+            ->assertOk()
+            ->assertJsonPath('table_session.id', $session->id)
+            ->assertJsonPath('limits.owner_spending_limit', 2500)
+            ->assertJsonPath('limits.effective_spending_limit', 2500);
+
+        $this->assertDatabaseHas('table_sessions', [
+            'id' => $session->id,
+            'owner_spending_limit' => 2500,
+        ]);
+    }
+
+    public function test_non_owner_cannot_update_owner_spending_limit(): void
+    {
+        $owner = Guest::factory()->create(['email_verified_at' => now()]);
+        $member = Guest::factory()->create(['email_verified_at' => now()]);
+        $session = TableSession::factory()->create(['owner_guest_id' => $owner->id]);
+        TableMember::factory()->create([
+            'table_session_id' => $session->id,
+            'guest_id' => $member->id,
+            'status' => TableMember::STATUS_APPROVED,
+        ]);
+
+        $this
+            ->actingAs($member, 'guard_guest')
+            ->postJson('/api/guest/tables/current/spending-limit', [
+                'owner_spending_limit' => 2500,
+            ])
+            ->assertForbidden();
+    }
+
+    public function test_admin_can_override_staff_spending_limit_for_session(): void
+    {
+        config(['tables.default_staff_spending_limit' => 5000]);
+
+        $admin = Employee::factory()->create(['role_code' => Employee::ADMIN]);
+        $session = TableSession::factory()->create();
+
+        $this
+            ->actingAs($admin, 'guard_employee')
+            ->postJson("/api/staff/table-sessions/{$session->id}/spending-limit", [
+                'staff_spending_limit_override' => 3000,
+            ])
+            ->assertOk()
+            ->assertJsonPath('table_session.id', $session->id)
+            ->assertJsonPath('limits.default_staff_spending_limit', 5000)
+            ->assertJsonPath('limits.staff_spending_limit_override', 3000)
+            ->assertJsonPath('limits.effective_spending_limit', 3000);
+
+        $this->assertDatabaseHas('table_sessions', [
+            'id' => $session->id,
+            'staff_spending_limit_override' => 3000,
+            'staff_spending_limit_override_set_by' => $admin->id,
+        ]);
+    }
+
+    public function test_non_admin_staff_cannot_override_staff_spending_limit(): void
+    {
+        $waiter = Employee::factory()->create(['role_code' => Employee::WAITER]);
+        $session = TableSession::factory()->create();
+
+        $this
+            ->actingAs($waiter, 'guard_employee')
+            ->postJson("/api/staff/table-sessions/{$session->id}/spending-limit", [
+                'staff_spending_limit_override' => 3000,
+            ])
+            ->assertForbidden();
+    }
+
+    public function test_owner_can_view_current_table_stats(): void
+    {
+        $owner = Guest::factory()->create(['email_verified_at' => now()]);
+        $member = Guest::factory()->create(['email_verified_at' => now()]);
+        $session = TableSession::factory()->create([
+            'owner_guest_id' => $owner->id,
+            'owner_spending_limit' => 5000,
+        ]);
+        TableMember::factory()->create([
+            'table_session_id' => $session->id,
+            'guest_id' => $member->id,
+            'status' => TableMember::STATUS_APPROVED,
+        ]);
+
+        $ownerOrder = Order::factory()->create([
+            'guest_id' => $owner->id,
+            'table_session_id' => $session->id,
+        ]);
+        OrderDetail::factory()->create([
+            'order_id' => $ownerOrder->id,
+            'ordered_quantity' => 2,
+            'unit_price' => 600,
+            'payment_status' => OrderDetail::PAYMENT_STATUS_PENDING,
+        ]);
+        OrderDetail::factory()->create([
+            'order_id' => $ownerOrder->id,
+            'ordered_quantity' => 1,
+            'unit_price' => 400,
+            'payment_status' => OrderDetail::PAYMENT_STATUS_PAID,
+        ]);
+
+        $memberOrder = Order::factory()->create([
+            'guest_id' => $member->id,
+            'table_session_id' => $session->id,
+        ]);
+        OrderDetail::factory()->create([
+            'order_id' => $memberOrder->id,
+            'ordered_quantity' => 3,
+            'unit_price' => 500,
+            'payment_status' => OrderDetail::PAYMENT_STATUS_PENDING,
+        ]);
+
+        $response = $this
+            ->actingAs($owner, 'guard_guest')
+            ->getJson('/api/guest/tables/current/stats');
+
+        $response->assertOk()
+            ->assertJsonPath('table_session.id', $session->id)
+            ->assertJsonPath('stats.payable_total', 2700)
+            ->assertJsonPath('stats.effective_spending_limit', 5000)
+            ->assertJsonPath('stats.remaining_spending_limit', 2300)
+            ->assertJsonPath('stats.per_guest_consumption.0.guest_id', $owner->id)
+            ->assertJsonPath('stats.per_guest_consumption.0.total', 1600)
+            ->assertJsonPath('stats.per_guest_consumption.0.payable_total', 1200)
+            ->assertJsonPath('stats.per_guest_consumption.0.paid_total', 400)
+            ->assertJsonPath('stats.per_guest_consumption.1.guest_id', $member->id)
+            ->assertJsonPath('stats.per_guest_consumption.1.total', 1500)
+            ->assertJsonPath('stats.per_guest_consumption.1.payable_total', 1500)
+            ->assertJsonPath('stats.per_guest_consumption.1.paid_total', 0);
+    }
+
+    public function test_non_owner_cannot_view_current_table_stats(): void
+    {
+        $owner = Guest::factory()->create(['email_verified_at' => now()]);
+        $member = Guest::factory()->create(['email_verified_at' => now()]);
+        $session = TableSession::factory()->create(['owner_guest_id' => $owner->id]);
+        TableMember::factory()->create([
+            'table_session_id' => $session->id,
+            'guest_id' => $member->id,
+            'status' => TableMember::STATUS_APPROVED,
+        ]);
+
+        $this
+            ->actingAs($member, 'guard_guest')
+            ->getJson('/api/guest/tables/current/stats')
+            ->assertForbidden();
     }
 
     private function staffToken(string $email = 'staff-table@example.com'): string

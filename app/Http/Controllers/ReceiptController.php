@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Receipt;
+use App\Models\TableMember;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rule;
@@ -56,6 +57,21 @@ class ReceiptController extends Controller
         return Receipt::with($with)->findOrFail($id);
     }
 
+    public function guestShow(Request $request, Receipt $receipt)
+    {
+        $guest = $request->user();
+
+        if ($receipt->guest_id !== $guest->id && !$this->guestCanAccessTableReceipt($guest->id, $receipt)) {
+            abort(403);
+        }
+
+        return $receipt->load([
+            'details.order',
+            'details.drinkUnit.drink',
+            'tableSession.table',
+        ]);
+    }
+
     /**
      * Update the specified resource in storage.
      */
@@ -104,5 +120,23 @@ class ReceiptController extends Controller
         }
 
         return $receipt;
+    }
+
+    private function guestCanAccessTableReceipt(int $guestId, Receipt $receipt): bool
+    {
+        if ($receipt->table_session_id === null) {
+            return false;
+        }
+
+        $receipt->loadMissing('tableSession');
+
+        if ($receipt->tableSession?->owner_guest_id === $guestId) {
+            return true;
+        }
+
+        return TableMember::where('table_session_id', $receipt->table_session_id)
+            ->where('guest_id', $guestId)
+            ->where('status', TableMember::STATUS_APPROVED)
+            ->exists();
     }
 }

@@ -5,6 +5,8 @@ use App\Http\Controllers\Auth\GuestAuthController as AuthController;
 use App\Http\Controllers\DrinkController;
 use App\Http\Controllers\GuestController as GuestController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ReceiptController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\TableMemberController;
 
@@ -37,6 +39,8 @@ Route::middleware(['auth:guard_guest'])->group(function () {
     Route::get('/tables/available', [TableController::class, 'available']);
     Route::post('/tables/claim', [TableController::class, 'claim']);
     Route::get('/tables/current', [TableController::class, 'current']);
+    Route::get('/tables/current/stats', [TableController::class, 'currentStats']);
+    Route::post('/tables/current/spending-limit', [TableController::class, 'updateCurrentSpendingLimit']);
     Route::post('/tables/join', [TableMemberController::class, 'join']);
     Route::get('/tables/current/members', [TableMemberController::class, 'members']);
     Route::post('/tables/members/{member}/approve', [TableMemberController::class, 'approve']);
@@ -47,4 +51,10 @@ Route::middleware(['auth:guard_guest'])->group(function () {
     // Rendelések
     Route::get('/orders/{status?}', [OrderController::class, 'myOrders'])->whereIn('status', ['active']);
     Route::post('/orders', [OrderController::class, 'makeOrder']);
+
+    // Fizetések
+    Route::post('/payments', [PaymentController::class, 'store']);
+    Route::post('/tables/current/payments', [PaymentController::class, 'tablePayment']);
+    Route::post('/tables/current/closing-payment', [PaymentController::class, 'closingPayment']);
+    Route::get('/receipts/{receipt}', [ReceiptController::class, 'guestShow']);
 });
