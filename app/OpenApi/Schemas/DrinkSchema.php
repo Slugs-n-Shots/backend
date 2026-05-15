@@ -136,6 +136,18 @@ use OpenApi\Attributes as OA;
         ),
     ]
 )]
+#[OA\Schema(
+    schema: 'RecentDrinksResponse',
+    title: 'Recent drinks response',
+    type: 'object',
+    properties: [
+        new OA\Property(
+            property: 'drinks',
+            type: 'array',
+            items: new OA\Items(ref: '#/components/schemas/DrinkMenuItem')
+        ),
+    ]
+)]
 final class DrinkSchema
 {
 }

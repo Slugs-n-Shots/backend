@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Drink;
 use App\Models\DrinkUnit;
+use App\Models\OrderDetail;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -217,6 +218,38 @@ class DrinkController extends Controller
     public function menu(Request $request)
     {
         return Drink::where('active', true)->get()->append('category_name')->append('units')->makeHidden(['category', 'active']);
+    }
+
+    public function recentForGuest(Request $request)
+    {
+        $valid = $request->validate([
+            'limit' => ['sometimes', 'integer', 'min:1', 'max:50'],
+        ]);
+        $limit = $valid['limit'] ?? 10;
+
+        $recentDrinkIds = OrderDetail::query()
+            ->join('orders', 'orders.id', '=', 'order_details.order_id')
+            ->join('drink_units', 'drink_units.id', '=', 'order_details.drink_unit_id')
+            ->join('drinks', 'drinks.id', '=', 'drink_units.drink_id')
+            ->where('orders.guest_id', $request->user()->id)
+            ->where('drinks.active', true)
+            ->whereNull('drinks.deleted_at')
+            ->groupBy('drink_units.drink_id')
+            ->orderByDesc(DB::raw('MAX(COALESCE(orders.recorded_at, orders.created_at))'))
+            ->orderByDesc(DB::raw('MAX(order_details.id)'))
+            ->limit($limit)
+            ->pluck('drink_units.drink_id')
+            ->all();
+
+        $drinks = Drink::whereIn('id', $recentDrinkIds)
+            ->get()
+            ->sortBy(fn (Drink $drink) => array_search($drink->id, $recentDrinkIds, true))
+            ->values()
+            ->append('category_name')
+            ->append('units')
+            ->makeHidden(['category', 'active']);
+
+        return ['drinks' => $drinks];
     }
 
     public function menuTree(Request $request)

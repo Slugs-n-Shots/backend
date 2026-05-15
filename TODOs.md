@@ -20,10 +20,10 @@ Rövid összefoglaló: a backend stabil alapot ad az autentikációhoz, az itall
 
 ## Magas prioritás
 
-- Fizetés és nyugtakészítés API: a `ReceiptController` létezik, de nincs route-ra kötött, rendelési tételekből dolgozó fizetési folyamat.
-- Promóciók tényleges kalkulációja: rendelésleadáskor jelenleg nincs aktív promóciókeresés, kedvezményszámítás vagy több promóció ütközésének kezelése.
-- Asztaltársaság / aktív asztal kezelés: külön asztal- vagy csoport-session modell kellene a foglaló, tagok, nyitott tételek és lezárás követhető kezelésére.
-- Szerveroldali rendelés- és fizetési jogosultságok: pontosítani kell, ki vehet fel rendelést, ki fizethet tételeket, ki zárhat asztalt, és milyen állapotból milyen állapotba lehet lépni.
+- Látogatói/anoním azonnali fizetéses rendelésfolyamat: a bejelentkezett vendéghez és asztalhoz kötött fizetési alap elkészült, de a belépés nélküli rendelés és GUID-alapú nyugta-visszakeresés külön szelet.
+- Nyugta letöltés és e-mail újraküldés: az alkalmazáson belüli nyugta megjelenítés elkészült, PDF/e-mail döntés és endpoint még nincs.
+- GDPR anonimizálás: vendég saját fiók lezárása/anonimizálása tartozás és aktív asztaltagság nélkül.
+- Riportok és lekérdezések: napi fogyás, bevétel, népszerű italok, alkalmazotti teljesítmény, export.
 
 ### Asztalkezelés
 
@@ -70,6 +70,7 @@ Ezeknél a feladatoknál a technikai irány látszik, de az üzleti folyamatot m
 ### Rendelés- és fizetési jogosultságok
 
 - Döntés: pultosok és pincérek rendeléseket rendelhetnek vendéghez, vendégen keresztül asztalhoz, státuszt állíthatnak, illetve fizetettnek jelölhetnek rendelést.
+- Döntés: lezárt table session kivételes utólagos fizetettnek jelölését csak admin végezheti auditált admin beavatkozásként.
 - Döntés: pultosok és pincérek ideiglenesen lezárhatnak (inaktiválhatnak), illetve megnyithatnak inaktivált asztalt.
 - Döntés: vendég csak várakozó állapotig módosíthat vagy törölhet saját rendelést.
 - Döntés: pultos bármilyen nyitott állapotú rendelést töröltnek jelölhet.
@@ -83,6 +84,10 @@ Ezeknél a feladatoknál a technikai irány látszik, de az üzleti folyamatot m
 
 ### Promóciók és kedvezmények
 
+- Scope döntés: a promóciós/kedvezményes kalkuláció nem része a jelenlegi asztal-rendelés-fizetés-nyugta fejlesztési körnek; külön jövőbeni modul és brief szükséges hozzá.
+- Jelenlegi kódállapot: vannak régi `promos`, `promo_types`, `order_details.promo_id` és `order_details.discount` mezők/modellek, de rendelésleadáskor nincs aktív promóciókeresés vagy kedvezményszámítás.
+- Jelenlegi rendelésleadási viselkedés: `promo_id = null`, `discount = 0`, a response `discounts` tömbje üres.
+- A meglévő promóciós vázat most nem töröljük és nem bővítjük, mert az adatmodell, admin beállítás, frontend megjelenítés, árkalkuláció, nyugta és audit külön összehangolt fejlesztési ciklust igényel.
 - Döntés: Egyszerre csak egy promóció érvényesülhet ugyanarra a tételre.
 - Döntés: "Egyet fizet kettőt kap" típusú promóciónál az ingyenes tétel 0 forintos egységáron jelenik meg a számlán.
 - Döntés: A promóciót a rendelés véglegesítésekor kell szerveroldalon kalkulálni.
@@ -112,7 +117,7 @@ Ezeknél a feladatoknál a technikai irány látszik, de az üzleti folyamatot m
 - Staff oldali rendelésfelvétel tételekkel: a pultos/pincér által vendég helyett rögzített rendeléshez route, validáció és teszt kell.
 - Riportok és lekérdezések: napi fogyás, népszerű italok, bevétel, alkalmazotti teljesítmény és átfutási idők végpontjai hiányoznak.
 - Vendég törlés / inaktiválás / GDPR szerinti anonimizálás szabályai: a jelenlegi soft delete mellé üzleti feltételek és személyesadat-kezelési folyamat kell. Személyes adatoknál a nevek első betűi, az emailcím azonosítórészének (@ előtti rész) első és utolsó karaktere maradhat maszkolt formában, pl. `e...m@example.com`.
-- Gyors rendelés támogatása: kedvencek helyett egyelőre elegendő lehet az utolsó X rendelt ital megjelenítése.
+- Gyors rendelés támogatása: elkészült a `GET /api/guest/recent-drinks?limit=10` alap endpoint, amely a vendég saját rendeléseiből a legutóbb rendelt, egyedi, aktív italokat adja vissza.
 
 ## Alacsony prioritás
 
@@ -124,6 +129,12 @@ Ezeknél a feladatoknál a technikai irány látszik, de az üzleti folyamatot m
 
 ## Jövőbeni fejlesztések
 
+- Promóció/kedvezmény modul külön brief alapján:
+  - szerveroldali promóció-kalkuláció rendelés véglegesítésekor,
+  - admin/backoffice promóció aktiválás és beállítás,
+  - frontend menü/kosár/nyugta megjelenítés,
+  - ütköző promóciók kezelése,
+  - auditmezők és tesztmátrix.
 - eldönteni, hogy az itallap gyorsítótárazása hogyan történjen:
   - kliens oldalon - az összes nyelven
   - kliens oldalon - csak az aktív nyelven

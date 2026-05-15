@@ -8,6 +8,7 @@ use OpenApi\Attributes as OA;
     path: '/staff/order-details/mark-paid',
     operationId: 'staffMarkOrderDetailsPaid',
     summary: 'Mark pending order details as paid by staff',
+    description: 'Staff can mark pending order details paid. If the order detail belongs to a closed table session, only admins can perform this exceptional settlement.',
     tags: ['Staff payments'],
     security: [['bearerAuth' => []]],
     requestBody: new OA\RequestBody(required: true, content: new OA\JsonContent(ref: '#/components/schemas/StaffMarkPaidRequest')),

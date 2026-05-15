@@ -291,6 +291,8 @@ Teszt:
 
 Risk tier: Tier 2, mert rendelési árakat és nyugtát érint.
 
+Scope státusz: későbbi, külön fejlesztési modul. A jelenlegi asztal-rendelés-fizetés-nyugta ciklusból tudatosan kivéve, mert admin/backoffice beállításokat, frontend megjelenítést, árkalkulációt, nyugtát és auditot is össze kell hangolni. A meglévő `promos`, `promo_types`, `order_details.promo_id` és `order_details.discount` váz egyelőre változatlanul marad; rendelésleadáskor nincs aktív kedvezményszámítás.
+
 Cél:
 - Rendelés véglegesítésekor szerveroldali promóciószámítás.
 - Egy tételre egyszerre csak egy promóció érvényesülhet.
@@ -378,6 +380,8 @@ Teszt:
 ### 8. Utolsó X rendelt ital
 
 Risk tier: Tier 1/2, kisebb adatlekérdezés, de vendégspecifikus.
+
+Státusz: alap endpoint elkészült `GET /api/guest/recent-drinks?limit=10` útvonalon.
 
 Cél:
 - Kedvencek helyett gyors rendeléshez az utolsó X rendelt ital listázása.

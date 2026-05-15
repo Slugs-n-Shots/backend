@@ -41,6 +41,7 @@ Route::middleware(['auth:guard_guest'])->group(function () {
     Route::get('/tables/current', [TableController::class, 'current']);
     Route::get('/tables/current/stats', [TableController::class, 'currentStats']);
     Route::post('/tables/current/spending-limit', [TableController::class, 'updateCurrentSpendingLimit']);
+    Route::post('/tables/current/close', [TableController::class, 'closeCurrent']);
     Route::post('/tables/join', [TableMemberController::class, 'join']);
     Route::get('/tables/current/members', [TableMemberController::class, 'members']);
     Route::post('/tables/members/{member}/approve', [TableMemberController::class, 'approve']);
@@ -51,6 +52,7 @@ Route::middleware(['auth:guard_guest'])->group(function () {
     // Rendelések
     Route::get('/orders/{status?}', [OrderController::class, 'myOrders'])->whereIn('status', ['active']);
     Route::post('/orders', [OrderController::class, 'makeOrder']);
+    Route::get('/recent-drinks', [DrinkController::class, 'recentForGuest']);
 
     // Fizetések
     Route::post('/payments', [PaymentController::class, 'store']);

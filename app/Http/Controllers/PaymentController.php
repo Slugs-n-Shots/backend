@@ -149,6 +149,9 @@ class PaymentController extends Controller
             }
 
             $tableSession = $details->first()?->order?->tableSession;
+            if ($tableSession?->status === TableSession::STATUS_CLOSED && !$employee->isAdmin()) {
+                abort(403);
+            }
 
             return $this->processPayment(
                 (int) $guestIds->first(),

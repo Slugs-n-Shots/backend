@@ -234,6 +234,33 @@ class TableController extends Controller
         ];
     }
 
+    public function closeCurrent()
+    {
+        $tableSession = TableSession::with('table')
+            ->where('owner_guest_id', request()->user()->id)
+            ->where('status', TableSession::STATUS_OPEN)
+            ->whereNull('closed_at')
+            ->first();
+
+        if ($tableSession === null) {
+            abort(403);
+        }
+
+        if ($this->pendingTotalForTableSession($tableSession) > 0) {
+            abort(response()->json([
+                'message' => __('This table still has pending order details.'),
+            ], 409));
+        }
+
+        $tableSession->close();
+        $tableSession->refresh();
+
+        return [
+            'table' => $this->guestTableResponse($tableSession->table, true),
+            'table_session' => $this->tableSessionResponse($tableSession),
+        ];
+    }
+
     private function guestTableResponse(Table $table, bool $isOwner = false): array
     {
         return [

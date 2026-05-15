@@ -185,7 +185,8 @@ Asztalhoz kötött fizetés:
 - owner és approved member fizethet a saját aktuális nyitott table sessionjének pending tételeiből,
 - pending, denied, removed tag nem fizethet asztaltételt,
 - `can_order=false` tag fizethet, mert a tiltás rendelésleadásra vonatkozik, nem tartozás rendezésére,
-- lezárt table sessionhöz új fizetés nem indítható, kivéve későbbi admin rendezési folyamat, ami első körben nem része ennek a modulnak.
+- lezárt table sessionhöz vendég új fizetést nem indíthat,
+- lezárt table session kivételes utólagos rendezését csak admin végezheti a staff mark-paid endpointon auditált admin beavatkozásként.
 
 Záró fizetés:
 - csak table owner indíthatja,
@@ -194,6 +195,7 @@ Záró fizetés:
 
 Staff/admin fizetettnek jelölés:
 - staff/admin pending tételeket jelölhet fizetettnek,
+- lezárt table sessionhöz tartozó pending tételt csak admin jelölhet fizetettnek,
 - ilyenkor automatikusan létrejön nyugta,
 - payment method legyen `admin_marked_paid`,
 - minden művelet kapjon `payment_events` audit rekordot.
@@ -312,6 +314,19 @@ Szabály:
 - csak owner,
 - az összes fennmaradó pending asztaltétel bekerül.
 
+### Asztalzárás
+
+Új endpoint:
+
+`POST /api/guest/tables/current/close`
+
+Szabály:
+- csak owner,
+- csak aktuális nyitott table session zárható,
+- ha van fizetetlen/pending rendelési tétel az asztalon, a zárás 409 választ kap,
+- a rendelés státusza önmagában nem blokkolja a zárást, mert a tételek már akkor is fizethetők, ha az ital még készül vagy felszolgálásra vár,
+- sikeres záráskor a `table_sessions.status=closed`, a `closed_at` kitöltődik, és az asztal újra foglalható.
+
 ### Staff/admin fizetettnek jelölés
 
 Új endpoint:
@@ -400,6 +415,7 @@ Frissítendő sémák:
 - `POST /api/guest/payments`
 - `POST /api/guest/tables/current/payments`
 - `POST /api/guest/tables/current/closing-payment`
+- `POST /api/guest/tables/current/close`
 - `GET /api/guest/receipts/{receipt}`
 - `POST /api/staff/order-details/mark-paid`
 
@@ -446,6 +462,7 @@ Frontend oldalon követendő változások:
 - új `POST /api/guest/payments`,
 - új `POST /api/guest/tables/current/payments`,
 - új `POST /api/guest/tables/current/closing-payment`,
+- új `POST /api/guest/tables/current/close`,
 - új `GET /api/guest/receipts/{receipt}`,
 - új `POST /api/staff/order-details/mark-paid`,
 - rendelési tételeken a `payment_status` alapján kell fizethető tételeket listázni,
@@ -458,4 +475,5 @@ Frontend oldalon követendő változások:
 - Nyugta e-mail újraküldés folyamata.
 - Külső bankkártyás fizetési szolgáltató integrációja.
 - Anoním rendelés és `access_guid` alapú nyugta-visszakeresés pontos UX/API folyamata.
+- Promóció/kedvezmény kalkuláció külön későbbi modul; a jelenlegi rendelésleadás `promo_id = null`, `discount = 0`, `discounts = []` viselkedéssel dolgozik.
 - Sztornó és visszatérítés továbbra is alkalmazáson kívüli folyamat, első körben nincs backend refund API.

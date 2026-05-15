@@ -498,6 +498,87 @@ class TableControllerTest extends TestCase
             ->assertForbidden();
     }
 
+    public function test_owner_can_close_fully_paid_current_table(): void
+    {
+        $owner = Guest::factory()->create(['email_verified_at' => now()]);
+        $table = Table::factory()->create();
+        $session = TableSession::factory()->create([
+            'table_id' => $table->id,
+            'owner_guest_id' => $owner->id,
+        ]);
+        $order = Order::factory()->create([
+            'guest_id' => $owner->id,
+            'table_session_id' => $session->id,
+        ]);
+        OrderDetail::factory()->create([
+            'order_id' => $order->id,
+            'payment_status' => OrderDetail::PAYMENT_STATUS_PAID,
+        ]);
+
+        $this
+            ->actingAs($owner, 'guard_guest')
+            ->postJson('/api/guest/tables/current/close')
+            ->assertOk()
+            ->assertJsonPath('table.id', $table->id)
+            ->assertJsonPath('table.status', 'available')
+            ->assertJsonPath('table_session.id', $session->id)
+            ->assertJsonPath('table_session.status', TableSession::STATUS_CLOSED);
+
+        $this->assertDatabaseHas('table_sessions', [
+            'id' => $session->id,
+            'status' => TableSession::STATUS_CLOSED,
+        ]);
+        $this->assertNotNull($session->fresh()->closed_at);
+    }
+
+    public function test_owner_cannot_close_current_table_with_pending_order_details(): void
+    {
+        $owner = Guest::factory()->create(['email_verified_at' => now()]);
+        $session = TableSession::factory()->create(['owner_guest_id' => $owner->id]);
+        $order = Order::factory()->create([
+            'guest_id' => $owner->id,
+            'table_session_id' => $session->id,
+        ]);
+        OrderDetail::factory()->create([
+            'order_id' => $order->id,
+            'payment_status' => OrderDetail::PAYMENT_STATUS_PENDING,
+        ]);
+
+        $this
+            ->actingAs($owner, 'guard_guest')
+            ->postJson('/api/guest/tables/current/close')
+            ->assertStatus(409);
+
+        $this->assertDatabaseHas('table_sessions', [
+            'id' => $session->id,
+            'status' => TableSession::STATUS_OPEN,
+            'closed_at' => null,
+        ]);
+    }
+
+    public function test_non_owner_cannot_close_current_table(): void
+    {
+        $owner = Guest::factory()->create(['email_verified_at' => now()]);
+        $member = Guest::factory()->create(['email_verified_at' => now()]);
+        $session = TableSession::factory()->create(['owner_guest_id' => $owner->id]);
+        TableMember::factory()->create([
+            'table_session_id' => $session->id,
+            'guest_id' => $member->id,
+            'status' => TableMember::STATUS_APPROVED,
+        ]);
+
+        $this
+            ->actingAs($member, 'guard_guest')
+            ->postJson('/api/guest/tables/current/close')
+            ->assertForbidden();
+
+        $this->assertDatabaseHas('table_sessions', [
+            'id' => $session->id,
+            'status' => TableSession::STATUS_OPEN,
+            'closed_at' => null,
+        ]);
+    }
+
     private function staffToken(string $email = 'staff-table@example.com'): string
     {
         Employee::factory()->create([

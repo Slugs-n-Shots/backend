@@ -6,6 +6,9 @@ use App\Models\Drink;
 use App\Models\DrinkCategory;
 use App\Models\DrinkUnit;
 use App\Models\Employee;
+use App\Models\Guest;
+use App\Models\Order;
+use App\Models\OrderDetail;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -281,6 +284,56 @@ class DrinkControllerTest extends TestCase
             ->assertJsonMissingPath('category_id');
     }
 
+    public function test_guest_recent_drinks_returns_unique_active_drinks_ordered_by_latest_order(): void
+    {
+        $guest = Guest::factory()->create(['email_verified_at' => now()]);
+        $otherGuest = Guest::factory()->create(['email_verified_at' => now()]);
+        $olderDrink = $this->createDrinkWithUnit(['name_en' => 'Older Soda', 'name_hu' => 'Regebbi szoda']);
+        $newerDrink = $this->createDrinkWithUnit(['name_en' => 'Newer Coffee', 'name_hu' => 'Ujabb kave']);
+        $hiddenDrink = $this->createDrinkWithUnit([
+            'name_en' => 'Inactive Past Drink',
+            'name_hu' => 'Inaktiv regi ital',
+            'active' => false,
+        ]);
+        $otherGuestDrink = $this->createDrinkWithUnit(['name_en' => 'Other Guest Drink']);
+
+        $this->createOrderDetailForDrink($guest, $olderDrink, now()->subHours(4));
+        $this->createOrderDetailForDrink($guest, $newerDrink, now()->subHours(3));
+        $this->createOrderDetailForDrink($guest, $olderDrink, now()->subHour());
+        $this->createOrderDetailForDrink($guest, $hiddenDrink, now());
+        $this->createOrderDetailForDrink($otherGuest, $otherGuestDrink, now()->addMinute());
+
+        $response = $this
+            ->actingAs($guest, 'guard_guest')
+            ->getJson('/api/guest/recent-drinks?limit=2&lang=en');
+
+        $response->assertOk()
+            ->assertJsonCount(2, 'drinks')
+            ->assertJsonPath('drinks.0.id', $olderDrink->id)
+            ->assertJsonPath('drinks.0.name', 'Older Soda')
+            ->assertJsonPath('drinks.0.units.0.unit', 'glass')
+            ->assertJsonPath('drinks.1.id', $newerDrink->id)
+            ->assertJsonMissing(['id' => $hiddenDrink->id])
+            ->assertJsonMissing(['id' => $otherGuestDrink->id]);
+    }
+
+    public function test_guest_recent_drinks_validates_limit_and_returns_empty_list_without_orders(): void
+    {
+        $guest = Guest::factory()->create(['email_verified_at' => now()]);
+
+        $this
+            ->actingAs($guest, 'guard_guest')
+            ->getJson('/api/guest/recent-drinks?limit=0')
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['limit']);
+
+        $this
+            ->actingAs($guest, 'guard_guest')
+            ->getJson('/api/guest/recent-drinks')
+            ->assertOk()
+            ->assertJsonPath('drinks', []);
+    }
+
     private function authenticateStaff(): void
     {
         parent::actingAs($this->employee, 'guard_employee');
@@ -300,5 +353,18 @@ class DrinkControllerTest extends TestCase
         ]);
 
         return $drink->refresh();
+    }
+
+    private function createOrderDetailForDrink(Guest $guest, Drink $drink, mixed $recordedAt): OrderDetail
+    {
+        $order = Order::factory()->create([
+            'guest_id' => $guest->id,
+            'recorded_at' => $recordedAt,
+        ]);
+
+        return OrderDetail::factory()->create([
+            'order_id' => $order->id,
+            'drink_unit_id' => $drink->units()->first()->id,
+        ]);
     }
 }

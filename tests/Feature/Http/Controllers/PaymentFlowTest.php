@@ -352,6 +352,56 @@ class PaymentFlowTest extends TestCase
         ]);
     }
 
+    public function test_only_admin_can_mark_closed_table_session_details_paid(): void
+    {
+        $waiter = Employee::factory()->create(['role_code' => Employee::WAITER]);
+        $admin = Employee::factory()->create(['role_code' => Employee::ADMIN]);
+        $guest = Guest::factory()->create(['email_verified_at' => now()]);
+        $session = TableSession::factory()->create([
+            'status' => TableSession::STATUS_CLOSED,
+            'closed_at' => now(),
+            'owner_guest_id' => $guest->id,
+        ]);
+        $order = Order::factory()->create([
+            'guest_id' => $guest->id,
+            'table_session_id' => $session->id,
+        ]);
+        $detail = $this->detail($order, 1, 1200);
+
+        $this
+            ->actingAs($waiter, 'guard_employee')
+            ->postJson('/api/staff/order-details/mark-paid', [
+                'order_detail_ids' => [$detail->id],
+                'memo' => 'Utólagos rendezés',
+            ])
+            ->assertForbidden();
+
+        $response = $this
+            ->actingAs($admin, 'guard_employee')
+            ->postJson('/api/staff/order-details/mark-paid', [
+                'order_detail_ids' => [$detail->id],
+                'memo' => 'Utólagos admin rendezés lezárt asztalnál',
+            ]);
+
+        $paymentId = $response->json('payment.id');
+
+        $response->assertOk()
+            ->assertJsonPath('payment.status', PaymentAttempt::STATUS_SUCCEEDED)
+            ->assertJsonPath('payment.employee_id', $admin->id)
+            ->assertJsonPath('payment.table_session_id', $session->id)
+            ->assertJsonPath('receipt.table_session_id', $session->id);
+
+        $this->assertDatabaseHas('order_details', [
+            'id' => $detail->id,
+            'payment_status' => OrderDetail::PAYMENT_STATUS_PAID,
+        ]);
+        $this->assertDatabaseHas('payment_events', [
+            'payment_attempt_id' => $paymentId,
+            'event_type' => PaymentEvent::TYPE_MARKED_PAID_BY_ADMIN,
+            'actor_employee_id' => $admin->id,
+        ]);
+    }
+
     private function detail(Order $order, int $quantity, int $unitPrice, array $overrides = []): OrderDetail
     {
         return OrderDetail::factory()->create(array_merge([
