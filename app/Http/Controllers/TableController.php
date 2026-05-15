@@ -328,7 +328,7 @@ class TableController extends Controller
             if (!isset($consumption[$guestId])) {
                 $consumption[$guestId] = [
                     'guest_id' => $guestId,
-                    'name' => $order->guest->name,
+                    'name' => $order->guest?->name ?? __('Anonymized guest'),
                     'total' => 0,
                     'payable_total' => 0,
                     'paid_total' => 0,

@@ -73,22 +73,10 @@ class RequestLogger
             return $value;
         }
 
-        $sensitiveKeys = [
-            'access_token',
-            'authorization',
-            'confirm_token',
-            'cookie',
-            'current_password',
-            'email',
-            'password',
-            'password_confirmation',
-            'pw_reset_token',
-            'remember_token',
-            'set-cookie',
-            'tax_number',
-            'token',
-            'x-xsrf-token',
-        ];
+        $sensitiveKeys = array_map(
+            static fn (string $key): string => strtolower($key),
+            config('request_logger.sensitive_keys', [])
+        );
 
         $masked = [];
         foreach ($value as $key => $item) {

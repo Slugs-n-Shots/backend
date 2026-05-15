@@ -31,6 +31,11 @@ class Guest extends Authenticatable implements JWTSubject, MustVerifyEmail
      * reservee: ?boolean
      * picture: ?string
      * active: boolean=false
+     * is_over_18: boolean=false
+     * age_verified_at: ?timestamp
+     * birth_date: ?date
+     * phone: ?string
+     * address: ?string
      * anonymized_at: ?timestamp
      *
      * Relations
@@ -57,6 +62,11 @@ class Guest extends Authenticatable implements JWTSubject, MustVerifyEmail
         'reservee',
         'picture',
         'active',
+        'is_over_18',
+        'age_verified_at',
+        'birth_date',
+        'phone',
+        'address',
         'anonymized_at',
         'anonymization_reason',
     ];
@@ -87,6 +97,9 @@ class Guest extends Authenticatable implements JWTSubject, MustVerifyEmail
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'active' => 'boolean',
+        'is_over_18' => 'boolean',
+        'age_verified_at' => 'datetime',
+        'birth_date' => 'date',
         'data' => 'json',
         'anonymized_at' => 'datetime',
     ];

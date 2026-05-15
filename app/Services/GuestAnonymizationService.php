@@ -6,6 +6,9 @@ use App\Models\Guest;
 use App\Models\GdprAuditEvent;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\PaymentAttempt;
+use App\Models\PaymentEvent;
+use App\Models\Receipt;
 use App\Models\TableMember;
 use App\Models\TableSession;
 use Illuminate\Support\Facades\DB;
@@ -61,11 +64,28 @@ class GuestAnonymizationService
                 'picture' => null,
                 'active' => false,
                 'email_verified_at' => null,
+                'age_verified_at' => null,
+                'birth_date' => null,
+                'phone' => null,
+                'address' => null,
                 'password' => Hash::make(Str::random(64)),
                 'anonymized_at' => now(),
                 'anonymization_reason' => 'guest_request',
                 'data' => $data,
             ])->save();
+
+            Receipt::where('guest_id', $lockedGuest->id)->update([
+                'guest_id' => null,
+            ]);
+            Order::where('guest_id', $lockedGuest->id)->update([
+                'guest_id' => null,
+            ]);
+            PaymentAttempt::where('guest_id', $lockedGuest->id)->update([
+                'guest_id' => null,
+            ]);
+            PaymentEvent::where('actor_guest_id', $lockedGuest->id)->update([
+                'actor_guest_id' => null,
+            ]);
 
             $this->recordAuditEvent(
                 GdprAuditEvent::TYPE_ANONYMIZATION_COMPLETED,
@@ -87,35 +107,35 @@ class GuestAnonymizationService
         if ($guest->anonymized_at !== null) {
             $reasons[] = [
                 'code' => 'already_anonymized',
-                'message' => 'A fiók már anonimizálva lett.',
+                'message' => __('The account has already been anonymized.'),
             ];
         }
 
         if ($this->hasOpenOwnedTable($guest)) {
             $reasons[] = [
                 'code' => 'open_table_owner',
-                'message' => 'Van nyitott saját asztalod.',
+                'message' => __('You have an open table as owner.'),
             ];
         }
 
         if ($this->hasOpenTableMembership($guest)) {
             $reasons[] = [
                 'code' => 'open_table_membership',
-                'message' => 'Van aktív vagy függő asztaltagságod.',
+                'message' => __('You have an active or pending table membership.'),
             ];
         }
 
         if ($this->hasPendingPayment($guest)) {
             $reasons[] = [
                 'code' => 'pending_payment',
-                'message' => 'Van fizetésre váró rendelési tételed.',
+                'message' => __('You have order items waiting for payment.'),
             ];
         }
 
         if ($this->hasActiveOrder($guest)) {
             $reasons[] = [
                 'code' => 'active_order',
-                'message' => 'Van folyamatban lévő rendelésed.',
+                'message' => __('You have an order in progress.'),
             ];
         }
 

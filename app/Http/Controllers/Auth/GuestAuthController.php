@@ -200,6 +200,10 @@ class GuestAuthController extends Controller
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . Guest::class],
             'password' => ['required',  Rules\Password::defaults()],
+            'is_over_18' => ['required', 'accepted'],
+            'phone' => ['nullable', 'string', 'max:32'],
+            'address' => ['nullable', 'string', 'max:255'],
+            'birth_date' => ['nullable', 'date', 'before_or_equal:today'],
         ]);
 
         $guest = Guest::create([
@@ -208,6 +212,11 @@ class GuestAuthController extends Controller
             'last_name' => $request->last_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'is_over_18' => true,
+            'age_verified_at' => now(),
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'birth_date' => $request->birth_date,
         ]);
 
         VerifyEmail::$createUrlCallback = function ($notifiable) {

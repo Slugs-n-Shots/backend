@@ -23,7 +23,7 @@ class Receipt extends Model
 
     /**
      * serno: string
-     * guest_id: integer
+     * guest_id: ?integer
      * issued_at: datetime
      * paid_for: integer
      * paid_at: datetime

@@ -6,6 +6,8 @@ use App\Models\Guest;
 use App\Models\GdprAuditEvent;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\PaymentAttempt;
+use App\Models\PaymentEvent;
 use App\Models\Receipt;
 use App\Models\TableMember;
 use App\Models\TableSession;
@@ -48,6 +50,11 @@ class GuestAnonymizationTest extends TestCase
             'email' => 'eva@example.com',
             'email_verified_at' => now(),
             'picture' => 'eva.jpg',
+            'is_over_18' => true,
+            'age_verified_at' => now()->subDay(),
+            'phone' => '+36 30 123 4567',
+            'address' => '1117 Budapest, Teszt utca 1.',
+            'birth_date' => '1990-01-02',
         ]);
         $receipt = Receipt::factory()->create(['guest_id' => $guest->id]);
         $order = Order::factory()->create([
@@ -59,12 +66,23 @@ class GuestAnonymizationTest extends TestCase
             'payment_status' => OrderDetail::PAYMENT_STATUS_PAID,
             'receipt_id' => $receipt->id,
         ]);
+        $paymentAttempt = PaymentAttempt::factory()->create([
+            'guest_id' => $guest->id,
+            'receipt_id' => $receipt->id,
+            'status' => PaymentAttempt::STATUS_SUCCEEDED,
+        ]);
+        $paymentEvent = PaymentEvent::factory()->create([
+            'payment_attempt_id' => $paymentAttempt->id,
+            'event_type' => PaymentEvent::TYPE_RECEIPT_CREATED,
+            'actor_guest_id' => $guest->id,
+            'receipt_id' => $receipt->id,
+        ]);
 
         $this
             ->actingAs($guest, 'guard_guest')
             ->postJson('/api/guest/me/anonymize', ['confirm' => true])
             ->assertOk()
-            ->assertJson(['message' => 'A fiók anonimizálva lett.']);
+            ->assertJson(['message' => __('The account has been anonymized.')]);
 
         $freshGuest = $guest->fresh();
         $this->assertSame('Anonimizált', $freshGuest->first_name);
@@ -76,10 +94,17 @@ class GuestAnonymizationTest extends TestCase
         $this->assertNull($freshGuest->email_verified_at);
         $this->assertNotNull($freshGuest->anonymized_at);
         $this->assertFalse(Hash::check('Password1!', $freshGuest->password));
+        $this->assertTrue($freshGuest->is_over_18);
+        $this->assertNull($freshGuest->age_verified_at);
+        $this->assertNull($freshGuest->phone);
+        $this->assertNull($freshGuest->address);
+        $this->assertNull($freshGuest->birth_date);
 
-        $this->assertDatabaseHas('orders', ['id' => $order->id, 'guest_id' => $guest->id]);
+        $this->assertDatabaseHas('orders', ['id' => $order->id, 'guest_id' => null]);
         $this->assertDatabaseHas('order_details', ['id' => $detail->id, 'receipt_id' => $receipt->id]);
-        $this->assertDatabaseHas('receipts', ['id' => $receipt->id, 'guest_id' => $guest->id]);
+        $this->assertDatabaseHas('receipts', ['id' => $receipt->id, 'guest_id' => null]);
+        $this->assertDatabaseHas('payment_attempts', ['id' => $paymentAttempt->id, 'guest_id' => null]);
+        $this->assertDatabaseHas('payment_events', ['id' => $paymentEvent->id, 'actor_guest_id' => null]);
         $this->assertDatabaseHas('gdpr_audit_events', [
             'guest_id' => $guest->id,
             'actor_guest_id' => $guest->id,
@@ -131,7 +156,7 @@ class GuestAnonymizationTest extends TestCase
 
         $this->assertDatabaseHas('receipts', [
             'id' => $receipt->id,
-            'guest_id' => $guest->id,
+            'guest_id' => null,
             'customer_type' => 'company',
             'customer_name' => 'Teszt Partner Kft.',
             'customer_address' => '1117 Budapest, Céges út 2.',

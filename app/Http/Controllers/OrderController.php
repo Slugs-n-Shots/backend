@@ -19,7 +19,7 @@ class OrderController extends Controller
     /**
      * Fields
      *
-     * guest_id: integer
+     * guest_id: ?integer
      * recorded_by: ?integer
      * recorded_at: ?datetime
      * made_by: ?integer

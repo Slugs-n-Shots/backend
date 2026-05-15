@@ -10,7 +10,7 @@ use OpenApi\Attributes as OA;
     type: 'object',
     properties: [
         new OA\Property(property: 'id', type: 'integer', format: 'int64', example: 1),
-        new OA\Property(property: 'guest_id', type: 'integer', format: 'int64', example: 1),
+        new OA\Property(property: 'guest_id', type: ['integer', 'null'], format: 'int64', example: 1),
         new OA\Property(property: 'recorded_by', type: ['integer', 'null'], format: 'int64', example: null),
         new OA\Property(property: 'recorded_at', type: ['string', 'null'], format: 'date-time', example: '2026-05-10T18:00:00+00:00'),
         new OA\Property(property: 'made_by', type: ['integer', 'null'], format: 'int64', example: null),

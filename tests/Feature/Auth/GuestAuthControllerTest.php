@@ -120,6 +120,7 @@ class GuestAuthControllerTest extends TestCase
             'last_name' => 'Doe',
             'email' => 'john@example.com',
             'password' => $this->password,
+            'is_over_18' => true,
         ]);
 
         // Act
@@ -144,6 +145,9 @@ class GuestAuthControllerTest extends TestCase
             'last_name' => 'User',
             'email' => 'test@example.com',
             'password' => $this->password,
+            'is_over_18' => true,
+            'phone' => '+36 30 123 4567',
+            'address' => '1117 Budapest, Teszt utca 1.',
         ]);
 
         $response->assertOk()
@@ -153,9 +157,30 @@ class GuestAuthControllerTest extends TestCase
         $this->assertNotNull($guest);
         $this->assertSame('Test', $guest->first_name);
         $this->assertSame('User', $guest->last_name);
+        $this->assertTrue($guest->is_over_18);
+        $this->assertNotNull($guest->age_verified_at);
+        $this->assertSame('+36 30 123 4567', $guest->phone);
+        $this->assertSame('1117 Budapest, Teszt utca 1.', $guest->address);
         $this->assertTrue(Hash::check($this->password, $guest->password));
         $this->assertGuest();
         Event::assertDispatched(\Illuminate\Auth\Events\Registered::class);
+    }
+
+    /** @test */
+    public function guest_registration_requires_adult_confirmation()
+    {
+        Event::fake();
+
+        $this->postJson('/api/guest/register', [
+            'first_name' => 'Test',
+            'last_name' => 'User',
+            'email' => 'minor@example.com',
+            'password' => $this->password,
+            'is_over_18' => false,
+        ])->assertUnprocessable()
+            ->assertJsonValidationErrors(['is_over_18']);
+
+        $this->assertDatabaseMissing('guests', ['email' => 'minor@example.com']);
     }
 
     /** @test */

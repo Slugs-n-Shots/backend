@@ -66,5 +66,12 @@
     "Only approved memberships can change ordering permission.": "Rendelési jogosultság csak jóváhagyott tagságnál módosítható.",
     "The owner cannot be removed with this endpoint.": "A felelős ezzel a végponttal nem távolítható el.",
     "Only approved memberships can be removed.": "Csak jóváhagyott tagság távolítható el.",
+    "Anonymized guest": "Anonimizált vendég",
+    "The account has been anonymized.": "A fiók anonimizálva lett.",
+    "The account has already been anonymized.": "A fiók már anonimizálva lett.",
+    "You have an open table as owner.": "Van nyitott saját asztalod.",
+    "You have an active or pending table membership.": "Van aktív vagy függő asztaltagságod.",
+    "You have order items waiting for payment.": "Van fizetésre váró rendelési tételed.",
+    "You have an order in progress.": "Van folyamatban lévő rendelésed.",
     "":""
 }

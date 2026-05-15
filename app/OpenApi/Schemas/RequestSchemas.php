@@ -16,13 +16,17 @@ use OpenApi\Attributes as OA;
 #[OA\Schema(
     schema: 'GuestRegisterRequest',
     type: 'object',
-    required: ['first_name', 'last_name', 'email', 'password'],
+    required: ['first_name', 'last_name', 'email', 'password', 'is_over_18'],
     properties: [
         new OA\Property(property: 'first_name', type: 'string', example: 'Jane'),
         new OA\Property(property: 'middle_name', type: ['string', 'null'], example: null),
         new OA\Property(property: 'last_name', type: 'string', example: 'Doe'),
         new OA\Property(property: 'email', type: 'string', format: 'email', example: 'jane.doe@example.com'),
         new OA\Property(property: 'password', type: 'string', format: 'password', example: 'slUGz-R0CKS!'),
+        new OA\Property(property: 'is_over_18', type: 'boolean', example: true),
+        new OA\Property(property: 'birth_date', type: ['string', 'null'], format: 'date', example: null),
+        new OA\Property(property: 'phone', type: ['string', 'null'], maxLength: 32, example: '+36 30 123 4567'),
+        new OA\Property(property: 'address', type: ['string', 'null'], maxLength: 255, example: '1117 Budapest, Teszt utca 1.'),
     ]
 )]
 #[OA\Schema(

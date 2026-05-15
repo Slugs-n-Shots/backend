@@ -481,6 +481,34 @@ class TableControllerTest extends TestCase
             ->assertJsonPath('stats.per_guest_consumption.1.paid_total', 0);
     }
 
+    public function test_current_table_stats_handles_detached_anonymized_orders(): void
+    {
+        $owner = Guest::factory()->create(['email_verified_at' => now()]);
+        $session = TableSession::factory()->create([
+            'owner_guest_id' => $owner->id,
+        ]);
+        $order = Order::factory()->create([
+            'guest_id' => null,
+            'table_session_id' => $session->id,
+            'status' => Order::STATUS_SERVED,
+        ]);
+        OrderDetail::factory()->create([
+            'order_id' => $order->id,
+            'ordered_quantity' => 1,
+            'unit_price' => 700,
+            'payment_status' => OrderDetail::PAYMENT_STATUS_PAID,
+        ]);
+
+        $this
+            ->actingAs($owner, 'guard_guest')
+            ->getJson('/api/guest/tables/current/stats')
+            ->assertOk()
+            ->assertJsonPath('stats.per_guest_consumption.0.guest_id', null)
+            ->assertJsonPath('stats.per_guest_consumption.0.name', __('Anonymized guest'))
+            ->assertJsonPath('stats.per_guest_consumption.0.total', 700)
+            ->assertJsonPath('stats.per_guest_consumption.0.paid_total', 700);
+    }
+
     public function test_non_owner_cannot_view_current_table_stats(): void
     {
         $owner = Guest::factory()->create(['email_verified_at' => now()]);

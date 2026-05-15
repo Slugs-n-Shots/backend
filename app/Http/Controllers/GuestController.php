@@ -166,7 +166,7 @@ class GuestController extends Controller
             Auth::logout(true);
         }
 
-        return response()->json(['message' => 'A fiók anonimizálva lett.']);
+        return response()->json(['message' => __('The account has been anonymized.')]);
     }
 
 }

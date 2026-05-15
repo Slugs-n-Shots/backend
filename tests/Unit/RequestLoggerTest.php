@@ -76,6 +76,9 @@ class RequestLoggerTest extends TestCase
             'payer' => [
                 'tax_number' => '12345678-2-42',
             ],
+            'phone' => '+36 30 123 4567',
+            'address' => '1117 Budapest, Teszt utca 1.',
+            'birth_date' => '1990-01-02',
         ], [], [], [
             'HTTP_AUTHORIZATION' => 'Bearer secret-token',
         ]);
@@ -93,7 +96,54 @@ class RequestLoggerTest extends TestCase
         $this->assertStringNotContainsString('guest@example.com', $logged);
         $this->assertStringNotContainsString('Secret123!', $logged);
         $this->assertStringNotContainsString('12345678-2-42', $logged);
+        $this->assertStringNotContainsString('+36 30 123 4567', $logged);
+        $this->assertStringNotContainsString('1117 Budapest, Teszt utca 1.', $logged);
+        $this->assertStringNotContainsString('1990-01-02', $logged);
         $this->assertStringNotContainsString('secret-token', $logged);
         $this->assertStringNotContainsString('secret-access-token', $logged);
+    }
+
+    public function test_request_logger_uses_configured_sensitive_keys(): void
+    {
+        config([
+            'request_logger.enabled' => true,
+            'request_logger.mask_sensitive' => true,
+            'request_logger.sensitive_keys' => ['custom_secret'],
+        ]);
+
+        $messages = [];
+        $logger = Mockery::mock();
+        $logger->shouldReceive('info')
+            ->twice()
+            ->with(Mockery::on(function (string $message) use (&$messages) {
+                $messages[] = $message;
+
+                return true;
+            }));
+
+        Log::shouldReceive('channel')
+            ->twice()
+            ->with('requests')
+            ->andReturn($logger);
+
+        $request = Request::create('/api/test', 'POST', [
+            'custom_secret' => 'config-only-secret',
+            'email' => 'visible@example.com',
+        ]);
+
+        (new RequestLogger())->handle($request, function () {
+            return response()->json([
+                'custom_secret' => 'response-secret',
+                'email' => 'response-visible@example.com',
+            ]);
+        });
+
+        $logged = implode("\n", $messages);
+
+        $this->assertStringContainsString('[masked]', $logged);
+        $this->assertStringNotContainsString('config-only-secret', $logged);
+        $this->assertStringNotContainsString('response-secret', $logged);
+        $this->assertStringContainsString('visible@example.com', $logged);
+        $this->assertStringContainsString('response-visible@example.com', $logged);
     }
 }
