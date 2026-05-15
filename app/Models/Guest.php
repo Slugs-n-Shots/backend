@@ -31,6 +31,7 @@ class Guest extends Authenticatable implements JWTSubject, MustVerifyEmail
      * reservee: ?boolean
      * picture: ?string
      * active: boolean=false
+     * anonymized_at: ?timestamp
      *
      * Relations
      *
@@ -56,6 +57,8 @@ class Guest extends Authenticatable implements JWTSubject, MustVerifyEmail
         'reservee',
         'picture',
         'active',
+        'anonymized_at',
+        'anonymization_reason',
     ];
 
     protected $appends = ['name'];
@@ -69,6 +72,7 @@ class Guest extends Authenticatable implements JWTSubject, MustVerifyEmail
         'password',
         'remember_token',
         'email_verified_at',
+        'anonymization_reason',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -84,6 +88,7 @@ class Guest extends Authenticatable implements JWTSubject, MustVerifyEmail
         'password' => 'hashed',
         'active' => 'boolean',
         'data' => 'json',
+        'anonymized_at' => 'datetime',
     ];
 
     /**

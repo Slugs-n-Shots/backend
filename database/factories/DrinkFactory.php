@@ -22,8 +22,9 @@ class DrinkFactory extends Factory
             $cat = \App\Models\DrinkCategory::first();
         }
 
-        $name_en = fake('en_EN')->colorName() . ' ' . fake('en_EN')->dayOfWeek();
-        $name_hu = fake('hu_HU')->colorName() . ' ' . fake('hu_HU')->dayOfWeek();
+        $suffix = fake()->unique()->numberBetween(100000, 999999);
+        $name_en = fake('en_EN')->colorName() . ' ' . fake('en_EN')->dayOfWeek() . ' ' . $suffix;
+        $name_hu = fake('hu_HU')->colorName() . ' ' . fake('hu_HU')->dayOfWeek() . ' ' . $suffix;
         return [
             'name_en' => $name_en,
             'name_hu' => $name_hu,

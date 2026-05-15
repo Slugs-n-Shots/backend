@@ -54,6 +54,25 @@ class Receipt extends Model
         'table_session_id',
         'payment_attempt_id',
         'access_guid',
+        'accounting_document_name',
+        'accounting_document_number',
+        'issuer_name',
+        'issuer_address',
+        'issuer_tax_number',
+        'issuer_organizational_unit',
+        'customer_type',
+        'customer_name',
+        'customer_address',
+        'customer_tax_number',
+        'customer_email',
+        'performance_at',
+        'economic_event_description',
+        'accounting_currency',
+        'accounting_gross_total',
+        'accounting_items',
+        'bookkeeping_reference',
+        'bookkeeping_posted_at',
+        'bookkeeping_verified_by',
     ];
 
     /**
@@ -68,6 +87,14 @@ class Receipt extends Model
 
     protected $appends = [
         'payment_method_name',
+    ];
+
+    protected $casts = [
+        'issued_at' => 'datetime',
+        'paid_at' => 'datetime',
+        'performance_at' => 'datetime',
+        'bookkeeping_posted_at' => 'datetime',
+        'accounting_items' => 'array',
     ];
 
     public function getPaymentMethodNameAttribute()

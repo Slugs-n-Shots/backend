@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Guest;
+use App\Services\GuestAnonymizationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -142,6 +143,30 @@ class GuestController extends Controller
         $user->save();
 
         return $user;
+    }
+
+    public function anonymizeCheck(Request $request, GuestAnonymizationService $anonymizationService)
+    {
+        return response()->json($anonymizationService->check(Auth::user()));
+    }
+
+    public function anonymize(Request $request, GuestAnonymizationService $anonymizationService)
+    {
+        $request->validate([
+            'confirm' => ['required', 'accepted'],
+        ]);
+
+        $result = $anonymizationService->anonymize(Auth::user());
+
+        if (!$result['can_anonymize']) {
+            return response()->json($result, 409);
+        }
+
+        if ($request->bearerToken()) {
+            Auth::logout(true);
+        }
+
+        return response()->json(['message' => 'A fiók anonimizálva lett.']);
     }
 
 }

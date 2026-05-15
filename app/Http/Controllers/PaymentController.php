@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\OrderDetail;
 use App\Models\PaymentAttempt;
 use App\Models\PaymentEvent;
+use App\Models\Guest;
 use App\Models\Receipt;
 use App\Models\TableMember;
 use App\Models\TableSession;
@@ -40,7 +41,9 @@ class PaymentController extends Controller
                 $valid['payment_method'],
                 $valid['simulate_result'] ?? PaymentAttempt::STATUS_SUCCEEDED,
                 null,
-                null
+                null,
+                null,
+                $valid['payer'] ?? null
             );
         });
     }
@@ -74,7 +77,9 @@ class PaymentController extends Controller
                 $valid['payment_method'],
                 $valid['simulate_result'] ?? PaymentAttempt::STATUS_SUCCEEDED,
                 $tableSession,
-                null
+                null,
+                null,
+                $valid['payer'] ?? null
             );
         });
     }
@@ -114,7 +119,9 @@ class PaymentController extends Controller
                 $valid['payment_method'],
                 $valid['simulate_result'] ?? PaymentAttempt::STATUS_SUCCEEDED,
                 $tableSession,
-                null
+                null,
+                null,
+                $valid['payer'] ?? null
             );
         });
     }
@@ -185,6 +192,12 @@ class PaymentController extends Controller
                 PaymentAttempt::STATUS_FAILED,
                 PaymentAttempt::STATUS_ABANDONED,
             ])],
+            'payer' => ['sometimes', 'array'],
+            'payer.type' => ['required_with:payer', 'string', Rule::in(['individual', 'company'])],
+            'payer.name' => ['required_with:payer', 'string', 'max:255'],
+            'payer.address' => ['required_with:payer', 'string', 'max:255'],
+            'payer.tax_number' => ['required_if:payer.type,company', 'nullable', 'string', 'max:32'],
+            'payer.email' => ['sometimes', 'nullable', 'email', 'max:255'],
         ]);
 
         if (!app()->environment(['local', 'testing']) && $request->has('simulate_result')) {
@@ -205,7 +218,8 @@ class PaymentController extends Controller
         string $result,
         ?TableSession $tableSession,
         ?int $paidForEmployeeId,
-        ?string $auditXml = null
+        ?string $auditXml = null,
+        ?array $payer = null
     ): array {
         if ($details->contains(fn(OrderDetail $detail) => $detail->payment_status !== OrderDetail::PAYMENT_STATUS_PENDING || $detail->receipt_id !== null)) {
             abort(response()->json([
@@ -214,6 +228,7 @@ class PaymentController extends Controller
         }
 
         $amount = $this->detailsTotal($details);
+        $receiptGuest = Guest::findOrFail($receiptGuestId);
 
         $payment = PaymentAttempt::create([
             'guest_id' => $actorGuestId,
@@ -251,8 +266,10 @@ class PaymentController extends Controller
             ];
         }
 
+        $serial = $this->nextReceiptSerial();
+
         $receipt = Receipt::create([
-            'serno' => $this->nextReceiptSerial(),
+            'serno' => $serial,
             'guest_id' => $receiptGuestId,
             'issued_at' => now(),
             'paid_for' => $paidForEmployeeId,
@@ -262,6 +279,7 @@ class PaymentController extends Controller
             'table_session_id' => $tableSession?->id,
             'payment_attempt_id' => $payment->id,
             'access_guid' => (string) Str::uuid(),
+            ...$this->accountingReceiptSnapshot($receiptGuest, $details, $amount, $serial, $payer),
         ]);
 
         foreach ($details as $detail) {
@@ -301,6 +319,74 @@ class PaymentController extends Controller
     private function detailsTotal(Collection $details): int
     {
         return (int) $details->sum(fn(OrderDetail $detail) => $detail->unit_price * $detail->ordered_quantity);
+    }
+
+    private function accountingReceiptSnapshot(Guest $guest, Collection $details, int $amount, string $serial, ?array $payer): array
+    {
+        $details->loadMissing(['drinkUnit.drink']);
+        $customer = $this->customerSnapshot($guest, $payer);
+
+        return [
+            'accounting_document_name' => config('accounting.document.name'),
+            'accounting_document_number' => $serial,
+            'issuer_name' => config('accounting.issuer.name'),
+            'issuer_address' => config('accounting.issuer.address'),
+            'issuer_tax_number' => config('accounting.issuer.tax_number'),
+            'issuer_organizational_unit' => config('accounting.issuer.organizational_unit'),
+            'customer_type' => $customer['type'],
+            'customer_name' => $customer['name'],
+            'customer_address' => $customer['address'],
+            'customer_tax_number' => $customer['tax_number'],
+            'customer_email' => $customer['email'],
+            'performance_at' => now(),
+            'economic_event_description' => config('accounting.document.event_description'),
+            'accounting_currency' => config('accounting.currency'),
+            'accounting_gross_total' => $amount,
+            'accounting_items' => $details->values()->map(fn (OrderDetail $detail) => $this->accountingItemSnapshot($detail))->all(),
+            'bookkeeping_reference' => null,
+            'bookkeeping_posted_at' => null,
+            'bookkeeping_verified_by' => null,
+        ];
+    }
+
+    private function customerSnapshot(Guest $guest, ?array $payer): array
+    {
+        if ($payer !== null) {
+            return [
+                'type' => $payer['type'],
+                'name' => $payer['name'],
+                'address' => $payer['address'] ?? null,
+                'tax_number' => $payer['tax_number'] ?? null,
+                'email' => $payer['email'] ?? null,
+            ];
+        }
+
+        return [
+            'type' => 'individual',
+            'name' => trim($guest->name),
+            'address' => null,
+            'tax_number' => null,
+            'email' => $guest->email,
+        ];
+    }
+
+    private function accountingItemSnapshot(OrderDetail $detail): array
+    {
+        $drinkUnit = $detail->drinkUnit;
+        $drink = $drinkUnit?->drink;
+
+        return [
+            'order_detail_id' => $detail->id,
+            'drink_unit_id' => $detail->drink_unit_id,
+            'description_hu' => $drink?->getRawOriginal('name_hu'),
+            'description_en' => $drink?->getRawOriginal('name_en'),
+            'quantity' => (int) $detail->ordered_quantity,
+            'unit_hu' => $drinkUnit?->unit_hu,
+            'unit_en' => $drinkUnit?->unit_en,
+            'unit_price' => (int) $detail->unit_price,
+            'discount' => (int) $detail->discount,
+            'gross_total' => (int) ($detail->unit_price * $detail->ordered_quantity),
+        ];
     }
 
     private function currentTableSessionForGuest(int $guestId, bool $ownerOnly): array

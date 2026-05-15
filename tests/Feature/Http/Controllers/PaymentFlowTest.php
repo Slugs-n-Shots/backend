@@ -84,6 +84,107 @@ class PaymentFlowTest extends TestCase
         ]);
     }
 
+    public function test_successful_payment_stores_accounting_receipt_snapshot(): void
+    {
+        config([
+            'accounting.issuer.name' => 'Slugs-n-Shots Kft.',
+            'accounting.issuer.address' => '1099 Budapest, Teszt utca 1.',
+            'accounting.issuer.tax_number' => '12345678-2-42',
+            'accounting.issuer.organizational_unit' => 'Pult',
+        ]);
+
+        $guest = Guest::factory()->create([
+            'first_name' => 'Éva',
+            'middle_name' => null,
+            'last_name' => 'Teszt',
+            'email' => 'eva@example.com',
+            'email_verified_at' => now(),
+        ]);
+        $order = Order::factory()->create(['guest_id' => $guest->id]);
+        $first = $this->detail($order, 2, 600);
+        $second = $this->detail($order, 1, 800);
+
+        $response = $this
+            ->actingAs($guest, 'guard_guest')
+            ->postJson('/api/guest/payments', [
+                'order_detail_ids' => [$first->id, $second->id],
+                'payment_method' => Receipt::PAYMENT_METHOD_CARD,
+            ]);
+
+        $receiptId = $response->json('receipt.id');
+        $receipt = Receipt::findOrFail($receiptId);
+
+        $response->assertOk()
+            ->assertJsonPath('receipt.accounting_document_name', 'Nyugta')
+            ->assertJsonPath('receipt.accounting_document_number', $response->json('receipt.serno'))
+            ->assertJsonPath('receipt.issuer_name', 'Slugs-n-Shots Kft.')
+            ->assertJsonPath('receipt.issuer_address', '1099 Budapest, Teszt utca 1.')
+            ->assertJsonPath('receipt.issuer_tax_number', '12345678-2-42')
+            ->assertJsonPath('receipt.issuer_organizational_unit', 'Pult')
+            ->assertJsonPath('receipt.customer_name', 'Teszt Éva')
+            ->assertJsonPath('receipt.customer_email', 'eva@example.com')
+            ->assertJsonPath('receipt.economic_event_description', 'Italfogyasztás fizetése')
+            ->assertJsonPath('receipt.accounting_currency', 'HUF')
+            ->assertJsonPath('receipt.accounting_gross_total', 2000)
+            ->assertJsonCount(2, 'receipt.accounting_items');
+
+        $this->assertNotNull($receipt->performance_at);
+        $this->assertSame(2000, $receipt->accounting_gross_total);
+        $this->assertSame(2, count($receipt->accounting_items));
+        $this->assertSame($first->id, $receipt->accounting_items[0]['order_detail_id']);
+        $this->assertSame(1200, $receipt->accounting_items[0]['gross_total']);
+        $this->assertSame($second->id, $receipt->accounting_items[1]['order_detail_id']);
+        $this->assertSame(800, $receipt->accounting_items[1]['gross_total']);
+    }
+
+    public function test_successful_payment_can_store_company_payer_on_receipt(): void
+    {
+        $guest = Guest::factory()->create(['email_verified_at' => now()]);
+        $order = Order::factory()->create(['guest_id' => $guest->id]);
+        $detail = $this->detail($order, 1, 1500);
+
+        $response = $this
+            ->actingAs($guest, 'guard_guest')
+            ->postJson('/api/guest/payments', [
+                'order_detail_ids' => [$detail->id],
+                'payment_method' => Receipt::PAYMENT_METHOD_CARD,
+                'payer' => [
+                    'type' => 'company',
+                    'name' => 'Teszt Partner Kft.',
+                    'address' => '1117 Budapest, Céges út 2.',
+                    'tax_number' => '87654321-2-43',
+                    'email' => 'szamla@example.com',
+                ],
+            ]);
+
+        $response->assertOk()
+            ->assertJsonPath('receipt.customer_type', 'company')
+            ->assertJsonPath('receipt.customer_name', 'Teszt Partner Kft.')
+            ->assertJsonPath('receipt.customer_address', '1117 Budapest, Céges út 2.')
+            ->assertJsonPath('receipt.customer_tax_number', '87654321-2-43')
+            ->assertJsonPath('receipt.customer_email', 'szamla@example.com');
+    }
+
+    public function test_company_payer_requires_tax_number(): void
+    {
+        $guest = Guest::factory()->create(['email_verified_at' => now()]);
+        $order = Order::factory()->create(['guest_id' => $guest->id]);
+        $detail = $this->detail($order, 1, 1500);
+
+        $this
+            ->actingAs($guest, 'guard_guest')
+            ->postJson('/api/guest/payments', [
+                'order_detail_ids' => [$detail->id],
+                'payment_method' => Receipt::PAYMENT_METHOD_CARD,
+                'payer' => [
+                    'type' => 'company',
+                    'name' => 'Teszt Partner Kft.',
+                    'address' => '1117 Budapest, Céges út 2.',
+                ],
+            ])
+            ->assertUnprocessable();
+    }
+
     public function test_guest_cannot_pay_other_guests_order_detail(): void
     {
         $guest = Guest::factory()->create(['email_verified_at' => now()]);

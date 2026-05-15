@@ -17,12 +17,16 @@ class RequestLogger
      */
     public function handle(Request $request, Closure $next): Response
     {
+        if (!app()->environment(['local', 'testing']) || !config('request_logger.enabled', true)) {
+            return $next($request);
+        }
+
         $uuid = Str::uuid();
         $data = [
             'Request Method' => $request->method(),
             'Request Path' => $request->path(),
-            'Requesting User' => $request->user()? $request->user()->toArray(): "none",
-            'Request Params' => $request->all(),
+            'Requesting User' => $this->mask($request->user() ? $request->user()->toArray() : "none"),
+            'Request Params' => $this->mask($request->all()),
             'Request IP' => $request->ip(),
             'Request URI' => $request->getRequestUri(),
             'lang' => $request->getLanguages(),
@@ -33,7 +37,9 @@ class RequestLogger
 
         $header = collect($request->header())->transform(function ($item) {
             return $item[0];
-        });
+        })->all();
+
+        $header = $this->mask($header);
 
 //        Log::channel('requests')->info(json_encode($request->headers->all(), JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 
@@ -41,8 +47,57 @@ class RequestLogger
 
         $ret = $next($request);
 
-        Log::channel('requests')->info($uuid . ":\n" . json_encode($ret, JSON_UNESCAPED_SLASHES| JSON_PRETTY_PRINT));
+        Log::channel('requests')->info($uuid . ":\n" . json_encode($this->responseData($ret), JSON_UNESCAPED_SLASHES| JSON_PRETTY_PRINT));
 
         return $ret;
+    }
+
+    private function responseData(Response $response): array
+    {
+        $content = $response->getContent();
+        $decoded = json_decode($content, true);
+
+        return [
+            'status' => $response->getStatusCode(),
+            'content' => $this->mask(json_last_error() === JSON_ERROR_NONE ? $decoded : $content),
+        ];
+    }
+
+    private function mask(mixed $value): mixed
+    {
+        if (!config('request_logger.mask_sensitive', true)) {
+            return $value;
+        }
+
+        if (!is_array($value)) {
+            return $value;
+        }
+
+        $sensitiveKeys = [
+            'access_token',
+            'authorization',
+            'confirm_token',
+            'cookie',
+            'current_password',
+            'email',
+            'password',
+            'password_confirmation',
+            'pw_reset_token',
+            'remember_token',
+            'set-cookie',
+            'tax_number',
+            'token',
+            'x-xsrf-token',
+        ];
+
+        $masked = [];
+        foreach ($value as $key => $item) {
+            $normalizedKey = strtolower((string) $key);
+            $masked[$key] = in_array($normalizedKey, $sensitiveKeys, true)
+                ? '[masked]'
+                : $this->mask($item);
+        }
+
+        return $masked;
     }
 }
