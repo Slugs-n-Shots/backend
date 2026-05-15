@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Guest;
+use App\Models\GuestRecentDrink;
 use App\Models\GdprAuditEvent;
 use App\Models\Order;
 use App\Models\OrderDetail;
@@ -66,6 +67,12 @@ class GuestAnonymizationTest extends TestCase
             'payment_status' => OrderDetail::PAYMENT_STATUS_PAID,
             'receipt_id' => $receipt->id,
         ]);
+        $recentDrink = GuestRecentDrink::create([
+            'guest_id' => $guest->id,
+            'drink_id' => $detail->drinkUnit->drink_id,
+            'last_ordered_at' => now()->subDay(),
+            'order_count' => 1,
+        ]);
         $paymentAttempt = PaymentAttempt::factory()->create([
             'guest_id' => $guest->id,
             'receipt_id' => $receipt->id,
@@ -105,6 +112,7 @@ class GuestAnonymizationTest extends TestCase
         $this->assertDatabaseHas('receipts', ['id' => $receipt->id, 'guest_id' => null]);
         $this->assertDatabaseHas('payment_attempts', ['id' => $paymentAttempt->id, 'guest_id' => null]);
         $this->assertDatabaseHas('payment_events', ['id' => $paymentEvent->id, 'actor_guest_id' => null]);
+        $this->assertDatabaseMissing('guest_recent_drinks', ['id' => $recentDrink->id]);
         $this->assertDatabaseHas('gdpr_audit_events', [
             'guest_id' => $guest->id,
             'actor_guest_id' => $guest->id,

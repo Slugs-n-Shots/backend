@@ -33,6 +33,7 @@ Route::middleware(['auth:guard_guest'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [GuestController::class, 'me']);
     Route::post('/me', [GuestController::class, 'updateSelf']);
+    Route::get('/me/export', [GuestController::class, 'export']);
     Route::get('/me/anonymize/check', [GuestController::class, 'anonymizeCheck']);
     Route::post('/me/anonymize', [GuestController::class, 'anonymize']);
     Route::post('/update-password', [GuestController::class, 'updatePassword']);

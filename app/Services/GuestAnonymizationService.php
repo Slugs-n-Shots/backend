@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Guest;
+use App\Models\GuestRecentDrink;
 use App\Models\GdprAuditEvent;
 use App\Models\Order;
 use App\Models\OrderDetail;
@@ -86,6 +87,7 @@ class GuestAnonymizationService
             PaymentEvent::where('actor_guest_id', $lockedGuest->id)->update([
                 'actor_guest_id' => null,
             ]);
+            GuestRecentDrink::where('guest_id', $lockedGuest->id)->delete();
 
             $this->recordAuditEvent(
                 GdprAuditEvent::TYPE_ANONYMIZATION_COMPLETED,

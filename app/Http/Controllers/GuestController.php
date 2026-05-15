@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Guest;
 use App\Services\GuestAnonymizationService;
+use App\Services\GuestDataExportService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -148,6 +149,11 @@ class GuestController extends Controller
     public function anonymizeCheck(Request $request, GuestAnonymizationService $anonymizationService)
     {
         return response()->json($anonymizationService->check(Auth::user()));
+    }
+
+    public function export(Request $request, GuestDataExportService $guestDataExportService)
+    {
+        return response()->json($guestDataExportService->export(Auth::user()));
     }
 
     public function anonymize(Request $request, GuestAnonymizationService $anonymizationService)

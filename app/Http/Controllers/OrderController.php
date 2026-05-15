@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\TableMember;
 use App\Models\TableSession;
+use App\Services\GuestRecentDrinkService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -403,6 +404,8 @@ class OrderController extends Controller
             ]);
             $total += $item['ordered_quantity'] * $drinkUnit->unit_price;
         }
+
+        app(GuestRecentDrinkService::class)->recordOrder($order);
 
         return [$order, $total];
     }
