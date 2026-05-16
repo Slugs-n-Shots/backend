@@ -12,10 +12,12 @@ A projekt célja egy olyan API biztosítása, amely támogatja a vendégoldali i
 - Asztaltörzs, GUID/QR alapú asztalfoglalás és table session kezelés.
 - Asztaltagság: csatlakozási kérés, jóváhagyás, elutasítás, rendelési jog tiltása/engedése.
 - Table session fogyasztási limitek vendég és staff/admin oldalról.
+- Személyenkénti table session fogyasztási limit az asztal felelőse által.
 - Vendég és staff rendelésleadás table sessionhöz kötötten.
 - Rendelési státuszfolyamat pultos/pincér munkához.
 - Tételszintű fizetési állapot (`pending`, `paid`).
 - Vendég saját fizetés, asztal részfizetés és záró fizetés.
+- Vendég profilkép feltöltés és törlés konfigurálható méretlimittel.
 - Staff/admin fizetettnek jelölés auditált beavatkozásként.
 - Nyugta és számviteli snapshot mezők.
 - Payment attempt és payment event audit trail.
@@ -44,6 +46,7 @@ A backend több, adatvédelemhez kapcsolódó funkciót tartalmaz:
 - [Üzleti logika](docs/business-logic.md)
 - [GDPR retention policy](docs/gdpr-retention-policy.md)
 - [Vendég adatkezelési összefoglaló](docs/guest-data-protection-summary.md)
+- [Bulk tesztadat generáló modul](docs/bulk-test-data-plan.md)
 - [Wiki oldal](https://github.com/slug-n-shots/backend/wiki)
 
 ## Technológia
@@ -56,22 +59,36 @@ A backend több, adatvédelemhez kapcsolódó funkciót tartalmaz:
 - JWT auth (`tymon/jwt-auth`)
 - OpenAPI / swagger-php / L5 Swagger
 
-## Fejlesztői parancsok
+## Fejlesztői környezet
 
 PHP parancsokat Docker PHP konténerben érdemes futtatni:
 
 ```bash
+docker compose exec php composer install
+docker compose exec php php artisan key:generate
+docker compose exec php php artisan jwt:secret
+docker compose exec php php artisan migrate
+```
+
+Hasznos ellenőrző parancsok:
+
+```bash
 docker compose exec php php artisan migrate:status
 docker compose exec php php artisan route:list
-docker compose exec php vendor/bin/phpunit
+docker compose exec php php artisan config:clear
 docker compose exec php php artisan l5-swagger:generate
 ```
 
-GDPR retention dry-run:
+## Törzsadat import
+
+Az ital kategóriák és italok JSON adatfájlból importálhatók. A kategóriákat érdemes előbb futtatni, utána az italokat:
 
 ```bash
-docker compose exec php php artisan gdpr:retention-prune --dry-run
+docker compose exec php php artisan import:categories database/seeders/data/DrinkCategories.json
+docker compose exec php php artisan import:drinks database/seeders/data/Drinks.json
 ```
+
+Az import parancsok meglévő rekordot angol név alapján keresnek (`name_en`), és adatszintű törlést nem végeznek.
 
 ## API dokumentáció
 
@@ -92,12 +109,43 @@ docker compose exec php php artisan l5-swagger:generate
 Teljes tesztcsomag:
 
 ```bash
-docker compose exec php vendor/bin/phpunit
+docker compose exec php php artisan test
 ```
 
 Szűkített példa:
 
 ```bash
-docker compose exec php vendor/bin/phpunit --filter=GuestAnonymizationTest
-docker compose exec php vendor/bin/phpunit --filter=GdprRetentionPruneTest
+docker compose exec php php artisan test --filter=GuestAnonymizationTest
+docker compose exec php php artisan test --filter=GdprRetentionPruneTest
+docker compose exec php php artisan test --filter=OrderFlowTest
+```
+
+Közvetlen PHPUnit futtatás is használható, ha arra van szükség:
+
+```bash
+docker compose exec php vendor/bin/phpunit --filter=GuestControllerTest
+```
+
+## Tesztadatok
+
+Nagyobb, életszerű fejlesztői vagy demó adatbázis generálása:
+
+```bash
+docker compose exec php php artisan test-data:bulk --dry-run
+docker compose exec php php artisan test-data:bulk --preset=demo
+docker compose exec php php artisan test-data:bulk --preset=load --fresh
+docker compose exec php php artisan test-data:bulk --guests=300 --orders=5000 --days=90 --seed=12345
+```
+
+A `test-data:bulk` csak `local` és `testing` környezetben fut. A `--fresh` adatbázis-újrahúzást végez, ezért interaktív megerősítést kér, vagy explicit `--force` opcióval futtatható.
+
+## Karbantartó parancsok
+
+GDPR retention dry-run és tényleges futtatás:
+
+```bash
+docker compose exec php php artisan gdpr:retention-prune --dry-run
+docker compose exec php php artisan gdpr:retention-prune
+docker compose exec php php artisan gdpr:retention-prune --days=7 --dry-run
+docker compose exec php php artisan gdpr:retention-prune --before=2026-05-15 --dry-run
 ```
