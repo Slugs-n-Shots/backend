@@ -48,6 +48,7 @@
     "This table session is already closed.": "Ez az asztal-session már le van zárva.",
     "This table still has pending order details.": "Az asztalnak még vannak fizetésre váró rendelési tételei.",
     "The table spending limit would be exceeded. Please pay pending items before ordering more.": "Az asztal fogyasztási limitje túllépésre kerülne. További rendelés előtt kérjük, rendezzétek a függő tételeket.",
+    "The per-guest spending limit would be exceeded. Please continue with immediate payment or pay pending items before ordering more.": "A személyenkénti fogyasztási limit túllépésre kerülne. Innentől azonnali fizetéssel folytathatod a rendelést, vagy előbb rendezd a függő tételeidet.",
     "There are no pending order details to pay.": "Nincs fizetésre váró rendelési tétel.",
     "Order details must belong to the same guest.": "A rendelési tételeknek ugyanahhoz a vendéghez kell tartozniuk.",
     "Order details must belong to the same table session.": "A rendelési tételeknek ugyanahhoz az asztal-sessionhöz kell tartozniuk.",

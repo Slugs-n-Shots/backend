@@ -351,15 +351,19 @@ class TableControllerTest extends TestCase
             ->actingAs($owner, 'guard_guest')
             ->postJson('/api/guest/tables/current/spending-limit', [
                 'owner_spending_limit' => 2500,
+                'owner_per_guest_spending_limit' => 1200,
             ])
             ->assertOk()
             ->assertJsonPath('table_session.id', $session->id)
             ->assertJsonPath('limits.owner_spending_limit', 2500)
+            ->assertJsonPath('limits.owner_per_guest_spending_limit', 1200)
+            ->assertJsonPath('limits.effective_per_guest_spending_limit', 1200)
             ->assertJsonPath('limits.effective_spending_limit', 2500);
 
         $this->assertDatabaseHas('table_sessions', [
             'id' => $session->id,
             'owner_spending_limit' => 2500,
+            'owner_per_guest_spending_limit' => 1200,
         ]);
     }
 
@@ -427,6 +431,7 @@ class TableControllerTest extends TestCase
         $session = TableSession::factory()->create([
             'owner_guest_id' => $owner->id,
             'owner_spending_limit' => 5000,
+            'owner_per_guest_spending_limit' => 2000,
         ]);
         TableMember::factory()->create([
             'table_session_id' => $session->id,
@@ -471,14 +476,19 @@ class TableControllerTest extends TestCase
             ->assertJsonPath('stats.payable_total', 2700)
             ->assertJsonPath('stats.effective_spending_limit', 5000)
             ->assertJsonPath('stats.remaining_spending_limit', 2300)
+            ->assertJsonPath('stats.owner_per_guest_spending_limit', 2000)
             ->assertJsonPath('stats.per_guest_consumption.0.guest_id', $owner->id)
             ->assertJsonPath('stats.per_guest_consumption.0.total', 1600)
             ->assertJsonPath('stats.per_guest_consumption.0.payable_total', 1200)
             ->assertJsonPath('stats.per_guest_consumption.0.paid_total', 400)
+            ->assertJsonPath('stats.per_guest_consumption.0.spending_limit', 2000)
+            ->assertJsonPath('stats.per_guest_consumption.0.remaining_spending_limit', 800)
             ->assertJsonPath('stats.per_guest_consumption.1.guest_id', $member->id)
             ->assertJsonPath('stats.per_guest_consumption.1.total', 1500)
             ->assertJsonPath('stats.per_guest_consumption.1.payable_total', 1500)
-            ->assertJsonPath('stats.per_guest_consumption.1.paid_total', 0);
+            ->assertJsonPath('stats.per_guest_consumption.1.paid_total', 0)
+            ->assertJsonPath('stats.per_guest_consumption.1.spending_limit', 2000)
+            ->assertJsonPath('stats.per_guest_consumption.1.remaining_spending_limit', 500);
     }
 
     public function test_current_table_stats_handles_detached_anonymized_orders(): void

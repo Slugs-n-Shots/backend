@@ -88,6 +88,14 @@ use OpenApi\Attributes as OA;
     ]
 )]
 #[OA\Schema(
+    schema: 'GuestProfilePictureUploadRequest',
+    type: 'object',
+    required: ['picture'],
+    properties: [
+        new OA\Property(property: 'picture', type: 'string', format: 'binary'),
+    ]
+)]
+#[OA\Schema(
     schema: 'MakeOrderCartItem',
     type: 'object',
     required: ['drink_id', 'quantity', 'unit', 'ordered_quantity'],

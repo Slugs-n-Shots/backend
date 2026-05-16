@@ -18,7 +18,8 @@ Ez a dokumentum a backend üzleti szabályait foglalja össze. Nem frontend-spec
 - Vendég regisztrációnál kötelező a 18+ elfogadás: `is_over_18`.
 - Opcionális compliance/profil mezők: `birth_date`, `phone`, `address`.
 - Az e-mail megerősítés külön folyamat.
-- A profiladatok közül a vendég saját nevét/képét módosíthatja, de e-mailt, jelszót és aktív státuszt nem ezen az általános profil endpointon keresztül.
+- A profiladatok közül a vendég saját nevét módosíthatja az általános profil endpointon keresztül; profilképet külön feltöltés/törlés endpoint kezel.
+- A profilkép feltöltési méretkorlátja `config/guests.php` alatt konfigurálható.
 - Jelszómódosításkor a jelenlegi jelszó ellenőrzése kötelező.
 
 ## Menü és italok
@@ -64,11 +65,13 @@ Ez a dokumentum a backend üzleti szabályait foglalja össze. Nem frontend-spec
 ## Fogyasztási limit
 
 - A table sessionhöz tartozhat owner által beállított limit.
+- A table sessionhöz tartozhat owner által beállított személyenkénti pending limit is, amely minden résztvevőre azonosan vonatkozik, beleértve az ownert.
 - A staff/admin oldalon lehet alapértelmezett vagy session szintű limit-felülírás.
 - Ha owner limit és staff limit is van, az alacsonyabb effektív limit érvényes.
 - A `null` vagy `0` érték az adott oldalon limit nélküliséget jelent.
-- A limit a függő/fizetetlen asztaltételek összegére vonatkozik.
-- Ha egy új rendelés túllépné az effektív limitet, a backend `409` választ ad.
+- Az asztalszintű limit a függő/fizetetlen asztaltételek összegére vonatkozik.
+- A személyenkénti limit az adott rendelő vendég függő/fizetetlen tételeire vonatkozik.
+- Ha egy új rendelés túllépné az effektív asztalszintű vagy személyenkénti limitet, a backend `409` választ ad.
 
 ## Fizetés és nyugta
 
@@ -103,9 +106,11 @@ Ez a dokumentum a backend üzleti szabályait foglalja össze. Nem frontend-spec
   - van aktív rendelése,
   - a fiók már anonimizált.
 - Anonimizáláskor a vendég profil PII mezői törlődnek vagy maszkolódnak.
+- A saját feltöltött profilkép adatbázis-linkje és storage fájlja is törlődik anonimizáláskor.
 - Rendelési, fizetési és nyugta rekordok üzleti/számviteli okból megmaradnak, de a vendégre mutató személyes linkek leválasztódnak.
 - A GDPR audit események megmaradnak, PII helyett maszkolt azonosítóval.
 - A vendég saját adat exportot kérhet: `GET /api/guest/me/export`.
+- Staff/admin vendégtörléskor nem sima soft delete történik, hanem ugyanazokra az előfeltételekre épülő GDPR anonimizálási flow fut. Blokkoló aktív állapot esetén a backend `409` választ ad.
 
 ## Retention policy
 
@@ -130,3 +135,4 @@ Ez a dokumentum a backend üzleti szabályait foglalja össze. Nem frontend-spec
 - Riportok és CSV export.
 - Promóció/kedvezmény kalkuláció.
 - Audit log admin megtekintő és tamper-evidence stratégia.
+- Bulk tesztadat generálás fejlesztői/demo/load környezethez.

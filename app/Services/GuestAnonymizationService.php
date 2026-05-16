@@ -14,6 +14,7 @@ use App\Models\TableMember;
 use App\Models\TableSession;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class GuestAnonymizationService
@@ -28,9 +29,18 @@ class GuestAnonymizationService
         ];
     }
 
-    public function anonymize(Guest $guest): array
+    public function anonymize(
+        Guest $guest,
+        string $reason = 'guest_request',
+        ?Guest $actorGuest = null,
+        bool $useGuestAsActor = true
+    ): array
     {
-        return DB::transaction(function () use ($guest) {
+        if ($useGuestAsActor && $actorGuest === null) {
+            $actorGuest = $guest;
+        }
+
+        return DB::transaction(function () use ($guest, $reason, $actorGuest) {
             $lockedGuest = Guest::whereKey($guest->id)->lockForUpdate()->firstOrFail();
             $check = $this->check($lockedGuest);
 
@@ -39,12 +49,14 @@ class GuestAnonymizationService
                     GdprAuditEvent::TYPE_ANONYMIZATION_BLOCKED,
                     $lockedGuest,
                     'blocked',
-                    $check['blocking_reasons']
+                    $check['blocking_reasons'],
+                    $actorGuest
                 );
 
                 return $check;
             }
 
+            $oldPicture = $lockedGuest->picture;
             $data = $lockedGuest->data ?? [];
             unset(
                 $data['confirm_token'],
@@ -71,7 +83,7 @@ class GuestAnonymizationService
                 'address' => null,
                 'password' => Hash::make(Str::random(64)),
                 'anonymized_at' => now(),
-                'anonymization_reason' => 'guest_request',
+                'anonymization_reason' => $reason,
                 'data' => $data,
             ])->save();
 
@@ -88,11 +100,16 @@ class GuestAnonymizationService
                 'actor_guest_id' => null,
             ]);
             GuestRecentDrink::where('guest_id', $lockedGuest->id)->delete();
+            DB::afterCommit(function () use ($oldPicture) {
+                $this->deleteStoredGuestPicture($oldPicture);
+            });
 
             $this->recordAuditEvent(
                 GdprAuditEvent::TYPE_ANONYMIZATION_COMPLETED,
                 $lockedGuest,
-                'completed'
+                'completed',
+                [],
+                $actorGuest
             );
 
             return [
@@ -100,6 +117,13 @@ class GuestAnonymizationService
                 'blocking_reasons' => [],
             ];
         });
+    }
+
+    private function deleteStoredGuestPicture(?string $path): void
+    {
+        if ($path !== null && str_starts_with($path, 'guest-pictures/')) {
+            Storage::disk('public')->delete($path);
+        }
     }
 
     private function blockingReasons(Guest $guest): array
@@ -188,12 +212,17 @@ class GuestAnonymizationService
             ->exists();
     }
 
-    private function recordAuditEvent(string $eventType, Guest $guest, string $status, array $blockingReasons = []): void
-    {
+    private function recordAuditEvent(
+        string $eventType,
+        Guest $guest,
+        string $status,
+        array $blockingReasons = [],
+        ?Guest $actorGuest = null
+    ): void {
         GdprAuditEvent::create([
             'event_type' => $eventType,
             'guest_id' => $guest->id,
-            'actor_guest_id' => $guest->id,
+            'actor_guest_id' => $actorGuest?->id,
             'status' => $status,
             'masked_email' => $this->auditMaskedEmail($guest),
             'blocking_reason_count' => count($blockingReasons),

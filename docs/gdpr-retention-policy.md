@@ -143,6 +143,7 @@ Anonimizálás:
 
 - vendég által indított fióklezárási/adattörlési folyamat,
 - profil PII törlődik/maszkolódik,
+- saját feltöltött profilkép storage fájlja törlődik,
 - aktív tartozás/asztal/rendelés mellett tiltott,
 - recent-drinks snapshot törlődik,
 - kapcsolatok azonnal leválasztódnak.

@@ -301,6 +301,82 @@ class OrderFlowTest extends TestCase
             ->assertStatus(409);
     }
 
+    public function test_table_owner_order_is_rejected_when_per_guest_limit_would_be_exceeded(): void
+    {
+        $owner = Guest::factory()->create(['email_verified_at' => now()]);
+        $session = TableSession::factory()->create([
+            'owner_guest_id' => $owner->id,
+            'owner_per_guest_spending_limit' => 1000,
+        ]);
+        $existingUnit = $this->createDrinkUnit('Existing Owner Soda', 1, 'glass', 800);
+        $newUnit = $this->createDrinkUnit('New Owner Soda', 1, 'glass', 300);
+        $order = Order::factory()->create([
+            'guest_id' => $owner->id,
+            'table_session_id' => $session->id,
+        ]);
+        OrderDetail::factory()->create([
+            'order_id' => $order->id,
+            'drink_unit_id' => $existingUnit->id,
+            'ordered_quantity' => 1,
+            'unit_price' => 800,
+            'payment_status' => OrderDetail::PAYMENT_STATUS_PENDING,
+        ]);
+
+        $this
+            ->actingAs($owner, 'guard_guest')
+            ->postJson('/api/guest/orders?lang=en', [
+                'cart' => [$this->cartItem($newUnit)],
+                'table_session_id' => $session->id,
+            ])
+            ->assertStatus(409)
+            ->assertJsonPath('code', 'per_guest_spending_limit_exceeded')
+            ->assertJsonPath('recommended_action', 'pay_now')
+            ->assertJsonPath('limit', 1000)
+            ->assertJsonPath('pending_total', 800)
+            ->assertJsonPath('new_order_total', 300);
+    }
+
+    public function test_table_member_order_is_rejected_when_own_per_guest_limit_would_be_exceeded(): void
+    {
+        $owner = Guest::factory()->create(['email_verified_at' => now()]);
+        $member = Guest::factory()->create(['email_verified_at' => now()]);
+        $session = TableSession::factory()->create([
+            'owner_guest_id' => $owner->id,
+            'owner_per_guest_spending_limit' => 1000,
+        ]);
+        TableMember::factory()->create([
+            'table_session_id' => $session->id,
+            'guest_id' => $member->id,
+            'status' => TableMember::STATUS_APPROVED,
+        ]);
+        $existingUnit = $this->createDrinkUnit('Existing Member Soda', 1, 'glass', 800);
+        $newUnit = $this->createDrinkUnit('New Member Soda', 1, 'glass', 300);
+        $order = Order::factory()->create([
+            'guest_id' => $member->id,
+            'table_session_id' => $session->id,
+        ]);
+        OrderDetail::factory()->create([
+            'order_id' => $order->id,
+            'drink_unit_id' => $existingUnit->id,
+            'ordered_quantity' => 1,
+            'unit_price' => 800,
+            'payment_status' => OrderDetail::PAYMENT_STATUS_PENDING,
+        ]);
+
+        $this
+            ->actingAs($member, 'guard_guest')
+            ->postJson('/api/guest/orders?lang=en', [
+                'cart' => [$this->cartItem($newUnit)],
+                'table_session_id' => $session->id,
+            ])
+            ->assertStatus(409)
+            ->assertJsonPath('code', 'per_guest_spending_limit_exceeded')
+            ->assertJsonPath('recommended_action', 'pay_now')
+            ->assertJsonPath('limit', 1000)
+            ->assertJsonPath('pending_total', 800)
+            ->assertJsonPath('new_order_total', 300);
+    }
+
     public function test_zero_spending_limits_are_treated_as_unlimited(): void
     {
         config(['tables.default_staff_spending_limit' => 0]);
@@ -309,6 +385,7 @@ class OrderFlowTest extends TestCase
         $session = TableSession::factory()->create([
             'owner_guest_id' => $owner->id,
             'owner_spending_limit' => 0,
+            'owner_per_guest_spending_limit' => 0,
             'staff_spending_limit_override' => 0,
         ]);
         $unit = $this->createDrinkUnit('Unlimited Soda', 1, 'glass', 1200);

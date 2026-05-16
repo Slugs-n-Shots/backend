@@ -160,7 +160,7 @@ class OrderController extends Controller
             $guest = Auth::user();
             $tableSession = $this->resolveGuestTableSession($guest, $valid['table_session_id'] ?? null);
             $cartTotal = $this->calculateCartTotal($valid['cart']);
-            $this->ensureTableSpendingLimitAllows($tableSession, $cartTotal);
+            $this->ensureSpendingLimitsAllow($tableSession, $guest, $cartTotal);
 
             [$order, $total] = $this->createOrderFromCart($valid['cart'], [
                 'guest_id' => $guest->id,
@@ -200,7 +200,7 @@ class OrderController extends Controller
                 $this->ensureStaffMayUseTableSession($guest, $tableSessionId);
                 $tableSession = TableSession::findOrFail($tableSessionId);
                 $cartTotal = $this->calculateCartTotal($valid['cart']);
-                $this->ensureTableSpendingLimitAllows($tableSession, $cartTotal);
+                $this->ensureSpendingLimitsAllow($tableSession, $guest, $cartTotal);
             }
 
             [$order, $total] = $this->createOrderFromCart($valid['cart'], [
@@ -522,6 +522,12 @@ class OrderController extends Controller
         }
     }
 
+    private function ensureSpendingLimitsAllow(TableSession $tableSession, Guest $guest, int $newOrderTotal): void
+    {
+        $this->ensureTableSpendingLimitAllows($tableSession, $newOrderTotal);
+        $this->ensurePerGuestSpendingLimitAllows($tableSession, $guest, $newOrderTotal);
+    }
+
     private function ensureTableSpendingLimitAllows(TableSession $tableSession, int $newOrderTotal): void
     {
         $limit = $tableSession->effectiveSpendingLimit();
@@ -542,11 +548,44 @@ class OrderController extends Controller
         }
     }
 
+    private function ensurePerGuestSpendingLimitAllows(TableSession $tableSession, Guest $guest, int $newOrderTotal): void
+    {
+        $limit = $tableSession->ownerPerGuestSpendingLimit();
+
+        if ($limit === null) {
+            return;
+        }
+
+        $pendingTotal = $this->pendingTotalForTableSessionGuest($tableSession, $guest);
+
+        if ($pendingTotal + $newOrderTotal > $limit) {
+            abort(response()->json([
+                'message' => __('The per-guest spending limit would be exceeded. Please continue with immediate payment or pay pending items before ordering more.'),
+                'code' => 'per_guest_spending_limit_exceeded',
+                'recommended_action' => 'pay_now',
+                'limit' => $limit,
+                'pending_total' => $pendingTotal,
+                'new_order_total' => $newOrderTotal,
+            ], 409));
+        }
+    }
+
     private function pendingTotalForTableSession(TableSession $tableSession): int
     {
         return (int) OrderDetail::where('payment_status', OrderDetail::PAYMENT_STATUS_PENDING)
             ->whereHas('order', function ($query) use ($tableSession) {
                 $query->where('table_session_id', $tableSession->id);
+            })
+            ->selectRaw('COALESCE(SUM(unit_price * ordered_quantity), 0) as total')
+            ->value('total');
+    }
+
+    private function pendingTotalForTableSessionGuest(TableSession $tableSession, Guest $guest): int
+    {
+        return (int) OrderDetail::where('payment_status', OrderDetail::PAYMENT_STATUS_PENDING)
+            ->whereHas('order', function ($query) use ($tableSession, $guest) {
+                $query->where('table_session_id', $tableSession->id)
+                    ->where('guest_id', $guest->id);
             })
             ->selectRaw('COALESCE(SUM(unit_price * ordered_quantity), 0) as total')
             ->value('total');

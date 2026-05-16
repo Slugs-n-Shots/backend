@@ -165,6 +165,7 @@ class TableController extends Controller
     {
         $valid = $request->validate([
             'owner_spending_limit' => ['required', 'nullable', 'integer', 'min:0'],
+            'owner_per_guest_spending_limit' => ['sometimes', 'nullable', 'integer', 'min:0'],
         ]);
 
         $tableSession = TableSession::with('table')
@@ -178,6 +179,9 @@ class TableController extends Controller
         }
 
         $tableSession->owner_spending_limit = $valid['owner_spending_limit'];
+        if (array_key_exists('owner_per_guest_spending_limit', $valid)) {
+            $tableSession->owner_per_guest_spending_limit = $valid['owner_per_guest_spending_limit'];
+        }
         $tableSession->save();
 
         return $this->tableSessionLimitResponse($tableSession->fresh());
@@ -229,6 +233,7 @@ class TableController extends Controller
                 'payable_total' => $payableTotal,
                 'effective_spending_limit' => $effectiveLimit,
                 'remaining_spending_limit' => $effectiveLimit === null ? null : max($effectiveLimit - $payableTotal, 0),
+                'owner_per_guest_spending_limit' => $tableSession->ownerPerGuestSpendingLimit(),
                 'per_guest_consumption' => $this->perGuestConsumptionForTableSession($tableSession),
             ],
         ];
@@ -283,6 +288,7 @@ class TableController extends Controller
             'closed_at' => $tableSession->closed_at?->toJSON(),
             'status' => $tableSession->status,
             'owner_spending_limit' => $tableSession->owner_spending_limit,
+            'owner_per_guest_spending_limit' => $tableSession->owner_per_guest_spending_limit,
             'staff_spending_limit_override' => $tableSession->staff_spending_limit_override,
             'effective_spending_limit' => $tableSession->effectiveSpendingLimit(),
         ];
@@ -294,6 +300,8 @@ class TableController extends Controller
             'table_session' => $this->tableSessionResponse($tableSession),
             'limits' => [
                 'owner_spending_limit' => $tableSession->owner_spending_limit,
+                'owner_per_guest_spending_limit' => $tableSession->owner_per_guest_spending_limit,
+                'effective_per_guest_spending_limit' => $tableSession->ownerPerGuestSpendingLimit(),
                 'default_staff_spending_limit' => config('tables.default_staff_spending_limit'),
                 'staff_spending_limit_override' => $tableSession->staff_spending_limit_override,
                 'staff_spending_limit' => $tableSession->staffSpendingLimit(),
@@ -315,6 +323,7 @@ class TableController extends Controller
 
     private function perGuestConsumptionForTableSession(TableSession $tableSession): array
     {
+        $perGuestLimit = $tableSession->ownerPerGuestSpendingLimit();
         $orders = Order::with(['guest', 'details'])
             ->where('table_session_id', $tableSession->id)
             ->orderBy('guest_id')
@@ -332,6 +341,8 @@ class TableController extends Controller
                     'total' => 0,
                     'payable_total' => 0,
                     'paid_total' => 0,
+                    'spending_limit' => $perGuestLimit,
+                    'remaining_spending_limit' => $perGuestLimit,
                 ];
             }
 
@@ -344,6 +355,13 @@ class TableController extends Controller
                 } else {
                     $consumption[$guestId]['payable_total'] += $lineTotal;
                 }
+            }
+
+            if ($perGuestLimit !== null) {
+                $consumption[$guestId]['remaining_spending_limit'] = max(
+                    $perGuestLimit - $consumption[$guestId]['payable_total'],
+                    0
+                );
             }
         }
 

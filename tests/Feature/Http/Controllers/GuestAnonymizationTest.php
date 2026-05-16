@@ -15,6 +15,7 @@ use App\Models\TableSession;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class GuestAnonymizationTest extends TestCase
@@ -128,6 +129,24 @@ class GuestAnonymizationTest extends TestCase
                 'password' => 'Password1!',
             ])
             ->assertUnauthorized();
+    }
+
+    public function test_guest_anonymization_deletes_stored_profile_picture(): void
+    {
+        Storage::fake('public');
+        $guest = Guest::factory()->create(['email_verified_at' => now()]);
+        $picturePath = "guest-pictures/{$guest->id}/avatar.jpg";
+        Storage::disk('public')->put($picturePath, 'profile picture');
+        $guest->picture = $picturePath;
+        $guest->save();
+
+        $this
+            ->actingAs($guest, 'guard_guest')
+            ->postJson('/api/guest/me/anonymize', ['confirm' => true])
+            ->assertOk();
+
+        $this->assertNull($guest->fresh()->picture);
+        Storage::disk('public')->assertMissing($picturePath);
     }
 
     public function test_anonymization_keeps_accounting_receipt_customer_snapshot(): void

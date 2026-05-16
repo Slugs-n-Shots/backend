@@ -22,6 +22,7 @@ class TableSession extends Model
         'closed_at',
         'status',
         'owner_spending_limit',
+        'owner_per_guest_spending_limit',
         'staff_spending_limit_override',
         'staff_spending_limit_override_set_by',
         'staff_spending_limit_override_set_at',
@@ -31,6 +32,9 @@ class TableSession extends Model
         'business_date' => 'date',
         'opened_at' => 'datetime',
         'closed_at' => 'datetime',
+        'owner_spending_limit' => 'integer',
+        'owner_per_guest_spending_limit' => 'integer',
+        'staff_spending_limit_override' => 'integer',
         'staff_spending_limit_override_set_at' => 'datetime',
     ];
 
@@ -86,6 +90,11 @@ class TableSession extends Model
         return $this->normalizeSpendingLimit(
             $this->staff_spending_limit_override ?? config('tables.default_staff_spending_limit')
         );
+    }
+
+    public function ownerPerGuestSpendingLimit(): ?int
+    {
+        return $this->normalizeSpendingLimit($this->owner_per_guest_spending_limit);
     }
 
     private function normalizeSpendingLimit(mixed $limit): ?int

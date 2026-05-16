@@ -41,6 +41,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'closed_at', type: ['string', 'null'], format: 'date-time', example: null),
         new OA\Property(property: 'status', type: 'string', enum: ['open', 'closed'], example: 'open'),
         new OA\Property(property: 'owner_spending_limit', type: ['integer', 'null'], example: 5000),
+        new OA\Property(property: 'owner_per_guest_spending_limit', type: ['integer', 'null'], example: 1500),
         new OA\Property(property: 'staff_spending_limit_override', type: ['integer', 'null'], example: 3000),
         new OA\Property(property: 'effective_spending_limit', type: ['integer', 'null'], example: 3000),
     ]
@@ -51,6 +52,7 @@ use OpenApi\Attributes as OA;
     required: ['owner_spending_limit'],
     properties: [
         new OA\Property(property: 'owner_spending_limit', type: ['integer', 'null'], minimum: 0, example: 5000),
+        new OA\Property(property: 'owner_per_guest_spending_limit', type: ['integer', 'null'], minimum: 0, example: 1500),
     ],
     type: 'object'
 )]
@@ -74,6 +76,8 @@ use OpenApi\Attributes as OA;
             type: 'object',
             properties: [
                 new OA\Property(property: 'owner_spending_limit', type: ['integer', 'null'], example: 5000),
+                new OA\Property(property: 'owner_per_guest_spending_limit', type: ['integer', 'null'], example: 1500),
+                new OA\Property(property: 'effective_per_guest_spending_limit', type: ['integer', 'null'], example: 1500),
                 new OA\Property(property: 'default_staff_spending_limit', type: ['integer', 'null'], example: 4000),
                 new OA\Property(property: 'staff_spending_limit_override', type: ['integer', 'null'], example: 3000),
                 new OA\Property(property: 'staff_spending_limit', type: ['integer', 'null'], example: 3000),
@@ -93,6 +97,8 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'total', type: 'integer', example: 3100),
         new OA\Property(property: 'payable_total', type: 'integer', example: 2700),
         new OA\Property(property: 'paid_total', type: 'integer', example: 400),
+        new OA\Property(property: 'spending_limit', type: ['integer', 'null'], example: 1500),
+        new OA\Property(property: 'remaining_spending_limit', type: ['integer', 'null'], example: 300),
     ]
 )]
 #[OA\Schema(
@@ -108,6 +114,7 @@ use OpenApi\Attributes as OA;
                 new OA\Property(property: 'payable_total', type: 'integer', example: 2700),
                 new OA\Property(property: 'effective_spending_limit', type: ['integer', 'null'], example: 5000),
                 new OA\Property(property: 'remaining_spending_limit', type: ['integer', 'null'], example: 2300),
+                new OA\Property(property: 'owner_per_guest_spending_limit', type: ['integer', 'null'], example: 1500),
                 new OA\Property(
                     property: 'per_guest_consumption',
                     type: 'array',

@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password as PasswordRule;
@@ -74,10 +76,19 @@ class GuestController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Guest $guest)
+    public function destroy(Guest $guest, GuestAnonymizationService $anonymizationService)
     {
-        if ($guest->delete())
+        if ($guest->anonymized_at !== null) {
             return response()->noContent();
+        }
+
+        $result = $anonymizationService->anonymize($guest, 'staff_delete', null, false);
+
+        if (!$result['can_anonymize']) {
+            return response()->json($result, 409);
+        }
+
+        return response()->noContent();
     }
 
     public function scheme()
@@ -119,6 +130,47 @@ class GuestController extends Controller
         ]);
 
         $guest->fill($valid)->save();
+        return $guest;
+    }
+
+    public function uploadPicture(Request $request)
+    {
+        $valid = $request->validate([
+            'picture' => [
+                'required',
+                'image',
+                'mimes:jpg,jpeg,png,webp',
+                'max:' . config('guests.profile_picture_max_kilobytes', 2048),
+            ],
+        ]);
+
+        $guest = Auth::user();
+        $oldPicture = $guest->picture;
+        $file = $valid['picture'];
+        $path = $file->storeAs(
+            "guest-pictures/{$guest->id}",
+            Str::random(24) . '.' . $file->extension(),
+            'public'
+        );
+
+        $guest->picture = $path;
+        $guest->save();
+
+        $this->deleteStoredGuestPicture($oldPicture);
+
+        return $guest;
+    }
+
+    public function deletePicture(Request $request)
+    {
+        $guest = Auth::user();
+        $oldPicture = $guest->picture;
+
+        $guest->picture = null;
+        $guest->save();
+
+        $this->deleteStoredGuestPicture($oldPicture);
+
         return $guest;
     }
 
@@ -173,6 +225,13 @@ class GuestController extends Controller
         }
 
         return response()->json(['message' => __('The account has been anonymized.')]);
+    }
+
+    private function deleteStoredGuestPicture(?string $path): void
+    {
+        if ($path !== null && str_starts_with($path, 'guest-pictures/')) {
+            Storage::disk('public')->delete($path);
+        }
     }
 
 }
